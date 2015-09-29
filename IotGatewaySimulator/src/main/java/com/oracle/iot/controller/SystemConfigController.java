@@ -1,6 +1,6 @@
 package com.oracle.iot.controller;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ public class SystemConfigController {
 	@RequestMapping(value = "/system/config", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getHost() {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new LinkedHashMap<String, Object>();
 		result.put("server", systemConfigService.getHost());
 		result.put("port", systemConfigService.getPort());
 		result.put("sendingMessages", systemConfigService.getMessageStatus());

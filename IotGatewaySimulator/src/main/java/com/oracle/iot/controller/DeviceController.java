@@ -1,7 +1,7 @@
 package com.oracle.iot.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +104,7 @@ public class DeviceController {
 	public List<Map<String, String>> getDeviceTypes() {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		for (DeviceType deviceType : DeviceType.values()) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put("name", deviceType.name());
 			map.put("display", deviceType.getDisplay());
 			list.add(map);

@@ -24,15 +24,20 @@
 <title>IoT Device Simulator</title>
 </head>
 <body data-ng-controller="DeviceController" data-ng-init="init()" class="ui-widget-content">
-	<md-toolbar layout="row" class="md-whiteframe-z2 top-bar">
-	<div class="md-toolbar-tools md-whiteframe-1dp">
+	<md-toolbar layout="row" class="md-whiteframe-z2 brand-bar">
+	<div class="md-whiteframe-1dp page-padding">
 		<a class="brand " href="#">
-			<img src="<c:url value='/resources/pictures/logo.png'/>" height="35px" alt="logo">
+		<div class="logo">
+		<!-- image  alt="Oracle" src="css/images/t.gif"/ -->
+		</div>
+		<div class="app-name">IoT CS Device Simulator</div>
 		</a>
-		<div class="title">IoT CS Device Simulator</div>
-		<md-button class="md-icon-button config-button" aria-label="Settings" ng-click="openConfig();"> <md-icon
-			md-svg-icon="resources/icons/menu.svg"></md-icon> </md-button>
+		<div class="config">
+		<md-button class="config-button" aria-label="Settings" ng-click="openConfig();"></md-button>
+		</div>
 	</div>
+	</md-toolbar>
+	<md-toolbar layout="row" class="md-whiteframe-z2 top-bar">
 	</md-toolbar>
 	<section layout="row" flex>
 		<md-sidenav class="md-sidenav-left md-whiteframe-z1 side-nav" md-component-id="left" md-is-locked-open="true">
@@ -98,7 +103,7 @@
 	<section layout="column" flex>
 		<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right"> <md-toolbar
 			class="md-theme-light">
-		<h1 class="md-toolbar-tools">System Config</h1>
+		<h1 class="title">System Config</h1>
 		</md-toolbar> <md-content layout-padding>
 		<form>
 			<md-input-container> <label for="server">IoT CS Server</label> <input type="text" id="server"
@@ -116,7 +121,7 @@
 	<modal-dialog show='modalShown' width='250px' height='400px'> <ng-modal-dialog-content>
 	<section layout="column">
 		<md-toolbar class="md-theme-light">
-		<h1 class="md-toolbar-tools">Add New Device</h1>
+		<h1 class="title">Add New Device</h1>
 		</md-toolbar>
 		<md-content layout-padding>
 		<form>

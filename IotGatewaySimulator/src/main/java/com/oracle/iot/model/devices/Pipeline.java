@@ -21,7 +21,7 @@ public class Pipeline extends IOTDevice {
 	@JsonIgnore
 	protected double capacityLoad = 60.0;
 	@JsonIgnore
-	protected double internalPressure = 1250;
+	protected double internalPressure = 12.50;
 	@JsonIgnore
 	protected double temperature = 65;
 	@JsonIgnore
@@ -69,7 +69,7 @@ public class Pipeline extends IOTDevice {
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("Curr. Capacity", capacityLoad);
-		map.put("Pressure", internalPressure);
+		map.put("Pressure (x100)", internalPressure);
 		map.put("Temperature", temperature);
 		map.put("Flow Speed", flowSpeed);
 		return map;
@@ -98,7 +98,7 @@ public class Pipeline extends IOTDevice {
 		if (eventMessage.equalsIgnoreCase("eventPressureDrop")) {
 			eventPressureDrop = !eventPressureDrop;
 			if (!eventPressureDrop)
-				internalPressure = 1250;
+				internalPressure = 12.50;
 			return true;
 		}
 		if (eventMessage.equalsIgnoreCase("eventFullCapacity")) {
@@ -111,7 +111,7 @@ public class Pipeline extends IOTDevice {
 		if (eventMessage.equalsIgnoreCase("eventShutdown")) {
 			eventShutdown = !eventShutdown;
 			if (!eventShutdown) {
-				internalPressure = 1250;
+				internalPressure = 12.50;
 				capacityLoad = 60;
 				temperature = 25;
 				flowSpeed = 5;
@@ -132,7 +132,7 @@ public class Pipeline extends IOTDevice {
 				.reliability(Message.Reliability.BEST_EFFORT).priority(Message.Priority.MEDIUM);
 		DataMessage message = msgBuilder.build();
 		addToChart(messageDate, "Curr. Capacity", capacityLoad);
-		addToChart(messageDate, "Pressure", internalPressure);
+		addToChart(messageDate, "Pressure (x100)", internalPressure);
 		addToChart(messageDate, "Temperature", temperature);
 		addToChart(messageDate, "Flow Speed", flowSpeed);
 
@@ -152,19 +152,19 @@ public class Pipeline extends IOTDevice {
 			flowSpeed = 5;
 
 			capacityLoad = Constants.randomDouble(55, 65, 2);
-			internalPressure = Constants.randomDouble(1225, 1275, 2);
+			internalPressure = Constants.randomDouble(12.25, 12.75, 2);
 			temperature = Constants.randomDouble(58, 62, 2);
 			flowSpeed = Constants.randomDouble(4, 6, 2);
 
 			if (eventFullCapacity) {
 				capacityLoad = 100;
 				flowSpeed = Constants.randomDouble(5, 7, 2);
-				internalPressure = Constants.randomDouble(1300, 1375, 2);
+				internalPressure = Constants.randomDouble(13.00, 13.75, 2);
 				temperature = Constants.randomDouble(65, 69, 2);
 			}
 			if (eventPressureDrop) {
 				flowSpeed = Constants.randomDouble(3.5, 4, 2);
-				internalPressure = Constants.randomDouble(900, 950, 2);
+				internalPressure = Constants.randomDouble(9.00, 9.50, 2);
 				temperature = Constants.randomDouble(55, 58, 2);
 			}
 		}

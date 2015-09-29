@@ -49,26 +49,16 @@ public abstract class IOTDevice {
 			chartSeries.add(series);
 			seriesValues = new ArrayList<Double>();
 			for (int i = 0; i <= MAX_CHART_SIZE; i++) {
-				seriesValues.add(null);
+				seriesValues.add(value);
 			}
 			seriesValues.add(value);
 			chartValues.add(seriesValues);
 		} else {
 			seriesValues = chartValues.get(index);
 		}
-		boolean full = true;
-		for (int i = 0; i <= MAX_CHART_SIZE; i++) {
-			if (seriesValues.get(i) == null) {
-				seriesValues.set(i, value);
-				full = false;
-				break;
-			}
-		}
-		if (full) {
-			seriesValues.add(value);
-			// remove the oldest record
-			seriesValues.remove(0);
-		}
+		seriesValues.add(value);
+		// remove the oldest record
+		seriesValues.remove(0);
 	}
 
 	public abstract Map<String, String> getAlerts();

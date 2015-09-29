@@ -26,7 +26,7 @@ public class DrillSite extends IOTDevice {
 	@JsonIgnore
 	protected double vibration = 1.0;
 	@JsonIgnore
-	protected double maxDepth = 5900;
+	protected double maxDepth = 59.00;
 
 	@JsonIgnore
 	protected boolean eventDrillSlowDown = false;
@@ -71,7 +71,7 @@ public class DrillSite extends IOTDevice {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("Drill RPM", drillRpm);
 		map.put("Temperature", temperature);
-		map.put("Depth", depth);
+		map.put("Depth (x100)", depth);
 		map.put("Vibration", vibration);
 		return map;
 	}
@@ -130,6 +130,7 @@ public class DrillSite extends IOTDevice {
 		if (eventDrillFailure) {
 			drillRpm = 0;
 			temperature = 0;
+			vibration = 0;
 		} else {
 			drillRpm = Constants.randomDouble(180, 200, 2);
 			vibration = Constants.randomDouble(0.5, 3, 2);
@@ -137,15 +138,15 @@ public class DrillSite extends IOTDevice {
 			if (eventDrillOverheat) {
 				temperature = temperature + 5;
 			} else {
-				temperature = Constants.randomDouble(140, 160, 2);
+				temperature = Constants.randomDouble(155, 160, 2);
 			}
 			if (eventDrillSlowDown) {
 				drillRpm = Constants.randomDouble(100, 120, 2);
-				temperature = Constants.randomDouble(180, 200, 2);
-				depth = depth + 2;
+				temperature = (eventDrillOverheat) ? temperature : Constants.randomDouble(190, 200, 2);
+				depth = depth + 0.01;
 				vibration = Constants.randomDouble(3, 4.5, 2);
 			} else {
-				depth = depth + 10;
+				depth = depth + 0.04;
 			}
 			if (depth > maxDepth) {
 				depth = 0;

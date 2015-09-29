@@ -3,7 +3,7 @@ package com.oracle.iot.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,7 +18,7 @@ public final class Constants {
 	}
 
 	public static Map<String, List<Double>> copy(Map<String, List<Double>> map) {
-		Map<String, List<Double>> copy = new HashMap<String, List<Double>>();
+		Map<String, List<Double>> copy = new LinkedHashMap<String, List<Double>>();
 		for (String key : map.keySet()) {
 			copy.put(key, Constants.clone(map.get(key)));
 		}

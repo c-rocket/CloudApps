@@ -1,6 +1,6 @@
 package com.oracle.iot.model.devices;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -39,7 +39,7 @@ public class HVAC extends IOTDevice {
 
 	@Override
 	public Map<String, String> getAlerts() {
-		Map<String, String> alerts = new HashMap<String, String>();
+		Map<String, String> alerts = new LinkedHashMap<String, String>();
 		alerts.put("alertDoorOpen", "Door Open");
 		alerts.put("alertDoorClosed", "Door Closed");
 		return alerts;
@@ -47,18 +47,18 @@ public class HVAC extends IOTDevice {
 
 	@Override
 	public Map<String, Object> getEvents() {
-		Map<String, Object> events = new HashMap<String, Object>();
-		Map<String, Object> obj = new HashMap<String, Object>();
+		Map<String, Object> events = new LinkedHashMap<String, Object>();
+		Map<String, Object> obj = new LinkedHashMap<String, Object>();
 		obj.put("display", "Motor Failure");
 		obj.put("value", eventMotorFailure);
 		events.put("eventMotorFailure", obj);
 
-		obj = new HashMap<String, Object>();
+		obj = new LinkedHashMap<String, Object>();
 		obj.put("display", "HVAC Failure");
 		obj.put("value", eventHvacNotWorking);
 		events.put("eventHvacNotWorking", obj);
 
-		obj = new HashMap<String, Object>();
+		obj = new LinkedHashMap<String, Object>();
 		obj.put("display", "Overheat Motor");
 		obj.put("value", eventMotorOverheat);
 		events.put("eventMotorOverheat", obj);
@@ -67,7 +67,7 @@ public class HVAC extends IOTDevice {
 
 	@Override
 	public Map<String, Object> getMetrics() {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("Output Temp", outputTemp);
 		map.put("Vibration", vibration);
 		map.put("Oil Viscosity", oilViscosity);
@@ -96,7 +96,6 @@ public class HVAC extends IOTDevice {
 
 	@Override
 	public Boolean eventHandler(String eventMessage) {
-		// TODO Auto-generated method stub
 		if (eventMessage.equalsIgnoreCase("eventMotorFailure")) {
 			eventMotorFailure = !eventMotorFailure;
 			if (!eventMotorFailure)

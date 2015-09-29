@@ -2,7 +2,7 @@ package com.oracle.iot.dao;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +20,7 @@ import com.oracle.iot.model.devices.Pipeline;
 
 @Repository
 public class DeviceDaoInMemory {
-	final Map<String, IOTDevice> devices = new HashMap<String, IOTDevice>();
+	final Map<String, IOTDevice> devices = new LinkedHashMap<String, IOTDevice>();
 
 	private void bootstrapDevices() {
 		for (int i = 1; i <= 1; i++) {
@@ -63,7 +63,7 @@ public class DeviceDaoInMemory {
 
 			@Override
 			public int compare(IOTDevice o1, IOTDevice o2) {
-				return o2.getCreateDate().compareTo(o1.getCreateDate());
+				return o2.getCreateDate().toDate().compareTo(o1.getCreateDate().toDate());
 			}
 		});
 		return foundDevices;
