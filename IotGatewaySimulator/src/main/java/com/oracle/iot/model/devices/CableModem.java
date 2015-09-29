@@ -139,7 +139,7 @@ public class CableModem extends IOTDevice {
 		return message;
 	}
 
-	private void animateMetrics() {
+	public void animateMetrics() {
 		if (eventDeviceFailure) {
 			downloadRate = 0;
 			uploadRate = 0;

@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -55,7 +56,7 @@ public class DeviceDaoInMemory {
 
 	public List<IOTDevice> findAll() {
 		if (devices.size() == 0) {
-			bootstrapDevices();
+			// bootstrapDevices();
 		}
 		List<IOTDevice> foundDevices = Constants.copyToList(devices.values());
 		Collections.sort(foundDevices, new Comparator<IOTDevice>() {
@@ -89,5 +90,12 @@ public class DeviceDaoInMemory {
 	public Boolean update(IOTDevice device) {
 		devices.put(device.getId(), device.copy());
 		return true;
+	}
+
+	public void deleteAll() {
+		Set<String> ids = devices.keySet();
+		for (String id : ids) {
+			devices.remove(id);
+		}
 	}
 }
