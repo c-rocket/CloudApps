@@ -1,5 +1,6 @@
 package com.oracle.iot.dao;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,7 @@ public class DeviceDaoInMemory {
 			bootstrapDevices();
 		}
 		List<IOTDevice> foundDevices = Constants.copyToList(devices.values());
-		foundDevices.sort(new Comparator<IOTDevice>() {
+		Collections.sort(foundDevices, new Comparator<IOTDevice>() {
 
 			@Override
 			public int compare(IOTDevice o1, IOTDevice o2) {
