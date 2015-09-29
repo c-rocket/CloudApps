@@ -1,0 +1,321 @@
+.system-config-window {
+	display: none;
+}
+
+.create-window {
+	display: none;
+}
+
+.md-toolbar-tools .brand {
+	float: left;
+}
+
+.md-toolbar-tools .title {
+	margin: auto;
+	font-size: 20pt;
+	font-variant: small-caps;
+}
+
+.md-toolbar-tools .config {
+	float: right;
+}
+
+/************************* CONTENT *************************/
+.md-toolbar-tools h1 {
+	font-size: inherit;
+	font-weight: inherit;
+	margin: inherit;
+}
+
+.fat-list {
+	width: 200px;
+	height: 55px;
+	text-align: left;
+}
+
+.fat-list {
+	width: 280px;
+	height: 55px;
+	font-size: 16px;
+	margin: 0 0 0 5px; 
+	padding : 3px 15px 3px 15px;
+	color: rgb(49, 46, 46);
+	background-color: rgba(224, 224, 224, 0.96);
+	text-transform: none;
+	font-weight: 400;
+	min-width: 100px;
+	padding: 3px 15px 3px 15px;
+	margin: 0 10px 0 10px;
+}
+
+.fat-list:not([disabled]) {
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.fat-list:not([disabled]):hover {
+	background-color: rgba(193, 193, 193, 0.96);
+	color: rgba(44, 65, 164, 0.96);
+	transition: 0.3s;
+}
+
+.fat-list[disabled] {
+	color: rgb(187, 187, 187);
+	background-color: rgba(230, 230, 229, 0.96);
+}
+
+.content {
+	background-color: #f5f5f5;
+}
+
+.content-grid {
+	margin: 3px 0 0 52px;
+}
+
+.content-grid md-grid-list {
+	margin: 8px;
+}
+
+.content-grid md-grid-tile-header {
+	font-variant: small-caps;
+	color: black;
+	padding-left: 10px;
+}
+
+.content-grid md-grid-tile{
+	margin: 0;
+	padding: 0;
+}
+
+.content-grid md-grid-tile .tile-content{
+	color: black;
+	display: block;
+	padding-top: 35px;
+	height: 100%;
+	width:100%;
+	text-align: left;
+}
+
+.content-grid md-grid-tile h3 {
+	display: block;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0 0 0 20px;
+}
+
+.alert-button {
+	margin-top: 5px;
+	width: 200px;
+}
+
+.event-toggle {
+	width:100%;
+	margin: 3px 0 3px 40px;
+}
+
+.config-button {
+    float:right;
+}
+.navbar-fixed-top {
+	width:100%;
+}
+.buttons-column {
+	width:100%;
+	height: 100%;
+}
+md-input-container.md-default-theme label{
+	color:black;
+}
+md-input-container .md-input {
+	border-style: solid;
+	border: 1px;
+	border-bottom: 2px;
+}
+
+.metricLabel{
+	font-variant: small-caps;
+	font-size: 16pt;
+	margin: 5px 32px 0 0;
+}
+
+.metricValue{
+	font-variant: small-caps;
+	font-size: 22pt;
+}
+
+.tile0 {
+	background: -webkit-radial-gradient(circle, #00A6D4, #0090B5); /* Safari */
+	background: -o-radial-gradient(circle, #00A6D4, #0090B5); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #00A6D4, #0090B5); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #00A6D4, #0090B5); /* Standard syntax */
+}
+
+.tile1 {
+	background: -webkit-radial-gradient(circle, #FF6A00, #CC5100); /* Safari */
+	background: -o-radial-gradient(circle, #FF6A00, #CC5100); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FF6A00, #CC5100); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FF6A00, #CC5100); /* Standard syntax */
+}
+
+.tile2 {
+	background: -webkit-radial-gradient(circle, #009688, #007A6E); /* Safari */
+	background: -o-radial-gradient(circle, #009688, #007A6E); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #009688, #007A6E); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #009688, #007A6E); /* Standard syntax */
+}
+
+.tile3 {
+	background: -webkit-radial-gradient(circle, #FFE566, #FFD800); /* Safari */
+	background: -o-radial-gradient(circle, #FFE566, #FFD800); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FFE566, #FFD800); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FFE566, #FFD800); /* Standard syntax */
+}
+
+.tile5 {
+	background: -webkit-radial-gradient(circle, #9967AF, #57007F); /* Safari */
+	background: -o-radial-gradient(circle, #9967AF, #57007F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #9967AF, #57007F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #9967AF, #57007F); /* Standard syntax */
+}
+
+.tile4 {
+	background: -webkit-radial-gradient(circle, #4CFF00, #3BC600); /* Safari */
+	background: -o-radial-gradient(circle, #4CFF00, #3BC600); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #4CFF00, #3BC600); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #4CFF00, #3BC600); /* Standard syntax */
+}
+
+.grey {
+	background: -webkit-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Safari */
+	background: -o-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #C6C6C6, #7F7F7F); /* Standard syntax */
+}
+
+.light-green {
+	background: -webkit-radial-gradient(circle, #72E580, #63C66F); /* Safari */
+	background: -o-radial-gradient(circle, #72E580, #63C66F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #72E580, #63C66F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #72E580, #63C66F); /* Standard syntax */
+}
+
+.blue {
+	background: -webkit-radial-gradient(circle, #4E65D8, #6B74A3); /* Safari */
+	background: -o-radial-gradient(circle, #4E65D8, #6B74A3); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #4E65D8, #6B74A3); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #4E65D8, #6B74A3); /* Standard syntax */
+}
+
+.pink {
+	background: -webkit-radial-gradient(circle, #FF7F7F, #D36969); /* Safari */
+	background: -o-radial-gradient(circle, #FF7F7F, #D36969); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FF7F7F, #D36969); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FF7F7F, #D36969); /* Standard syntax */
+}
+
+.purple {
+	background: -webkit-radial-gradient(circle, #DF9BE1, #B57EB7); /* Safari */
+	background: -o-radial-gradient(circle, #DF9BE1, #B57EB7); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #DF9BE1, #B57EB7); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #DF9BE1, #B57EB7); /* Standard syntax */
+}
+
+.ng-modal-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:absolute;
+  z-index:80;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.8;
+}
+.ng-modal-dialog {
+  /* A centered div above the overlay with a box shadow. */
+  z-index:81;
+  position: absolute;
+  width: 50%; /* Default */
+
+  /* Center the dialog */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  box-shadow: 4px 4px 80px #000;
+}
+.ng-modal-dialog-content {
+  padding:10px;
+  text-align: left;
+}
+.ng-modal-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 120%;
+  display: inline-block;
+  font-weight: bold;
+  font-family: 'arial', 'sans-serif';
+}
+
+.top-bar {
+	background: -webkit-linear-gradient(0deg, #150054, #00137F);
+	background: -o-linear-gradient(0deg, #150054, #00137F);
+	background: -moz-linear-gradient(0deg, #150054, #00137F);
+	background: linear-gradient(0deg, #150054, #00137F);
+}
+
+.content {
+	background-color:rgb(242, 242, 242);
+}
+.side-nav {
+	background-color: rgb(234, 234, 234);
+}
+
+.temp {
+	background: -webkit-radial-gradient(circle, red, yellow, green); /* Safari */
+	background: -o-radial-gradient(circle, red, yellow, green); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, red, yellow, green); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, red, yellow, green); /* Standard syntax */
+}
+
+.create-button {
+	width: 280px;
+	height: 55px;
+	/* background-color: rgba(0, 127, 14, 0.96); */
+	font-size: 16px;
+	color: white;
+	margin: 0 0 0 5px;
+	padding: 3px 15px 3px 15px;
+	margin: 10px;
+	border-radius: 25px;
+	background: -webkit-radial-gradient(circle, #00A00D, #007205); /* Safari */
+	background: -o-radial-gradient(circle, #00A00D, #007205); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #00A00D, #007205); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #00A00D, #007205); /* Standard syntax */
+}
+
+.create-button:not([disabled]) {
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.create-button:not([disabled]):hover {
+	background-color: rgba(0, 175, 17, 0.96);
+	color: white;
+}
+
+.create-button:not([disabled]):focus {
+	background-color: rgba(0, 127, 14, 0.96);
+	color: white;
+}
+
+.create-button[disabled] {
+	color: rgb(187, 187, 187);
+	background-color: rgba(230, 230, 229, 0.96);
+}
