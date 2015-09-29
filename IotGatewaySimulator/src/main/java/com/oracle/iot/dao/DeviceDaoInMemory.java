@@ -77,7 +77,8 @@ public class DeviceDaoInMemory {
 	}
 
 	public IOTDevice findById(String id) {
-		return devices.get(id).copy();
+		IOTDevice device = devices.get(id);
+		return (device != null) ? device.copy() : null;
 	}
 
 	public Boolean updateAll(List<IOTDevice> allDevices) {
