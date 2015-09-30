@@ -14,8 +14,8 @@ import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
 public class HVAC extends IOTDevice {
-	private static final String DATA_FORMAT = "urn:oracle:iot:device:hvac";
-	private static final String ALERT_FORMAT = "urn:oracle:iot:alert:hvac";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:hvac";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:myhvac";
 
 	@JsonIgnore
 	protected double outputTemp = 30.0;
@@ -87,11 +87,9 @@ public class HVAC extends IOTDevice {
 		AlertMessage.Builder alertBuilder = new AlertMessage.Builder();
 		alertBuilder.format(ALERT_FORMAT).source(getId()).description(description).dataItem("outputTemp", outputTemp)
 				.dataItem("vibration", vibration).dataItem("oilViscosity", oilViscosity)
-				.dataItem("motorAmperage", motorAmperage).eventTime(new DateTime().toDate())
-				.severity(AlertMessage.Severity.CRITICAL);
+				.dataItem("motorAmperage", motorAmperage).severity(AlertMessage.Severity.CRITICAL);
 
-		AlertMessage alert = alertBuilder.build();
-		return alert;
+		return alertBuilder.build();
 	}
 
 	@Override
@@ -126,8 +124,8 @@ public class HVAC extends IOTDevice {
 		DataMessage.Builder msgBuilder = new DataMessage.Builder();
 		msgBuilder.format(DATA_FORMAT).source(getId()).dataItem("outputTemp", outputTemp)
 				.dataItem("vibration", vibration).dataItem("oilViscosity", oilViscosity)
-				.dataItem("motorAmperage", motorAmperage).eventTime(messageDate.toDate())
-				.reliability(Message.Reliability.BEST_EFFORT).priority(Message.Priority.MEDIUM);
+				.dataItem("motorAmperage", motorAmperage).reliability(Message.Reliability.BEST_EFFORT)
+				.priority(Message.Priority.MEDIUM);
 		DataMessage message = msgBuilder.build();
 		addToChart(messageDate, "Output Temp", outputTemp);
 		addToChart(messageDate, "Vibration", vibration);

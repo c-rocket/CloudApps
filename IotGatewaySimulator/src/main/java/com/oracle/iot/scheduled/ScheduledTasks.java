@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,8 @@ import com.oracle.iot.service.SystemConfigService;
 
 @Component
 public class ScheduledTasks {
+
+	private final Logger log = Logger.getLogger(ScheduledTasks.class);
 
 	@Resource
 	private MessagingService messageService;
@@ -28,6 +31,7 @@ public class ScheduledTasks {
 		// check if sending messages is turned on
 		List<IOTDevice> allDevices = deviceService.findAll();
 		if (allDevices != null && allDevices.size() > 0) {
+			log.debug("Device Count: " + allDevices.size());
 			messageService.sendMessages(allDevices, systemConfigService.getHost(), systemConfigService.getPort(),
 					systemConfigService.getMessageStatus());
 			deviceService.updateAll(allDevices);

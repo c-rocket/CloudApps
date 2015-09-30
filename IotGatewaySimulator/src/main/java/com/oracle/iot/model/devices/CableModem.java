@@ -15,8 +15,8 @@ import oracle.iot.message.Message;
 
 public class CableModem extends IOTDevice {
 
-	private static final String DATA_FORMAT = "urn:oracle:iot:device:modem";
-	private static final String ALERT_FORMAT = "urn:oracle:iot:alert:modem";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:modem";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:modem";
 
 	@JsonIgnore
 	protected double downloadRate = 60.0;

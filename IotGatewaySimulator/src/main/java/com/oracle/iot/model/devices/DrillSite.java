@@ -14,8 +14,8 @@ import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
 public class DrillSite extends IOTDevice {
-	private static final String DATA_FORMAT = "urn:oracle:iot:device:modem";
-	private static final String ALERT_FORMAT = "urn:oracle:iot:alert:hvac";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:drillsite";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:drillsite";
 
 	@JsonIgnore
 	protected double drillRpm = 200;

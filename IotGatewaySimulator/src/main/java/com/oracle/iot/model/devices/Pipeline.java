@@ -15,8 +15,8 @@ import oracle.iot.message.Message;
 
 public class Pipeline extends IOTDevice {
 
-	private static final String DATA_FORMAT = "urn:oracle:iot:device:pipeline";
-	private static final String ALERT_FORMAT = "urn:oracle:iot:alert:pipeline";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:pipeline";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:pipeline";
 
 	@JsonIgnore
 	protected double capacityLoad = 60.0;

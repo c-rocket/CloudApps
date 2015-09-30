@@ -14,8 +14,8 @@ import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
 public class FleetTruck extends IOTDevice {
-	private static final String DATA_FORMAT = "urn:oracle:iot:device:fleet";
-	private static final String ALERT_FORMAT = "urn:oracle:iot:alert:fleet";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:fleet";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:fleet";
 
 	@JsonIgnore
 	protected double currentSpeed = 80.0;
