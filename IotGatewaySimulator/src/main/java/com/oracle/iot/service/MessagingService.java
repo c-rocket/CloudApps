@@ -1,14 +1,14 @@
 package com.oracle.iot.service;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.oracle.iot.client.ConnectionManager;
+import com.oracle.iot.client.TrustManager;
 import com.oracle.iot.dao.MessagingDao;
 import com.oracle.iot.model.IOTDevice;
 
@@ -22,65 +22,68 @@ public class MessagingService {
 	@Resource
 	private MessagingDao dao;
 
-	Map<String, AsyncDeviceClient> clients = new LinkedHashMap<String, AsyncDeviceClient>();
-
-	public void sendMessages(List<IOTDevice> devices, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
+	public boolean sendMessages(List<IOTDevice> devices, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
+		boolean error = false;
 		for (IOTDevice device : devices) {
 			DataMessage message = device.createMessage();
-			if (sendMessages) {
-				getDeviceClientConnection(iotcsServer, iotcsPort, device);
-				sendMessage(device.getId(), message);
+			if (sendMessages && !error) {
+				AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+				error = !getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+				if (!error) {
+					DEVICE_CLIENT.sendMessage(message);
+				}
 			}
 		}
+		return error;
 	}
 
-	private void sendMessage(String id, Message message) {
-		clients.get(id).sendMessage(message);
-	}
-
-	private void getDeviceClientConnection(String iotcsServer, Integer iotcsPort, IOTDevice device) {
+	private boolean getDeviceClientConnection(AsyncDeviceClient client, String iotcsServer, Integer iotcsPort,
+			IOTDevice device) {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
-		if (clients.get(device.getId()) == null) {
-			AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
-			clients.put(device.getId(), DEVICE_CLIENT);
-		}
 		byte[] privateKey = dao.getPrivateKey(device.getId());
 		if (privateKey == null) {
 			try {
-				privateKey = clients.get(device.getId()).activate(device.getSecret());
-				savePrivateKey(device, privateKey);
+				privateKey = client.activate(device.getSecret());
+				dao.savePrivateKey(device.getId(), privateKey);
 			} catch (final IllegalStateException EXCEPTION) {
-				clients.get(device.getId()).close();
-				clients.remove(device.getId());
-				System.err.println("The device has already been activated, but there is no private key");
-				System.err.println("Enroll a new device and try again.");
-				System.exit(-1);
+				log.error("The device has already been activated, but there is no private key", EXCEPTION);
+				log.error("Enroll a new device and try again.", EXCEPTION);
+				return false;
 			} catch (Exception e) {
-				e.printStackTrace();
-				clients.get(device.getId()).close();
-				clients.remove(device.getId());
+				log.error("Error activating client", e);
+				return false;
 			}
 		} else {
 			// Authenticate with, and connect to, the server
 			System.out.println("\nConnecting with client-assertion...");
 			try {
-				clients.get(device.getId()).authenticate(privateKey);
+				client.authenticate(privateKey);
 			} catch (Exception e) {
-				e.printStackTrace();
-				dao.deletePrivateKey(device.getId());
-				clients.get(device.getId()).close();
-				clients.remove(device.getId());
+				log.error("Error authenticating client", e);
+				return false;
 			}
 		}
-	}
-
-	private void savePrivateKey(IOTDevice device, final byte[] PRIVATE_KEY) {
-		dao.savePrivateKey(device.getId(), PRIVATE_KEY);
-	}
-
-	public Boolean sendAlert(IOTDevice device, String alert, String iotcsServer, Integer iotcsPort) {
-		getDeviceClientConnection(iotcsServer, iotcsPort, device);
-		sendMessage(device.getId(), device.createAlertMessage(alert));
 		return true;
+	}
+
+	public Boolean sendAlert(IOTDevice device, String alert, String iotcsServer, Integer iotcsPort,
+			Boolean sendMessages) {
+		if (sendMessages) {
+			Message message = device.createAlertMessage(alert);
+			AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+			DEVICE_CLIENT.sendMessage(message);
+		}
+		return true;
+	}
+
+	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
+		if (sendMessages) {
+			AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+			TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
+			ConnectionManager.getInstance(trustManager).close();
+			DEVICE_CLIENT.close();
+		}
 	}
 }

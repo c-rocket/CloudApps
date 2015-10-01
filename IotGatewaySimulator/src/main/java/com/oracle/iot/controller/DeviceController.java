@@ -69,7 +69,11 @@ public class DeviceController {
 	@RequestMapping(value = "/device/delete/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public Boolean deleteDevice(@PathVariable String id) {
-		return deviceService.delete(id);
+		IOTDevice device = deviceService.findById(id);
+		Boolean removed = deviceService.delete(id);
+		messagingService.close(device, systemConfigService.getHost(), systemConfigService.getPort(),
+				systemConfigService.getMessageStatus());
+		return removed;
 	}
 
 	@RequestMapping(value = "/device/{id}/show", method = RequestMethod.GET)
@@ -81,13 +85,8 @@ public class DeviceController {
 	@RequestMapping(value = "/device/{id}/alerts/{alert}", method = RequestMethod.PUT)
 	@ResponseBody
 	public Boolean sendAlert(@PathVariable String id, @PathVariable String alert) {
-		if (systemConfigService.getMessageStatus()) {
-			return messagingService.sendAlert(deviceService.findById(id), alert, systemConfigService.getHost(),
-					systemConfigService.getPort());
-		} else {
-			log.info("Alert captured");
-			return true;
-		}
+		return messagingService.sendAlert(deviceService.findById(id), alert, systemConfigService.getHost(),
+				systemConfigService.getPort(), systemConfigService.getMessageStatus());
 	}
 
 	@RequestMapping(value = "/device/{id}/events/{event}", method = RequestMethod.PUT)
