@@ -2,6 +2,10 @@
 <!DOCTYPE HTML>
 <html data-ng-app="simulatorApp">
 <head>
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="Create Devices for Oracle IoT Cloud Service">
+<meta name="keywords" content="Oracle IoT Cloud Servicet">
+<meta name="author" content="Oracle">
 <link rel="shortcut icon" href="<c:url value='/resources/pictures/favicon.ico'/>" type="image/x-icon" />
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
