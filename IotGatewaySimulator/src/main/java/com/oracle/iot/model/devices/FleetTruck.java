@@ -88,11 +88,11 @@ public class FleetTruck extends IOTDevice {
 	@Override
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("Current Speed", currentSpeed);
-		map.put("Latitude", latitude);
-		map.put("Longitude", longitude);
-		map.put("Fuel Level", fuelLevel);
-		map.put("Engine Temp.", engineTemperature);
+		map.put("Current Speed (km/hr)", currentSpeed);
+		map.put("Latitude (N)", latitude);
+		map.put("Longitude (W)", longitude);
+		map.put("Fuel Level (%)", fuelLevel);
+		map.put("Engine Temp. (C)", engineTemperature);
 		return map;
 	}
 

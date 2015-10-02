@@ -68,10 +68,10 @@ public class HVAC extends IOTDevice {
 	@Override
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("Output Temp", outputTemp);
-		map.put("Vibration", vibration);
-		map.put("Oil Viscosity", oilViscosity);
-		map.put("Motor Amperage", motorAmperage);
+		map.put("Output Temp (C)", outputTemp);
+		map.put("Vibration (G)", vibration);
+		map.put("Oil Viscosity (cP)", oilViscosity);
+		map.put("Motor Amperage (A)", motorAmperage);
 		return map;
 	}
 

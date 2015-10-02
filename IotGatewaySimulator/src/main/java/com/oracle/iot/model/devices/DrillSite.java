@@ -69,10 +69,10 @@ public class DrillSite extends IOTDevice {
 	@Override
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("Drill RPM", drillRpm);
-		map.put("Temperature", temperature);
-		map.put("Depth (x100)", depth);
-		map.put("Vibration", vibration);
+		map.put("Drill Speed (rpm)", drillRpm);
+		map.put("Temperature (C)", temperature);
+		map.put("Depth (x100 ft)", depth);
+		map.put("Vibration (G)", vibration);
 		return map;
 	}
 

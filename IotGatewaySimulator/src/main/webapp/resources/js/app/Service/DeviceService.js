@@ -3,6 +3,10 @@ app.service('DeviceService', function() {
 		var url = baseUrl + 'device/' + id + '/show';
 		http.get(url).success(handler);
 	}
+	this.getCurrentDevice = function(http, baseUrl, handler) {
+		var url = baseUrl + 'device/current/show';
+		http.get(url).success(handler);
+	}
 	this.getDeviceTypes = function(http, baseUrl, handler) {
 		var url = baseUrl + 'device/types';
 		http.get(url).success(handler);

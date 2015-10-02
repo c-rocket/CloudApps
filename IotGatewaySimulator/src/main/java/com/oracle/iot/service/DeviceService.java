@@ -30,7 +30,6 @@ public class DeviceService {
 
 	public IOTDevice findById(String id) {
 		IOTDevice device = deviceDao.findById(id);
-		// deviceDao.clearChart(id);
 		return device;
 	}
 
@@ -40,6 +39,12 @@ public class DeviceService {
 
 	public Boolean updateDevice(IOTDevice device) {
 		return deviceDao.update(device);
+	}
+
+	public IOTDevice getCurrentDevice() {
+		List<IOTDevice> devices = deviceDao.findAll();
+		return (devices.size() > 0) ? devices.get(0) : null;
+
 	}
 
 }

@@ -68,10 +68,10 @@ public class Pipeline extends IOTDevice {
 	@Override
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("Curr. Capacity", capacityLoad);
-		map.put("Pressure (x100)", internalPressure);
-		map.put("Temperature", temperature);
-		map.put("Flow Speed", flowSpeed);
+		map.put("Current Capacity (%)", capacityLoad);
+		map.put("Pressure (x100 Pa)", internalPressure);
+		map.put("Temperature (C)", temperature);
+		map.put("Flow Speed (ft/sec)", flowSpeed);
 		return map;
 	}
 
@@ -152,14 +152,14 @@ public class Pipeline extends IOTDevice {
 			flowSpeed = 5;
 
 			capacityLoad = Constants.randomDouble(55, 65, 2);
-			internalPressure = Constants.randomDouble(12.25, 12.75, 2);
+			internalPressure = Constants.randomDouble(12.25, 13, 2);
 			temperature = Constants.randomDouble(58, 62, 2);
 			flowSpeed = Constants.randomDouble(4, 6, 2);
 
 			if (eventFullCapacity) {
 				capacityLoad = 100;
 				flowSpeed = Constants.randomDouble(5, 7, 2);
-				internalPressure = Constants.randomDouble(13.00, 13.75, 2);
+				internalPressure = Constants.randomDouble(15, 17.75, 2);
 				temperature = Constants.randomDouble(65, 69, 2);
 			}
 			if (eventPressureDrop) {

@@ -1,102 +1,77 @@
 package com.oracle.iot.dao;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
-import com.oracle.iot.model.Constants;
 import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
-import com.oracle.iot.model.devices.CableModem;
-import com.oracle.iot.model.devices.DrillSite;
-import com.oracle.iot.model.devices.FleetTruck;
-import com.oracle.iot.model.devices.HVAC;
-import com.oracle.iot.model.devices.Pipeline;
 
 @Repository
 public class DeviceDaoInMemory {
-	final Map<String, IOTDevice> devices = new LinkedHashMap<String, IOTDevice>();
-
-	private void bootstrapDevices() {
-		for (int i = 1; i <= 1; i++) {
-			String id = i + "-HvacTest";
-			devices.put(id, new HVAC(id, "secret" + id));
-
-			id = i + "-ModemTest";
-			devices.put(id, new CableModem(id, "secret" + id));
-
-			id = i + "-DrillSiteTest";
-			devices.put(id, new DrillSite(id, "secret" + id));
-
-			id = i + "-FleetTruckTest";
-			devices.put(id, new FleetTruck(id, "secret" + id));
-
-			id = i + "-PipelineTest";
-			devices.put(id, new Pipeline(id, "secret" + id));
-		}
-	}
+	// private Map<String, IOTDevice> devices = new LinkedHashMap<String,
+	// IOTDevice>(); - used originally but the IOT client jar can barely handle
+	// being one device at a time :)
+	private IOTDevice device = null;
 
 	public boolean exists(String id) {
-		return devices.get(id) != null;
+		return (this.device != null && this.device.getId().equals(id));
 	}
 
-	public boolean insert(DeviceType device, String id, String secret) {
-		if (!exists(id)) {
-			devices.put(id, device.getDevice(id, secret).copy());
-			return true;
+	public boolean insert(DeviceType deviceType, String id, String secret) {
+		if (exists(id)) {
+			return false;
 		}
-		return false;
+		if (this.device != null) {
+			throw new RuntimeException("Device exists, please remove and close properly first");
+		}
+		this.device = deviceType.getDevice(id, secret).copy();
+		return true;
 
 	}
 
 	public List<IOTDevice> findAll() {
-		if (devices.size() == 0) {
-			// bootstrapDevices();
+		if (device == null) {
+			return new ArrayList<IOTDevice>();
+		} else {
+			return new ArrayList<IOTDevice>(Arrays.asList(device.copy()));
 		}
-		List<IOTDevice> foundDevices = Constants.copyToList(devices.values());
-		Collections.sort(foundDevices, new Comparator<IOTDevice>() {
-
-			@Override
-			public int compare(IOTDevice o1, IOTDevice o2) {
-				return o2.getCreateDate().toDate().compareTo(o1.getCreateDate().toDate());
-			}
-		});
-		return foundDevices;
 	}
 
 	public Boolean delete(String id) {
-		if (devices.get(id) == null)
+		if (this.device == null || !this.device.getId().equals(id))
 			return false;
-		devices.remove(id);
+		this.device = null;
 		return true;
 	}
 
 	public IOTDevice findById(String id) {
-		IOTDevice device = devices.get(id);
-		return (device != null) ? device.copy() : null;
+		if (this.device != null && this.device.getId().equals(id)) {
+			return device.copy();
+		}
+		return null;
 	}
 
 	public Boolean updateAll(List<IOTDevice> allDevices) {
 		for (IOTDevice device : allDevices) {
-			devices.put(device.getId(), device.copy());
+			if (this.device != null && this.device.getId().equals(device.getId())) {
+				this.device = device.copy();
+			}
 		}
 		return true;
 	}
 
 	public Boolean update(IOTDevice device) {
-		devices.put(device.getId(), device.copy());
-		return true;
+		if (this.device != null && this.device.getId().equals(device.getId())) {
+			this.device = device.copy();
+			return true;
+		}
+		return false;
 	}
 
 	public void deleteAll() {
-		Set<String> ids = devices.keySet();
-		for (String id : ids) {
-			devices.remove(id);
-		}
+		device = null;
 	}
 }

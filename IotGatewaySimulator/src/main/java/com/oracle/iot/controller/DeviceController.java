@@ -54,10 +54,16 @@ public class DeviceController {
 			return false;
 		if (Common.isNull(deviceType))
 			return false;
-		if (deviceService.create(deviceType, id, secret)) {
-			return true;
+
+		IOTDevice currentDevice = deviceService.getCurrentDevice();
+		if (currentDevice == null) {
+			return deviceService.create(deviceType, id, secret);
+		} else {
+			messagingService.close(currentDevice, systemConfigService.getHost(), systemConfigService.getPort(),
+					systemConfigService.getMessageStatus());
+			deviceService.delete(currentDevice.getId());
+			return deviceService.create(deviceType, id, secret);
 		}
-		return false;
 	}
 
 	@RequestMapping(value = "/device/list", method = RequestMethod.GET)
@@ -79,6 +85,9 @@ public class DeviceController {
 	@RequestMapping(value = "/device/{id}/show", method = RequestMethod.GET)
 	@ResponseBody
 	public IOTDevice showDevice(@PathVariable String id) {
+		if (id.equals("current")) {
+			return deviceService.getCurrentDevice();
+		}
 		return deviceService.findById(id);
 	}
 

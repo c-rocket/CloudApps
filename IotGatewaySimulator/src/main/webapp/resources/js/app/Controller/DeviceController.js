@@ -1,6 +1,6 @@
 //data-ng-controller
 app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log,
-		DeviceService, DeviceListService, SystemConfigService) {
+		DeviceService, SystemConfigService) {
 	var last = {
 		bottom : false,
 		top : true,
@@ -13,7 +13,6 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	var color = [ 'blue', 'green', 'yellow', 'purple', 'navy', 'orange' ]
 
-	$scope.devices = [];
 	$scope.device = {};
 	$scope.systemConfig = {};
 	$scope.createDevice = {};
@@ -25,6 +24,8 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	$scope.data = [];
 
 	$scope.systemConfig = {};
+	$scope.createText = "Create Device";
+	$scope.infoText = "Start by creating a device here!";
 
 	$scope.baseUrl = angular.element($('#baseUrl')).val();
 
@@ -53,35 +54,28 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	function deviceHandler(deviceResponse) {
 		$scope.device = deviceResponse;
-		extractChartData($scope.device.chartSeries, $scope.device.chartValues, $scope.device.chartLabels);
-		$scope.runCounter = true;
+		if ($scope.device) {
+			currentId = $scope.device.id;
+			extractChartData($scope.device.chartSeries, $scope.device.chartValues, $scope.device.chartLabels);
+			$scope.runCounter = true;
+			$scope.createText = 'Swap Device';
+			$scope.infoText = "Want to change devices? Swap for a new one!";
+		}
 	}
 
 	function deviceTypeHandler(deviceTypeResponse) {
 		$scope.deviceTypes = deviceTypeResponse;
 	}
 
-	function listResponse(listResponse) {
-		$scope.devices = listResponse
-		if ($scope.devices.length > 0) {
-			$scope.empty = false;
-			$scope.loadDevice($scope.devices[0].id);
-		} else {
-			$scope.device = {};
-			$scope.labels = [];
-			$scope.series = [];
-			$scope.data = [];
-			$scope.empty = true;
-		}
-	}
-
 	$scope.init = function() {
-		DeviceListService.getDevices($http, $scope.baseUrl, listResponse);
+		$scope.labels = [];
+		$scope.series = [];
+		$scope.data = [];
 		DeviceService.getDeviceTypes($http, $scope.baseUrl, deviceTypeHandler);
+		DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
 	}
 
 	$scope.loadDevice = function(id) {
-		currentId = id;
 		$scope.labels = [];
 		$scope.series = [];
 		$scope.data = [];
@@ -89,7 +83,9 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	}
 
 	function deleteDeviceHandler() {
-		DeviceListService.getDevices($http, $scope.baseUrl, listResponse);
+		$scope.device = {};
+		$scope.createText = "Create Device";
+		$scope.infoText = "Start by creating a device here!";
 	}
 	$scope.deleteDevice = function(id) {
 		currentId = null;
@@ -114,29 +110,42 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	// ____________NEW DEVICE
 	$scope.newDevice = {};
+	$scope.openCreate = toggleCreate('left');
+	function toggleCreate(navId) {
+		var debounceFn = $mdUtil.debounce(function() {
+			$mdSidenav(navId).toggle().then(function() {
+				$scope.newDevice = {};
+			});
+		}, 200);
+		return debounceFn;
+	}
 
 	function createDeviceHandler(response) {
 		if (response == true) {
-			var toast = $mdToast.simple().content('Device Added').position($scope.getToastPosition());
+			var toast = $mdToast.simple().content('Device Created').position($scope.getToastPosition());
 			$mdToast.show(toast);
 			$scope.loadDevice(currentId);
-			DeviceListService.getDevices($http, $scope.baseUrl, listResponse);
-			$scope.toggleModal();
 		} else {
-			var toast = $mdToast.simple().content('Device could not be added, possible duplicate ID').position(
-					$scope.getToastPosition());
+			var toast = $mdToast.simple().content('Ohhh no, your device could not be added. Guess I\'m broken')
+					.position($scope.getToastPosition());
 			$mdToast.show(toast);
 		}
+		$mdSidenav('left').close().then(function() {
+			$log.debug("Device Creation Attempted");
+		});
 	}
 	$scope.createDevice = function() {
+		$mdSidenav('right').close().then(function() {
+			$log.debug("applied");
+		});
 		currentId = $scope.newDevice.id;
 		DeviceService.createDevice($http, $scope.baseUrl, $scope.newDevice, createDeviceHandler);
-		$scope.newDevice = {};
 	}
 
 	$scope.cancelDevice = function() {
-		$scope.newDevice = {};
-		$scope.toggleModal();
+		$mdSidenav('left').close().then(function() {
+			$log.debug("cancelled");
+		});
 	}
 
 	// ____________CONFIG SIDE NAV

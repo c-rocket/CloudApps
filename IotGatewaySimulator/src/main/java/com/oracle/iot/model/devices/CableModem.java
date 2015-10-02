@@ -23,7 +23,9 @@ public class CableModem extends IOTDevice {
 	@JsonIgnore
 	protected double uploadRate = 3.0;
 	@JsonIgnore
-	protected double powerOutput = 10;
+	protected double powerOutput = 12;
+	@JsonIgnore
+	protected double ping = 10;
 
 	@JsonIgnore
 	protected boolean eventThrottledDownload = false;
@@ -68,9 +70,10 @@ public class CableModem extends IOTDevice {
 	@Override
 	public Map<String, Object> getMetrics() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("Download Rate", downloadRate);
-		map.put("Upload Rate", uploadRate);
-		map.put("Power Output", powerOutput);
+		map.put("Download Rate (Mbps)", downloadRate);
+		map.put("Upload Rate (Mbps)", uploadRate);
+		map.put("Ping (ms)", ping);
+		map.put("Power Output (V-DC)", powerOutput);
 		return map;
 	}
 
@@ -116,7 +119,8 @@ public class CableModem extends IOTDevice {
 			if (!eventDeviceFailure) {
 				downloadRate = 60.0;
 				uploadRate = 3.0;
-				powerOutput = 10.0;
+				powerOutput = 12.0;
+				ping = 10.0;
 			}
 			return true;
 		}
@@ -144,10 +148,12 @@ public class CableModem extends IOTDevice {
 			downloadRate = 0;
 			uploadRate = 0;
 			powerOutput = 0;
+			ping = 0;
 		} else {
 			downloadRate = Constants.randomDouble(55, 65, 2);
 			uploadRate = Constants.randomDouble(2.5, 3.5, 2);
-			powerOutput = Constants.randomDouble(9.8, 10.2, 2);
+			powerOutput = Constants.randomDouble(11.9, 12.1, 2);
+			ping = Constants.randomDouble(8, 14, 2);
 
 			if (eventThrottledDownload) {
 				downloadRate = Constants.randomDouble(15, 25, 2);
