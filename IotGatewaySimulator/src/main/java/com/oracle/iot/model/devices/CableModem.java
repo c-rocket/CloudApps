@@ -185,6 +185,7 @@ public class CableModem extends IOTDevice {
 		copy.downloadRate = this.downloadRate;
 		copy.uploadRate = this.uploadRate;
 		copy.powerOutput = this.powerOutput;
+		copy.ping = this.ping;
 		copy.eventDeviceFailure = this.eventDeviceFailure;
 		copy.eventThrottledDownload = this.eventThrottledDownload;
 		copy.eventThrottledUpload = this.eventThrottledUpload;

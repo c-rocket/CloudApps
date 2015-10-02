@@ -63,9 +63,9 @@ public class DeviceDaoInMemory {
 		return true;
 	}
 
-	public Boolean update(IOTDevice device) {
-		if (this.device != null && this.device.getId().equals(device.getId())) {
-			this.device = device.copy();
+	public Boolean update(IOTDevice update) {
+		if (this.device != null && this.device.getId().equals(update.getId())) {
+			this.device = update.copy();
 			return true;
 		}
 		return false;
