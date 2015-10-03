@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html data-ng-app="simulatorApp">
 <head>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="initial-scale=1" />
 <meta name="description" content="Create Devices for Oracle IoT Cloud Service">
 <meta name="keywords" content="Oracle IoT Cloud Servicet">
 <meta name="author" content="Oracle">
