@@ -42,10 +42,10 @@
 	</div>
 	</md-toolbar>
 	<md-toolbar layout="row" class="md-whiteframe-z2 top-bar"> </md-toolbar>
-	<section layout="row" flex>
-		<md-content flex layout-padding class="content"> <md-grid-list md-cols-sm="1" md-cols-md="2"
-			md-cols-gt-md="4" md-row-height-gt-md="100px" md-row-height="100px" class="content-grid" md-gutter="30">
-		<md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" class="md-whiteframe-z4 light-green">
+	<div flex ng-cloak class="device-content">
+		<md-grid-list md-cols-sm="1" md-cols-md="3" md-cols-gt-md="4" md-row-height-sm="100px" md-row-height-gt-md="100px" md-row-height="100px"
+			class="content-grid" md-gutter="30"> <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1"
+			class="md-whiteframe-z4 light-green">
 		<section layout="column">
 			<div class="centered" ng-bind="infoText">Create your device here!</div>
 			<div class="centered">
@@ -76,8 +76,8 @@
 				ng-click="sendEvent(device.id,key,!value.value,value.display)" aria-label="key"> Toggle {{ value.display
 			}} </md-switch>
 		</section>
-		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" class="md-whiteframe-z4 turquoise"
-			ng-show="device.id"> <md-grid-tile-header>
+		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" class="md-whiteframe-z4 turquoise" ng-show="device.id">
+		<md-grid-tile-header>
 		<h2>Device Details</h2>
 		</md-grid-tile-header>
 		<div class="tile-content">
@@ -86,18 +86,18 @@
 				<li>Secret: {{device.secret}}</li>
 			</ul>
 		</div>
-		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="3" class="md-whiteframe-z4" ng-show="device.id">
+		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="3" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
 		<div>
-			<canvas id="line" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"
-				chart-series="series" width="700" height="250" chart-getColour="getColour()"> <!-- chart-colours="" -->
+			<canvas id="lineChart" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"
+				chart-series="series" width="850" height="250" chart-getColour="getColour()"> <!-- chart-colours="" -->
 		</canvas>
 		</div>
 		</md-grid-tile> </md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" class="md-whiteframe-z4 pink" ng-show="device.id">
 		<section layout="column" layout-sm="column" layout-align="center center" layout-wrap>
 			<md-button class="md-raised md-warn alert-button" ng-click="deleteDevice(device.id)">Delete Device</md-button>
 		</section>
-		</md-grid-tile> </md-grid-list> </md-content>
-	</section>
+		</md-grid-tile> </md-grid-list>
+	</div>
 
 	<section layout="column" flex>
 		<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right"> <md-toolbar

@@ -1,3 +1,7 @@
+html, body {
+    min-height: 100%;
+}
+
 .system-config-window {
 	display: none;
 }
@@ -54,22 +58,13 @@
 }
 
 .content-grid {
-	margin: 3px 0 0 52px;
-}
-
-.content-grid md-grid-list {
-	margin: 8px;
+	margin: 0 auto;
 }
 
 .content-grid md-grid-tile-header {
 	font-variant: small-caps;
 	color: black;
 	padding-left: 10px;
-}
-
-.content-grid md-grid-tile{
-	margin: 0;
-	padding: 0;
 }
 
 .content-grid md-grid-tile .tile-content{
@@ -399,4 +394,33 @@ md-grid-tile {
 	margin: 0 auto;
 	padding: 3px 10px 3px 10px;
 	text-align: center;
+}
+
+.device-content {
+	min-height: 100%;
+	padding: 10px;
+}
+
+md-grid-list {
+	min-height: 100%;
+}
+
+md-grid-tile {
+  transition: all 300ms ease-out 50ms; 
+}
+
+md-grid-tile {
+	min-height: 100px;
+}
+
+@media screen and (min-device-width: 482px) { 
+    .chart {
+		width: 850px;
+	}
+}
+
+@media screen and (max-device-width: 481px) {
+	.chart {
+		width: 250px;
+	}
 }
