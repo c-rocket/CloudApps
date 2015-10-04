@@ -1,5 +1,5 @@
 //data-ng-controller
-app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log,
+app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $mdMedia, $interval, $mdUtil, $log,
 		DeviceService, SystemConfigService) {
 	var last = {
 		bottom : false,
@@ -28,6 +28,7 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	$scope.infoText = "Start by creating a device here!";
 
 	$scope.baseUrl = angular.element($('#baseUrl')).val();
+	$scope.$mdMedia = $mdMedia;
 
 	$scope.toggleSidenav = function(menuId) {
 		$mdSidenav(menuId).toggle();

@@ -1,56 +1,8 @@
-html, body {
-    min-height: 100%;
-}
-
-.system-config-window {
-	display: none;
-}
-
-.create-window {
-	display: none;
-}
-
 /************************* CONTENT *************************/
 .md-toolbar-tools h1 {
 	font-size: inherit;
 	font-weight: inherit;
 	margin: inherit;
-}
-
-.fat-list {
-	width: 200px;
-	height: 55px;
-	text-align: left;
-}
-
-.fat-list {
-	width: 280px;
-	height: 55px;
-	font-size: 16px;
-	margin: 0 0 0 5px; 
-	padding : 3px 15px 3px 15px;
-	color: rgb(49, 46, 46);
-	background-color: rgba(224, 224, 224, 0.96);
-	text-transform: none;
-	font-weight: 400;
-	min-width: 100px;
-	padding: 3px 15px 3px 15px;
-	margin: 0 10px 0 10px;
-}
-
-.fat-list:not([disabled]) {
-	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-}
-
-.fat-list:not([disabled]):hover {
-	background-color: rgba(193, 193, 193, 0.96);
-	color: rgba(44, 65, 164, 0.96);
-	transition: 0.3s;
-}
-
-.fat-list[disabled] {
-	color: rgb(187, 187, 187);
-	background-color: rgba(230, 230, 229, 0.96);
 }
 
 .content {
@@ -59,6 +11,11 @@ html, body {
 
 .content-grid {
 	margin: 0 auto;
+}
+
+.device-content md-grid-tile {
+	min-width: 300px;
+	transition: all 300ms ease-out 50ms;
 }
 
 .content-grid md-grid-tile-header {
@@ -71,8 +28,6 @@ html, body {
 	color: black;
 	display: block;
 	padding-top: 35px;
-	height: 100%;
-	width:100%;
 	text-align: left;
 	font-variant: small-caps;
 	font-size: 13pt;
@@ -102,27 +57,23 @@ ul {
 .navbar-fixed-top {
 	width:100%;
 }
-.buttons-column {
-	width:100%;
-	height: 100%;
-}
-md-input-container.md-default-theme label{
-	color:black;
-}
-md-input-container .md-input {
-	border-style: solid;
-	border: 1px;
-	border-bottom: 2px;
+
+.data-form {
+	overflow: hidden;
 }
 
-.metricLabel{
+.data-form md-input-container.md-default-theme label{
+	color:black;
+}
+
+.metricLabel {
 	font-variant: small-caps;
 	font-size: 15pt;
 	padding: 5px 20px 0 5px;
 	margin: 0 auto 0 0;
 }
 
-.metricValue{
+.metricValue {
 	font-variant: small-caps;
 	font-size: 22pt;
 }
@@ -211,61 +162,11 @@ md-input-container .md-input {
 	background: radial-gradient(circle, #DF9BE1, #B57EB7); /* Standard syntax */
 }
 
-.ng-modal-overlay {
-  /* A dark translucent div that covers the whole screen */
-  position:absolute;
-  z-index:80;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background-color:#000000;
-  opacity: 0.8;
-}
-.ng-modal-dialog {
-  /* A centered div above the overlay with a box shadow. */
-  z-index:81;
-  position: absolute;
-  width: 50%; /* Default */
-
-  /* Center the dialog */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-
-  background-color: #fff;
-  box-shadow: 4px 4px 80px #000;
-}
-.ng-modal-dialog-content {
-  padding:10px;
-  text-align: left;
-}
-.ng-modal-close {
-  position: absolute;
-  top: 3px;
-  right: 5px;
-  padding: 5px;
-  cursor: pointer;
-  font-size: 120%;
-  display: inline-block;
-  font-weight: bold;
-  font-family: 'arial', 'sans-serif';
-}
-
 .content {
 	background-color:rgb(242, 242, 242);
 }
 .side-nav {
 	background-color: rgb(234, 234, 234);
-}
-
-.temp {
-	background: -webkit-radial-gradient(circle, red, yellow, green); /* Safari */
-	background: -o-radial-gradient(circle, red, yellow, green); /* Opera 11.6 to 12.0 */
-	background: -moz-radial-gradient(circle, red, yellow, green); /* Firefox 3.6 to 15 */
-	background: radial-gradient(circle, red, yellow, green); /* Standard syntax */
 }
 
 md-toolbar{
@@ -277,50 +178,7 @@ md-toolbar{
     min-height: 35px;
     height: 35px;
     z-index: 500;
-}
-
-.brand-bar .brand{
-	color: #454545;
-    cursor: pointer;
-    font-weight: normal;
-    text-decoration: none;
-}
-
-.brand-bar .brand .logo{
-	background: url(../pictures/oracle_logo_sm.png) no-repeat;
-    background-position: bottom;
-    display: inline-block;
-    height: 21px;
-    margin-right: 0;
-    margin-top: 6px;
-    min-width: 140px;
-    width: 160px;
-}
-
-.brand-bar .brand .app-name{
-	color: #454545;
-    display: inline-block;
-    position: relative;
-    height: 100%;
-    vertical-align: baseline;
-    font-size: 18px;
-}
-
-.brand-bar .config{
-	line-height: 34px;
-    cursor: pointer;
-    position: relative;
-    float: right;
-    vertical-align: bottom;
-    padding: 0;
-}
-
-.brand-bar .config-button{
-	height: 34px;
-	width: 34px;
-   background: url(../pictures/menu.png) no-repeat;
-   margin: 0;
-   min-width: 34px;
+    font-variant: small-caps;
 }
 
 .page-padding {
@@ -338,7 +196,6 @@ md-toolbar{
 	color: #454545;
     display: inline-block;
     position: relative;
-    height: 100%;
     vertical-align: baseline;
     font-size: 18px;
     font-weight: normal;
@@ -350,12 +207,12 @@ md-toolbar{
 
 .md-sidenav-right {
 	margin-top: 104px;
-	height: 500px;
+	height: 300px;
 }
 
 .md-sidenav-left {
 	margin-top: 104px;
-	height: 500px;
+	height: 360px;
 }
 
 .create-button {
@@ -386,10 +243,6 @@ md-toolbar{
 	background-color: rgba(230, 230, 229, 0.96);
 }
 
-md-grid-tile {
-	min-width: 300px;
-}
-
 .centered {
 	margin: 0 auto;
 	padding: 3px 10px 3px 10px;
@@ -397,30 +250,64 @@ md-grid-tile {
 }
 
 .device-content {
-	min-height: 100%;
 	padding: 10px;
 }
 
-md-grid-list {
-	min-height: 100%;
+.brand-bar .config {
+	line-height: 27px;
+	height: 27px;
+	width: 27px;
+	cursor: pointer;
+	float: right;
+	vertical-align: bottom;
+	margin-top: 0;
 }
 
-md-grid-tile {
-  transition: all 300ms ease-out 50ms; 
+.brand-bar .config-button {
+	height: 27px;
+	width: 27px;
+	background: url(../pictures/menu.png) no-repeat;
+	min-width: 27px;
+	z-index: 50;
 }
 
-md-grid-tile {
-	min-height: 100px;
+.brand-bar .brand{
+	color: #454545;
+    cursor: pointer;
+    font-weight: normal;
+    text-decoration: none;
 }
 
-@media screen and (min-device-width: 482px) { 
-    .chart {
-		width: 850px;
+.brand-bar .brand .logo{
+    background-position: bottom;
+    display: inline-block;
+    height: 21px;
+    margin-right: 15px;
+}
+
+.brand-bar .brand .app-name {
+	color: #454545;
+	display: inline-block;
+	vertical-align: top;
+	font-size: 18px;
+	height: 21px;
+	margin-top: 10px;
+}
+
+@media only screen and (min-width: 961px) {
+	.brand-bar .brand .logo {
+		background: url(../pictures/oracle_logo_sm.png) no-repeat;
+		min-width: 135px;
+		width: 135px;
+		margin-top: 12px;
 	}
 }
 
-@media screen and (max-device-width: 481px) {
-	.chart {
-		width: 250px;
+@media only screen and (max-width: 960px) {
+	.brand-bar .brand .logo {
+		background: url(../pictures/oracle_logo_mobile.png) no-repeat;
+		min-width: 21px;
+		width: 21px;
+		margin-top: 9px;
 	}
 }
