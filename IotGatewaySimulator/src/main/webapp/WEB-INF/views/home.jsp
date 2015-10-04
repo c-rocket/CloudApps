@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html data-ng-app="simulatorApp">
 <head>
-<meta name="viewport" content="initial-scale=1" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
 <meta name="description" content="Create Devices for Oracle IoT Cloud Service">
 <meta name="keywords" content="Oracle IoT Cloud Service">
 <meta name="author" content="Oracle">
@@ -30,7 +30,7 @@
 <body data-ng-controller="DeviceController" data-ng-init="init()" class="ui-widget-content">
 	<md-toolbar layout="row" class="md-whiteframe-z2 brand-bar">
 	<div class="md-whiteframe-1dp page-padding">
-		<a class="brand " href="#">
+		<a class="brand " href="<c:url value='/'/>">
 			<div class="logo">
 				<!-- image  alt="Oracle" src="css/images/t.gif"/ -->
 			</div>
@@ -43,7 +43,7 @@
 	</md-toolbar>
 	<md-toolbar layout="row" class="md-whiteframe-z2 top-bar"> </md-toolbar>
 	<div flex ng-cloak class="device-content">
-		<md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-lg="3" md-cols-gt-lg="4" md-row-height="100px"
+		<md-grid-list id="deviceContent" md-cols-sm="1" md-cols-md="2" md-cols-lg="3" md-cols-gt-lg="4" md-row-height="100px"
 			class="content-grid" md-gutter="30"> <md-grid-tile md-rowspan="1" md-colspan="1"
 			class="md-whiteframe-z4 light-green">
 		<section layout="column">
@@ -70,7 +70,7 @@
 		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 blue" ng-show="device.id"> <md-grid-tile-header>
 		<h2>Control Events</h2>
 		</md-grid-tile-header>
-		<section layout="column" layout-align="center" layout-wrap>
+		<section layout="column" layout-align="center" layout-wrap class="events">
 			<md-switch class="event-toggle" ng-model="value.value" data-ng-repeat="(key, value) in device.events"
 				ng-click="sendEvent(device.id,key,!value.value,value.display)" aria-label="key"> Toggle {{ value.display
 			}} </md-switch>
@@ -78,13 +78,13 @@
 		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 turquoise" ng-show="device.id"> <md-grid-tile-header>
 		<h2>Device Details</h2>
 		</md-grid-tile-header>
-		<div class="tile-content">
+		<div class="device-info">
 			<ul>
 				<li>Type: {{device.resource}}</li>
 				<li>Secret: {{device.secret}}</li>
 			</ul>
 		</div>
-		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="3" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
+		</md-grid-tile> <md-grid-tile class="scrollable" md-rowspan="3" md-colspan="3" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
 		<div>
 			<canvas id="lineChart" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"
 				chart-series="series" width="850" height="250" chart-getColour="getColour()"> <!-- chart-colours="" -->

@@ -1,5 +1,5 @@
 //data-ng-controller
-app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $mdMedia, $interval, $mdUtil, $log,
+app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log,
 		DeviceService, SystemConfigService) {
 	var last = {
 		bottom : false,
@@ -28,29 +28,10 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	$scope.infoText = "Start by creating a device here!";
 
 	$scope.baseUrl = angular.element($('#baseUrl')).val();
-	$scope.$mdMedia = $mdMedia;
 
-	$scope.toggleSidenav = function(menuId) {
-		$mdSidenav(menuId).toggle();
-	};
-	$scope.toastPosition = angular.extend({}, last);
-	$scope.getToastPosition = function() {
-		sanitizePosition();
-		return Object.keys($scope.toastPosition).filter(function(pos) {
-			return $scope.toastPosition[pos];
-		}).join(' ');
-	};
-	function sanitizePosition() {
-		var current = $scope.toastPosition;
-		if (current.bottom && last.top)
-			current.top = false;
-		if (current.top && last.bottom)
-			current.bottom = false;
-		if (current.right && last.left)
-			current.left = false;
-		if (current.left && last.right)
-			current.right = false;
-		last = angular.extend({}, current);
+	function getToast(content) {
+		var element = angular.element('#deviceContent');
+		return $mdToast.simple().content(content).parent(element).position('top left');
 	}
 
 	function deviceHandler(deviceResponse) {
@@ -95,16 +76,15 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	$scope.sendAlert = function(id, alertName, alertDisplay) {
 		function alertHandler() {
-			var toast = $mdToast.simple().content(alertDisplay + ' Alert Sent').position($scope.getToastPosition());
-			$mdToast.show(toast);
+			$mdToast.show(getToast(alertDisplay + ' Alert Sent'));
 		}
+		console.log('sending alert');
 		DeviceService.sendAlert($http, $scope.baseUrl, id, alertName, alertHandler);
 	}
 	$scope.sendEvent = function(id, eventName, value, displayName) {
 		function eventHandler() {
 			var startEnd = (value) ? 'Started' : 'Ended';
-			var toast = $mdToast.simple().content(displayName + ' ' + startEnd).position($scope.getToastPosition());
-			$mdToast.show(toast);
+			$mdToast.show(getToast(displayName + ' ' + startEnd));
 		}
 		DeviceService.toggleEvent($http, $scope.baseUrl, id, eventName, eventHandler);
 	}
@@ -123,13 +103,10 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	function createDeviceHandler(response) {
 		if (response == true) {
-			var toast = $mdToast.simple().content('Device Created').position($scope.getToastPosition());
-			$mdToast.show(toast);
+			$mdToast.show(getToast('Device Created'));
 			$scope.loadDevice(currentId);
 		} else {
-			var toast = $mdToast.simple().content('Ohhh no, your device could not be added. Guess I\'m broken')
-					.position($scope.getToastPosition());
-			$mdToast.show(toast);
+			$mdToast.show(getToast('Ohhh no, your device could not be added. Guess I\'m broken'));
 		}
 		$mdSidenav('left').close().then(function() {
 			$log.debug("Device Creation Attempted");
@@ -164,8 +141,7 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		return debounceFn;
 	}
 	function configApplyHandler(response) {
-		var toast = $mdToast.simple().content('Configuration Changed').position($scope.getToastPosition());
-		$mdToast.show(toast);
+		$mdToast.show(getToast('Configuration Changed').position('top right'));
 	}
 	$scope.cancel = function() {
 		$mdSidenav('right').close().then(function() {

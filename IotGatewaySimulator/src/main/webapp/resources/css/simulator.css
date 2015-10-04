@@ -1,3 +1,10 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
 /************************* CONTENT *************************/
 .md-toolbar-tools h1 {
 	font-size: inherit;
@@ -14,7 +21,7 @@
 }
 
 .device-content md-grid-tile {
-	min-width: 300px;
+	min-width: 290px;
 	transition: all 300ms ease-out 50ms;
 }
 
@@ -24,15 +31,32 @@
 	padding-left: 10px;
 }
 
-.content-grid md-grid-tile .tile-content{
+.content-grid md-grid-tile .device-info{
 	color: black;
 	display: block;
 	padding-top: 35px;
 	text-align: left;
 	font-variant: small-caps;
 	font-size: 13pt;
-	padding: 5px 5px 3px 3px;
-	margin-top: 55px;
+	padding: 3px 5px;
+	margin-top: 48px;
+	width: 100%;
+}
+
+.content-grid md-grid-tile .events{
+	color: black;
+	display: block;
+	padding-top: 35px;
+	text-align: left;
+	font-variant: small-caps;
+	font-size: 13pt;
+	padding: 3px 5px;
+	width: 100%;
+}
+
+.content-grid .scrollable{
+	overflow: auto;
+	overflow-y: hidden;
 }
 
 .content-grid md-grid-tile h3 {
