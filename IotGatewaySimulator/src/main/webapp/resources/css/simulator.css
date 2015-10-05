@@ -335,3 +335,8 @@ md-toolbar{
 		margin-top: 9px;
 	}
 }
+
+.chart-cover {
+	width: 70%;
+	height: 100%;
+}
