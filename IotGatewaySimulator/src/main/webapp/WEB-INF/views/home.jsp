@@ -84,10 +84,10 @@
 				<li>Secret: {{device.secret}}</li>
 			</ul>
 		</div>
-		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="3" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
+		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="2" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
 		<div class="scrollable chart-cover">
 			<canvas id="lineChart" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"
-				chart-series="series" width="850" height="250" chart-getColour="getColour()"> <!-- chart-colours="" -->
+				chart-series="series" chart-getColour="getColour()"> <!-- chart-colours="" -->
 		</canvas>
 		</div>
 		</md-grid-tile> </md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 pink" ng-show="device.id">
