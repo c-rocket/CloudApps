@@ -275,6 +275,7 @@ md-toolbar{
 
 .device-content {
 	padding: 10px;
+	height: 100%;
 }
 
 .brand-bar .config {

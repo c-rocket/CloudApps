@@ -45,15 +45,10 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		}
 	}
 
-	function deviceTypeHandler(deviceTypeResponse) {
-		$scope.deviceTypes = deviceTypeResponse;
-	}
-
 	$scope.init = function() {
 		$scope.labels = [];
 		$scope.series = [];
 		$scope.data = [];
-		DeviceService.getDeviceTypes($http, $scope.baseUrl, deviceTypeHandler);
 		DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
 	}
 
@@ -91,11 +86,16 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	// ____________NEW DEVICE
 	$scope.newDevice = {};
+	function deviceTypeHandler(deviceTypeResponse) {
+		$scope.deviceTypes = deviceTypeResponse;
+	}
+
 	$scope.openCreate = toggleCreate('left');
 	function toggleCreate(navId) {
 		var debounceFn = $mdUtil.debounce(function() {
 			$mdSidenav(navId).toggle().then(function() {
 				$scope.newDevice = {};
+				DeviceService.getDeviceTypes($http, $scope.baseUrl, deviceTypeHandler);
 			});
 		}, 200);
 		return debounceFn;
