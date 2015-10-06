@@ -7,7 +7,7 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		left : false,
 		right : true
 	};
-	var currentId = null;
+	$scope.currentId = null;
 
 	Chart.defaults.global.colours = [ "#0090B5", "#CC5100", "#007A6E", "#FFD800", "#3BC600", "#57007F", "#63C66F" ]
 
@@ -35,9 +35,9 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	}
 
 	function deviceHandler(deviceResponse) {
-		$scope.device = deviceResponse;
-		if ($scope.device) {
-			currentId = $scope.device.id;
+		if (deviceResponse.length != 0) {
+			$scope.device = deviceResponse;
+			$scope.currentId = $scope.device.id;
 			extractChartData($scope.device.chartSeries, $scope.device.chartValues, $scope.device.chartLabels);
 			$scope.runCounter = true;
 			$scope.createText = 'Swap Device';
@@ -49,14 +49,8 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		$scope.labels = [];
 		$scope.series = [];
 		$scope.data = [];
+		$scope.device = {};
 		DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
-	}
-
-	$scope.loadDevice = function(id) {
-		$scope.labels = [];
-		$scope.series = [];
-		$scope.data = [];
-		DeviceService.getDevice($http, $scope.baseUrl, id, deviceHandler);
 	}
 
 	function deleteDeviceHandler() {
@@ -64,8 +58,9 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		$scope.createText = "Create Device";
 		$scope.infoText = "Start by creating a device here!";
 	}
+
 	$scope.deleteDevice = function(id) {
-		currentId = null;
+		$scope.currentId = null;
 		DeviceService.deleteDevice($http, $scope.baseUrl, id, deleteDeviceHandler);
 	}
 
@@ -76,6 +71,7 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		console.log('sending alert');
 		DeviceService.sendAlert($http, $scope.baseUrl, id, alertName, alertHandler);
 	}
+
 	$scope.sendEvent = function(id, eventName, value, displayName) {
 		function eventHandler() {
 			var startEnd = (value) ? 'Started' : 'Ended';
@@ -104,19 +100,16 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	function createDeviceHandler(response) {
 		if (response == true) {
 			$mdToast.show(getToast('Device Created'));
-			$scope.loadDevice(currentId);
+			DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
 		} else {
 			$mdToast.show(getToast('Ohhh no, your device could not be added. Guess I\'m broken'));
 		}
-		$mdSidenav('left').close().then(function() {
-			$log.debug("Device Creation Attempted");
-		});
 	}
 	$scope.createDevice = function() {
-		$mdSidenav('right').close().then(function() {
+		$mdSidenav('left').close().then(function() {
 			$log.debug("applied");
 		});
-		currentId = $scope.newDevice.id;
+		$scope.currentId = $scope.newDevice.id;
 		DeviceService.createDevice($http, $scope.baseUrl, $scope.newDevice, createDeviceHandler);
 	}
 
@@ -157,32 +150,36 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 
 	// ______________CHART
 	function extractChartData(chartSeries, chartValues, chartLabels) {
+		if (typeof chartLabels != 'undefined') {
+			if ($scope.labels.length < chartLabels.length) {
+				$scope.labels = chartLabels
+			}
+			// add the incremental chart data labels
+			var keys = Object.keys(chartValues);
+			// if the series have not yet been labeled then add them
+			if ($scope.series.length == 0) {
+				$scope.series = chartSeries;
+			}
+			// add the incremental chart values for each series
+			$scope.data = chartValues;
 
-		if ($scope.labels.length < chartLabels.length) {
-			$scope.labels = chartLabels
+			// Start Poll for updating chart
+			function metricsAndChartHandler(deviceResponse) {
+				$scope.device.metrics = deviceResponse.metrics;
+				if ($scope.device.metrics == null) {
+					$scope.init();
+				}
+				extractChartData(deviceResponse.chartSeries, deviceResponse.chartValues, deviceResponse.chartLabels);
+			}
+
+			$interval(function() {
+				DeviceService.getDevice($http, $scope.baseUrl, $scope.currentId, metricsAndChartHandler);
+			}, 500, 1);
+
+			$scope.$on('$destroy', function() {
+				$interval.cancel(true);
+			});
 		}
-		// add the incremental chart data labels
-		var keys = Object.keys(chartValues);
-		// if the series have not yet been labeled then add them
-		if ($scope.series.length == 0) {
-			$scope.series = chartSeries;
-		}
-		// add the incremental chart values for each series
-		$scope.data = chartValues;
-
-		// Start Poll for updating chart
-		function metricsAndChartHandler(deviceResponse) {
-			$scope.device.metrics = deviceResponse.metrics;
-			extractChartData(deviceResponse.chartSeries, deviceResponse.chartValues, deviceResponse.chartLabels);
-		}
-
-		$interval(function() {
-			DeviceService.getDevice($http, $scope.baseUrl, currentId, metricsAndChartHandler);
-		}, 500, 1);
-
-		$scope.$on('$destroy', function() {
-			$interval.cancel(true);
-		});
 	}
 
 	$scope.modalShown = false;

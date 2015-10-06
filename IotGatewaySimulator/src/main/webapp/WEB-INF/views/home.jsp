@@ -27,7 +27,7 @@
 <title>IoT Device Simulator</title>
 <base href="/0.11.2/">
 </head>
-<body data-ng-controller="DeviceController" data-ng-init="init()" class="ui-widget-content">
+<body data-ng-controller="DeviceController" data-ng-init="init()" class="ui-widget-content" id="theBody">
 	<md-toolbar layout="row" class="md-whiteframe-z2 brand-bar">
 	<div class="md-whiteframe-1dp page-padding">
 		<a class="brand " href="<c:url value='/'/>">
@@ -52,22 +52,22 @@
 				<md-button class="create-button" ng-click="openCreate()" ng-bind="createText">Create Device</md-button>
 			</div>
 		</section>
-		</md-grid-tile> <md-grid-tile ng-show="device.id" data-ng-repeat="(key, value) in device.metrics"
+		</md-grid-tile> <md-grid-tile ng-show="currentId" data-ng-repeat="(key, value) in device.metrics"
 			class="md-whiteframe-z4 tile{{$index%5}}">
 		<section layout="row">
 			<div class="metricLabel">{{key}}</div>
 			<div class="metricValue">{{value | number : 2}}</div>
 		</section>
-		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 grey" ng-show="device.id"> <img
-			ng-src="<c:url value='/resources/pictures/'/>{{ device.picture }}" height="75%" ng-show="device.id" /> </md-grid-tile> <md-grid-tile
-			md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 purple" ng-show="device.id"> <md-grid-tile-header>
+		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 grey" ng-show="currentId"> <img
+			ng-src="<c:url value='/resources/pictures/'/>{{ device.picture }}" height="75%" ng-show="currentId" /> </md-grid-tile> <md-grid-tile
+			md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 purple" ng-show="currentId"> <md-grid-tile-header>
 		<h2>Signal Alerts</h2>
 		</md-grid-tile-header>
 		<section layout="column" layout-sm="column" layout-align="center center" layout-wrap>
 			<md-button class="md-raised md-warn alert-button" data-ng-repeat="(key, value) in device.alerts"
 				ng-click="sendAlert(device.id,key,value)">{{value}}</md-button>
 		</section>
-		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 blue" ng-show="device.id"> <md-grid-tile-header>
+		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 blue" ng-show="currentId"> <md-grid-tile-header>
 		<h2>Control Events</h2>
 		</md-grid-tile-header>
 		<section layout="column" layout-align="center" layout-wrap class="events">
@@ -75,7 +75,7 @@
 				ng-click="sendEvent(device.id,key,!value.value,value.display)" aria-label="key"> Toggle {{ value.display
 			}} </md-switch>
 		</section>
-		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 turquoise" ng-show="device.id"> <md-grid-tile-header>
+		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 turquoise" ng-show="currentId"> <md-grid-tile-header>
 		<h2>Device Details</h2>
 		</md-grid-tile-header>
 		<div class="device-info">
@@ -84,13 +84,13 @@
 				<li>Secret: {{device.secret}}</li>
 			</ul>
 		</div>
-		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="2" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="device.id">
+		</md-grid-tile> <md-grid-tile md-rowspan="3" md-colspan="2" md-colspan-md="2" md-colspan-sm="1" class="md-whiteframe-z4" ng-show="currentId">
 		<div class="scrollable chart-cover">
 			<canvas id="lineChart" class="chart chart-line" chart-data="data" chart-labels="labels" chart-legend="true"
 				chart-series="series" chart-getColour="getColour()"> <!-- chart-colours="" -->
 		</canvas>
 		</div>
-		</md-grid-tile> </md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 pink" ng-show="device.id">
+		</md-grid-tile> </md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 pink" ng-show="currentId">
 		<section layout="column" layout-sm="column" layout-align="center center" layout-wrap>
 			<md-button class="md-raised md-warn alert-button" ng-click="deleteDevice(device.id)">Delete Device</md-button>
 		</section>

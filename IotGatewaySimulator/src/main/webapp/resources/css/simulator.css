@@ -1,6 +1,5 @@
 html, body {
 	width: 100%;
-	height: 100%;
 	margin: 0px;
 	padding: 0px;
 }
@@ -23,6 +22,7 @@ html, body {
 .device-content md-grid-tile {
 	min-width: 290px;
 	transition: all 300ms ease-out 50ms;
+	overflow: hidden;
 }
 
 .content-grid md-grid-tile-header {
@@ -275,7 +275,6 @@ md-toolbar{
 
 .device-content {
 	padding: 10px;
-	height: 100%;
 }
 
 .brand-bar .config {
@@ -319,25 +318,62 @@ md-toolbar{
 	margin-top: 10px;
 }
 
-@media only screen and (min-width: 961px) {
+@media only screen and (min-width: 1201px) {
 	.brand-bar .brand .logo {
 		background: url(../pictures/oracle_logo_sm.png) no-repeat;
 		min-width: 135px;
 		width: 135px;
 		margin-top: 12px;
 	}
+	.chart-cover {
+		height: 320px;
+		width: 60%;
+		overflow: visible;
+		margin: 15px auto auto auto;
+	}
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (min-width: 961px) and (max-width: 1200px){
+	.brand-bar .brand .logo {
+		background: url(../pictures/oracle_logo_sm.png) no-repeat;
+		min-width: 135px;
+		width: 135px;
+		margin-top: 12px;
+	}
+	.chart-cover {
+		height: 320px;
+		width: 68%;
+		overflow: visible;
+		margin: 15px auto auto auto;
+	}
+}
+
+@media only screen and (min-width:601px) and (max-width: 960px) {
 	.brand-bar .brand .logo {
 		background: url(../pictures/oracle_logo_mobile.png) no-repeat;
 		min-width: 21px;
 		width: 21px;
 		margin-top: 9px;
 	}
+	.chart-cover {
+		height: 300px;
+		width: 65%;
+		overflow: visible;
+		margin: 15px auto auto auto;
+	}
 }
 
-.chart-cover {
-	width: 70%;
-	height: 100%;
+@media only screen and (max-width: 600px) {
+	.brand-bar .brand .logo {
+		background: url(../pictures/oracle_logo_mobile.png) no-repeat;
+		min-width: 21px;
+		width: 21px;
+		margin-top: 9px;
+	}
+	.chart-cover {
+		height: 320px;
+		width: 80%;
+		overflow: visible;
+		margin: 15px auto auto auto;
+	}
 }
