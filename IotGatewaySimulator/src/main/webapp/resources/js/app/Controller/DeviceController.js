@@ -1,5 +1,5 @@
 //data-ng-controller
-app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log, 
+app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log, $window,
 		DeviceService, SystemConfigService) {
 	var last = {
 		bottom : false,
@@ -8,7 +8,6 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 		right : true
 	};
 	$scope.currentId = null;
-	$log.debug('Test');
 
 	Chart.defaults.global.colours = [ "#0090B5", "#CC5100", "#007A6E", "#FFD800", "#3BC600", "#57007F", "#63C66F" ]
 
@@ -28,6 +27,7 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 	$scope.infoText = "Start by creating a device here!";
 
 	$scope.baseUrl = angular.element($('#baseUrl')).val();
+	$scope.deviceType = null;
 
 	function getToast(content) {
 		var element = angular.element('#deviceContent');
@@ -38,6 +38,7 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 		if (deviceResponse.length != 0) {
 			$scope.device = deviceResponse;
 			$scope.currentId = $scope.device.id;
+			$scope.deviceType = $scope.device.resource;
 			extractChartData($scope.device.chartSeries, $scope.device.chartValues, $scope.device.chartLabels);
 			$scope.runCounter = true;
 			$scope.createText = 'Swap Device';
@@ -61,6 +62,7 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 
 	$scope.deleteDevice = function(id) {
 		$scope.currentId = null;
+		$scope.deviceType = null;
 		DeviceService.deleteDevice($http, $scope.baseUrl, id, deleteDeviceHandler);
 	}
 
@@ -100,23 +102,26 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 	function createDeviceHandler(response) {
 		if (response == true) {
 			$mdToast.show(getToast('Device Created'));
-			DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
+			console.log($scope.newDevice.type);
+			console.log($scope.deviceType);
+			if ($scope.newDevice.type == $scope.deviceType) {
+				$scope.deviceType = $scope.newDevice.type;
+				DeviceService.getCurrentDevice($http, $scope.baseUrl, deviceHandler);
+			} else {
+				$window.location.reload();
+			}
 		} else {
 			$mdToast.show(getToast('Ohhh no, your device could not be added. Guess I\'m broken'));
 		}
 	}
 	$scope.createDevice = function() {
-		$mdSidenav('left').close().then(function() {
-			$log.debug("applied");
-		});
+		$mdSidenav('left').close();
 		$scope.currentId = $scope.newDevice.id;
 		DeviceService.createDevice($http, $scope.baseUrl, $scope.newDevice, createDeviceHandler);
 	}
 
 	$scope.cancelDevice = function() {
-		$mdSidenav('left').close().then(function() {
-			$log.debug("cancelled");
-		});
+		$mdSidenav('left').close();
 	}
 
 	// ____________CONFIG SIDE NAV

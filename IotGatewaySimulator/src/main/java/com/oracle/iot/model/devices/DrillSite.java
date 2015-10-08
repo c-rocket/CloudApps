@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oracle.iot.model.Constants;
+import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 
 import oracle.iot.message.AlertMessage;
@@ -166,7 +167,7 @@ public class DrillSite extends IOTDevice {
 
 	@Override
 	public String getResource() {
-		return "drill";
+		return DeviceType.DRILL_SITE.name();
 	}
 
 	@Override
