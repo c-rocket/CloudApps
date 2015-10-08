@@ -22,7 +22,6 @@ html, body {
 .device-content md-grid-tile {
 	min-width: 290px;
 	transition: all 300ms ease-out 50ms;
-	overflow: hidden;
 }
 
 .content-grid md-grid-tile-header {
@@ -87,7 +86,30 @@ ul {
 }
 
 .data-form md-input-container.md-default-theme label{
-	color:black;
+	font-size: 10pt;
+	font-variant: small-caps;
+}
+
+.data-form md-input-container.md-default-theme .labelForSelect {
+	font-size: 7pt;
+	font-variant: small-caps;
+	color: rgba(0, 0, 0, 0.54);
+	-webkit-font-smoothing: antialiased;
+	padding-left: 2px;
+	position: relative;
+	top: 10px;
+	box-sizing: border-box;
+}
+
+.data-form md-switch{
+	font-size: 10pt;
+	font-variant: small-caps;
+	margin: 0 0 0 0;
+	text-align: left;
+}
+
+.data-form md-input-container label, md-input-container .md-placeholder{
+	color: rgba(0, 0, 0, 0.54);
 }
 
 .metricLabel {

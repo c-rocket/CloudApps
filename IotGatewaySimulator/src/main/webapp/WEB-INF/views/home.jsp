@@ -11,11 +11,17 @@
 <link rel="stylesheet" href="<c:url value='/resources/charts/angular-chart.min.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/simulator.css'/>" />
 
+<!-- Angular Dependencies -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<!-- Angular Material Dependencies -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-animate.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-aria.min.js"></script>
+
+<!-- Angular Material Javascript using GitCDN to load directly from `bower-material/master` -->
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
+
 <script src="<c:url value='/resources/charts/Chart.min.js'/>"></script>
 <script src="<c:url value='/resources/charts/angular-chart.min.js'/>"></script>
 <script src="<c:url value='/resources/js/app/SimulatorApp.js'/>"></script>
@@ -107,9 +113,9 @@
 				required ng-model="systemConfig.server" md-autofocus> </md-input-container>
 			<md-input-container> <label for="port">IoT CS Port</label> <input type="text" id="port" required
 				ng-model="systemConfig.port" md-autofocus> </md-input-container>
-
-			<md-switch class="event-toggle" ng-model="systemConfig.sendingMessages" aria-label="key"> Sending
-			Messages </md-switch>
+			<md-switch id="configSendMessages" class="event-toggle" ng-model="systemConfig.sendingMessages" aria-label="key">
+			Sending Messages: {{systemConfig.sendingMessages}}
+			</md-switch>
 		</form>
 		<md-button ng-click="apply()" class="md-primary">Apply</md-button> <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
 		</md-content> </md-sidenav>
@@ -121,13 +127,16 @@
 		<h1 class="title">Configure Device</h1>
 		</md-toolbar> <md-content layout-padding>
 		<form class="data-form">
-			<md-input-container> Device Type<md-select ng-model="newDevice.type" required
-				aria-label="deviceType"> <md-option ng-repeat="deviceType in deviceTypes" value="{{deviceType.name}}">{{deviceType.display}}</md-option>
-			</md-select> </md-input-container>
-			<md-input-container> <label for="id">Device ID</label> <input type="text" id="id" required
+			<md-input-container> 
+				<span class="labelForSelect">Device Type*</span>
+				<md-select id="createType" ng-model="newDevice.type" aria-label="createType" placeholder="Select a Device Type"> 
+					<md-option ng-repeat="deviceType in deviceTypes" value="{{deviceType.name}}">{{deviceType.display}}</md-option>
+				</md-select> 
+			</md-input-container>
+			<md-input-container> <label for="id">Device ID*</label> <input type="text" id="id"
 				ng-model="newDevice.id" md-autofocus> </md-input-container>
-			<md-input-container> <label for="secret">Shared Secret</label> <input type="text" id="secret"
-				required ng-model="newDevice.secret" md-autofocus> </md-input-container>
+			<md-input-container> <label for="secret">Shared Secret*</label> <input type="text" id="secret"
+				ng-model="newDevice.secret" md-autofocus> </md-input-container>
 		</form>
 		<md-button ng-click="createDevice()" class="md-primary">Create</md-button> <md-button ng-click="cancelDevice()"
 			class="md-primary">Cancel</md-button> </md-content> </md-sidenav>

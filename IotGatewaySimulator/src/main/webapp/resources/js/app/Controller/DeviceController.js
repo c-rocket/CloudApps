@@ -1,5 +1,5 @@
 //data-ng-controller
-app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log,
+app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast, $interval, $mdUtil, $log, 
 		DeviceService, SystemConfigService) {
 	var last = {
 		bottom : false,
@@ -8,6 +8,7 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 		right : true
 	};
 	$scope.currentId = null;
+	$log.debug('Test');
 
 	Chart.defaults.global.colours = [ "#0090B5", "#CC5100", "#007A6E", "#FFD800", "#3BC600", "#57007F", "#63C66F" ]
 
@@ -17,7 +18,6 @@ app.controller('DeviceController', function($scope, $window, $http, $mdSidenav, 
 	$scope.systemConfig = {};
 	$scope.createDevice = {};
 	$scope.deviceTypes = [];
-	$scope.empty = true;
 
 	$scope.labels = [];
 	$scope.series = [];
