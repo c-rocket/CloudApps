@@ -55,12 +55,14 @@ public class DeviceDaoInMemory {
 	}
 
 	public Boolean updateAll(List<IOTDevice> allDevices) {
+		boolean updated = false;
 		for (IOTDevice device : allDevices) {
 			if (this.device != null && this.device.getId().equals(device.getId())) {
 				this.device = device.copy();
+				updated = true;
 			}
 		}
-		return true;
+		return updated;
 	}
 
 	public Boolean update(IOTDevice update) {

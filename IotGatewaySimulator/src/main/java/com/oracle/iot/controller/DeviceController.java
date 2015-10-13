@@ -9,15 +9,12 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.oracle.iot.controller.converter.DeviceTypeEnumConverter;
 import com.oracle.iot.model.Common;
 import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
@@ -36,11 +33,6 @@ public class DeviceController {
 	private MessagingService messagingService;
 	@Resource
 	private SystemConfigService systemConfigService;
-
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(DeviceType.class, new DeviceTypeEnumConverter());
-	}
 
 	@RequestMapping(value = "/device/create", method = RequestMethod.POST)
 	@ResponseBody

@@ -24,17 +24,19 @@ public class MessagingService {
 
 	public boolean sendMessages(List<IOTDevice> devices, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
 		boolean error = false;
+		// Note that right now there will only ever be one device as the client
+		// library does not support multiples through their Asyn library class
 		for (IOTDevice device : devices) {
 			DataMessage message = device.createMessage();
 			if (sendMessages && !error) {
-				AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
 				error = !getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 				if (!error) {
 					DEVICE_CLIENT.sendMessage(message);
 				}
 			}
 		}
-		return error;
+		return !error;
 	}
 
 	private boolean getDeviceClientConnection(AsyncDeviceClient client, String iotcsServer, Integer iotcsPort,
@@ -70,7 +72,7 @@ public class MessagingService {
 			Boolean sendMessages) {
 		if (sendMessages) {
 			Message message = device.createAlertMessage(alert);
-			AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
 			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 			DEVICE_CLIENT.sendMessage(message);
 		}
@@ -79,7 +81,7 @@ public class MessagingService {
 
 	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
 		if (sendMessages) {
-			AsyncDeviceClient DEVICE_CLIENT = new AsyncDeviceClient(iotcsServer, iotcsPort, device.getId());
+			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
 			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 			TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
 			ConnectionManager.getInstance(trustManager).close();
