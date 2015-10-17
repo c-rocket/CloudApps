@@ -70,4 +70,17 @@ public final class Constants {
 		return copy;
 	}
 
+	public static Double RandomTenPercent(Double value) {
+		Double plusTen = value * 1.1;
+		Double minusTen = value * 0.9;
+		return randomDouble(minusTen, plusTen, 2);
+	}
+
+	public static Double doubleOrNull(String str) {
+		if (str != null && str.length() > 0) {
+			return Double.valueOf(str);
+		}
+		return null;
+	}
+
 }

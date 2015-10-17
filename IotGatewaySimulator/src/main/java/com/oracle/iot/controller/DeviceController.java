@@ -1,7 +1,5 @@
 package com.oracle.iot.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.iot.model.Common;
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 import com.oracle.iot.service.DeviceService;
 import com.oracle.iot.service.MessagingService;
@@ -39,22 +36,19 @@ public class DeviceController {
 	public Boolean createNewDevice(@RequestBody Map<String, Object> device) {
 		String id = device.get("id").toString();
 		String secret = device.get("secret").toString();
-		DeviceType deviceType = DeviceType.findByName(device.get("type").toString());
 		if (Common.isNullOrEmpty(id))
 			return false;
 		if (Common.isNullOrEmpty(secret))
 			return false;
-		if (Common.isNull(deviceType))
-			return false;
 
 		IOTDevice currentDevice = deviceService.getCurrentDevice();
 		if (currentDevice == null) {
-			return deviceService.create(deviceType, id, secret);
+			return deviceService.create(device.get("type").toString(), id, secret);
 		} else {
 			messagingService.close(currentDevice, systemConfigService.getHost(), systemConfigService.getPort(),
 					systemConfigService.getMessageStatus());
 			deviceService.delete(currentDevice.getId());
-			return deviceService.create(deviceType, id, secret);
+			return deviceService.create(device.get("type").toString(), id, secret);
 		}
 	}
 
@@ -102,13 +96,6 @@ public class DeviceController {
 	@RequestMapping(value = "/device/types", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, String>> getDeviceTypes() {
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		for (DeviceType deviceType : DeviceType.values()) {
-			Map<String, String> map = new LinkedHashMap<String, String>();
-			map.put("name", deviceType.name());
-			map.put("display", deviceType.getDisplay());
-			list.add(map);
-		}
-		return list;
+		return deviceService.getTypes();
 	}
 }

@@ -36,7 +36,7 @@ public class MessagingService {
 				}
 			}
 		}
-		return !error;
+		return error;
 	}
 
 	private boolean getDeviceClientConnection(AsyncDeviceClient client, String iotcsServer, Integer iotcsPort,

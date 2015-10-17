@@ -32,6 +32,18 @@ public class DeviceDaoInMemory {
 
 	}
 
+	public boolean insert(IOTDevice device) {
+		if (exists(device.getId())) {
+			return false;
+		}
+		if (this.device != null) {
+			throw new RuntimeException("Device exists, please remove and close properly first");
+		}
+		this.device = device.copy();
+		return true;
+
+	}
+
 	public List<IOTDevice> findAll() {
 		if (device == null) {
 			return new ArrayList<IOTDevice>();

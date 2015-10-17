@@ -15,8 +15,8 @@ import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
 public class HVAC extends IOTDevice {
-	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:hvac";
-	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:myhvac";
+	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:hvac2";
+	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:hvac2";
 
 	@JsonIgnore
 	protected double outputTemp = 30.0;
@@ -176,7 +176,7 @@ public class HVAC extends IOTDevice {
 
 	@Override
 	public String getResource() {
-		return DeviceType.HVAC.name();
+		return DeviceType.HVAC2.getDisplay();
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import com.oracle.iot.model.devices.Pipeline;
 
 public enum DeviceType {
 
-	HVAC ("HVAC") {
+	HVAC2("HVAC2") {
 		public IOTDevice getDevice(String id, String secret) {
 			return new HVAC(id, secret);
 		}
@@ -18,25 +18,25 @@ public enum DeviceType {
 			return new DrillSite(id, secret);
 		}
 	},
-	CABLE_MODEM ("Cable Modem") {
+	CABLE_MODEM("Cable Modem") {
 		public IOTDevice getDevice(String id, String secret) {
 			return new CableModem(id, secret);
 		}
 	},
-	FLEET_TRUCK ("Shipping Truck") {
+	FLEET_TRUCK("Shipping Truck") {
 		public IOTDevice getDevice(String id, String secret) {
 			return new FleetTruck(id, secret);
 		}
 	},
-	PIPELINE ("Pipeline"){
+	PIPELINE("Pipeline") {
 		public IOTDevice getDevice(String id, String secret) {
 			return new Pipeline(id, secret);
 		}
 	};
-	
+
 	private String display;
-	
-	DeviceType(String display){
+
+	DeviceType(String display) {
 		this.display = display;
 	}
 
