@@ -34,6 +34,11 @@ public class DevicePropertiesLoaderDao {
 	private void loadDevices() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		URL resource = classLoader.getResource("devices");
+		if (resource == null) {
+			logger.error(
+					"Could not load the properties directory for some reason...maybe it spontaneously combusted!!");
+			return;
+		}
 		File directory = new File(resource.getFile());
 		if (!directory.exists()) {
 			logger.error(
