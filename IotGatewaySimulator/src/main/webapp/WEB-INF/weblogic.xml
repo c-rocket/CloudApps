@@ -8,6 +8,10 @@
 		<keepgenerated>true</keepgenerated>
 		<debug>true</debug>
 	</jsp-descriptor>
+	<logging>
+		<log-filename>DeviceSimulator.log</log-filename>
+		<logging-enabled>true</logging-enabled>
+	</logging>
 	<container-descriptor>
 		<prefer-web-inf-classes>true</prefer-web-inf-classes>
 	</container-descriptor>
