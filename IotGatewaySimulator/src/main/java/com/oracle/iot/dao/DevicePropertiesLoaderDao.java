@@ -38,6 +38,7 @@ public class DevicePropertiesLoaderDao {
 		if (!directory.exists()) {
 			logger.error(
 					"Could not load the properties directory for some reason...maybe it spontaneously combusted!!");
+			logger.error(directory.getAbsolutePath());
 			return;
 		}
 		for (File device : directory.listFiles()) {
