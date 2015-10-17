@@ -83,4 +83,11 @@ public final class Constants {
 		return null;
 	}
 
+	public static Double scale(Double value, int scale) {
+		if (value == null) {
+			return null;
+		}
+		return new BigDecimal(value).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+	}
+
 }

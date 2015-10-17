@@ -29,7 +29,9 @@ public class PropertyDevice extends IOTDevice {
 	public PropertyDevice(PropertyDeviceDetails details, String id, String secret) {
 		super(id, secret);
 		this.details = details;
-		animateMetrics();
+		for (PropertyMetric metric : details.getMetrics()) {
+			currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
+		}
 		log.info("Creating Events: " + details.getEvents().size());
 		for (PropertyEvent event : details.getEvents()) {
 			eventTriggers.put(event, false);
@@ -86,11 +88,16 @@ public class PropertyDevice extends IOTDevice {
 
 		// write out updated values as current values
 		for (PropertyMetric metric : calcs.keySet()) {
-			currentMetrics.put(metric.getDisplayName(), calcs.get(metric));
+			Double newValue = Constants.scale(calcs.get(metric), 2);
+			currentMetrics.put(metric.getDisplayName(), newValue);
 		}
 	}
 
 	private Double calculateAnimatedEventValue(EventMetric eventMetric, PropertyMetric metric, Double value) {
+		// hold number at current value
+		if (eventMetric.getHold()) {
+			value = (Double) currentMetrics.get(metric.getDisplayName());
+		}
 		// set straight up value
 		if (eventMetric.getEventValue() != null) {
 			value = eventMetric.getEventValue();
@@ -121,7 +128,7 @@ public class PropertyDevice extends IOTDevice {
 		}
 		// alternate
 		if (eventMetric.getAlternate() != null) {
-			if ((Double) currentMetrics.get(metric.getDisplayName()) != eventMetric.getAlternate()) {
+			if (((Double) currentMetrics.get(metric.getDisplayName())).compareTo(eventMetric.getAlternate()) != 0) {
 				value = eventMetric.getAlternate();
 			} else {
 				value = eventMetric.getEventValue();
@@ -131,6 +138,9 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	private Double calculateAnimatedValue(PropertyMetric metric, Double value) {
+		if (currentMetrics.get(metric.getDisplayName()) == null) {
+			value = metric.getDefaultValue();
+		}
 		// increment
 		if (metric.getIncrement() != null) {
 			value = (Double) currentMetrics.get(metric.getDisplayName()) + metric.getIncrement();
@@ -157,7 +167,7 @@ public class PropertyDevice extends IOTDevice {
 		}
 		// alternate
 		if (metric.getAlternate() != null) {
-			if (value != metric.getAlternate()) {
+			if (value.compareTo(metric.getAlternate()) != 0) {
 				value = metric.getAlternate();
 			} else {
 				value = metric.getDefaultValue();

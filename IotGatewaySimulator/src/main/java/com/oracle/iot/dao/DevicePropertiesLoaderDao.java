@@ -79,12 +79,13 @@ public class DevicePropertiesLoaderDao {
 					Double value = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".value"));
 					Double increment = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".increment"));
 					Double loop = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".loop"));
-					if (value != null || increment != null || loop != null) {
+					Boolean hold = prop.getProperty(eventMetricBase + ".hold", "false").equalsIgnoreCase("true");
+					if (value != null || increment != null || loop != null || hold) {
 						Double alternate = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".alternate"));
 						Double max = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".max"));
 						Double min = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".min"));
 						newDevice.addEvent(event, displayName, priority, metricName, value, increment, alternate, loop,
-								max, min);
+								max, min, hold);
 					}
 				}
 			}

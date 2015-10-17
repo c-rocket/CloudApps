@@ -8,9 +8,10 @@ public class EventMetric {
 	private Double loop;
 	private Double max;
 	private Double min;
+	private Boolean hold = Boolean.FALSE;
 
 	public EventMetric(String metricName, Double eventValue, Double increment, Double alternate, Double loop,
-			Double max, Double min) {
+			Double max, Double min, Boolean hold) {
 		super();
 		this.metricName = metricName;
 		this.eventValue = eventValue;
@@ -19,6 +20,7 @@ public class EventMetric {
 		this.loop = loop;
 		this.max = max;
 		this.min = min;
+		this.hold = hold;
 	}
 
 	public String getMetricName() {
@@ -47,6 +49,10 @@ public class EventMetric {
 
 	public Double getMin() {
 		return min;
+	}
+
+	public Boolean getHold() {
+		return hold;
 	}
 
 }

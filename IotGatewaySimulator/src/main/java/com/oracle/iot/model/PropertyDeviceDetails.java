@@ -46,14 +46,14 @@ public class PropertyDeviceDetails {
 	}
 
 	public void addEvent(String name, String displayName, Integer priority, String metricName, Double value,
-			Double increment, Double alternate, Double loop, Double max, Double min) {
+			Double increment, Double alternate, Double loop, Double max, Double min, Boolean hold) {
 		PropertyEvent propertyEvent = events.get(name);
 
 		if (propertyEvent == null) {
 			propertyEvent = new PropertyEvent(name, displayName, priority);
 			events.put(name, propertyEvent);
 		}
-		propertyEvent.addEventMetric(metricName, value, increment, alternate, loop, max, min);
+		propertyEvent.addEventMetric(metricName, value, increment, alternate, loop, max, min, hold);
 	}
 
 	public void addAlert(String alert, String displayName) {

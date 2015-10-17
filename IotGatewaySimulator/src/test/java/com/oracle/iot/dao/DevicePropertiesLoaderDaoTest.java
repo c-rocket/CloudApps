@@ -27,7 +27,7 @@ public class DevicePropertiesLoaderDaoTest {
 	private DevicePropertiesLoaderDao dao;
 
 	@Test
-	public void loadHvacDevice_Entirely() throws Exception {
+	public void loadHvacDevice_HvacEntirely() throws Exception {
 		// execute
 		List<String> names = dao.getDeviceNames();
 
@@ -131,7 +131,63 @@ public class DevicePropertiesLoaderDaoTest {
 		assertNull(eventMetrics.get(3).getMax());
 		assertNull(eventMetrics.get(3).getMin());
 		assertNull(eventMetrics.get(3).getAlternate());
+	}
 
+	@Test
+	public void loadHvacDevice_NewBitsDrillSite() throws Exception {
+		// execute
+		List<String> names = dao.getDeviceNames();
+
+		// assert
+		assertTrue(names.size() >= 1);
+		assertTrue(names.contains("drillsite"));
+
+		PropertyDeviceDetails device = dao.getDevice("drillsite");
+		assertEquals(device.getDisplayName(), "Drill Site");
+		assertEquals(device.getPicture(), "drill.png");
+		assertEquals(device.getDataFormat(), "com:oracle:iot:model:devices:drillsite");
+		assertEquals(device.getAlertFormat(), "com:oracle:iot:model:devices:alert:drillsite");
+
+		List<PropertyMetric> metrics = device.getMetrics();
+		assertEquals(metrics.size(), 4);
+		assertEquals(metrics.get(2).getName(), "depth");
+		assertEquals(metrics.get(2).getDisplayName(), "Depth (x100 ft)");
+		assertEquals(metrics.get(2).getDefaultValue().doubleValue(), 0, Double.NaN);
+		assertEquals(metrics.get(2).getLoop().doubleValue(), 0.04, Double.NaN);
+		assertEquals(metrics.get(2).getMax().doubleValue(), 59, Double.NaN);
+
+		List<PropertyEvent> events = device.getEvents();
+		assertEquals(events.size(), 3);
+
+		assertEquals(events.get(0).getName(), "eventDrillSlowDown");
+		assertEquals(events.get(0).getDisplayName(), "Drill Slow Down");
+		assertEquals((int) events.get(0).getPriority(), 3);
+		List<EventMetric> eventMetrics = events.get(0).getEventMetrics();
+		assertEquals(eventMetrics.size(), 4);
+		assertEquals(eventMetrics.get(0).getMetricName(), "drillRpm");
+		assertEquals(eventMetrics.get(0).getEventValue(), 110, Double.NaN);
+		assertEquals(eventMetrics.get(1).getMetricName(), "temperature");
+		assertEquals(eventMetrics.get(1).getEventValue(), 185, Double.NaN);
+		assertEquals(eventMetrics.get(2).getMetricName(), "depth");
+		assertEquals(eventMetrics.get(2).getEventValue(), 0, Double.NaN);
+		assertEquals(eventMetrics.get(2).getLoop(), 0.01, Double.NaN);
+		assertEquals(eventMetrics.get(2).getMax(), 59.0, Double.NaN);
+		assertEquals(eventMetrics.get(3).getMetricName(), "vibration");
+		assertEquals(eventMetrics.get(3).getEventValue(), 4, Double.NaN);
+
+		assertEquals(events.get(2).getName(), "eventDrillFailure");
+		assertEquals(events.get(2).getDisplayName(), "Drill Failure");
+		assertEquals((int) events.get(2).getPriority(), 1);
+		eventMetrics = events.get(2).getEventMetrics();
+		assertEquals(eventMetrics.size(), 4);
+		assertEquals(eventMetrics.get(0).getMetricName(), "drillRpm");
+		assertEquals(eventMetrics.get(0).getEventValue(), 0, Double.NaN);
+		assertEquals(eventMetrics.get(1).getMetricName(), "temperature");
+		assertEquals(eventMetrics.get(1).getEventValue(), 25, Double.NaN);
+		assertEquals(eventMetrics.get(2).getMetricName(), "depth");
+		assertTrue(eventMetrics.get(2).getHold());
+		assertEquals(eventMetrics.get(3).getMetricName(), "vibration");
+		assertEquals(eventMetrics.get(3).getEventValue(), 0, Double.NaN);
 	}
 
 }

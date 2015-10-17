@@ -41,7 +41,6 @@ public class PropertyDeviceTest {
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
 		assertMetric((Double) metrics.get("Oil Viscosity (cP)"), 0.25);
 		assertMetric((Double) metrics.get("Motor Amperage (A)"), 50.0);
-
 	}
 
 	@Test
@@ -63,7 +62,7 @@ public class PropertyDeviceTest {
 
 		// assert
 		metrics = device.getMetrics();
-		assertEquals((Double) metrics.get("Output Temp (C)"), originalTemp + 10.0, Double.NaN);
+		assertTrue(((Double) metrics.get("Output Temp (C)")).compareTo(originalTemp + 10.0) == 0);
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
 		assertMetric((Double) metrics.get("Oil Viscosity (cP)"), 0.25);
 		assertMetric((Double) metrics.get("Motor Amperage (A)"), 50.0);
@@ -160,7 +159,6 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
 		device.eventHandler("eventMotorFailure");
 		device.createMessage();
 
@@ -182,7 +180,6 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
 		device.eventHandler("eventMotorFailure");
 		device.createMessage();
 		device.createMessage();
@@ -205,7 +202,6 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
 		device.eventHandler("eventHvacNotWorking");
 		device.createMessage();
 
@@ -255,6 +251,127 @@ public class PropertyDeviceTest {
 
 		// assert
 		assertNotNull(message);
+	}
+
+	@Test
+	public void drillSitePropertyDeviceTest_normalLoop() throws Exception {
+		// setup
+		String id = "testId";
+		String secret = "testPassword";
+		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
+
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
+
+		// execute
+		device.createMessage();
+		device.createMessage();
+		device.createMessage();
+
+		// assert
+		Map<String, Object> metrics = device.getMetrics();
+		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 200.0);
+		assertMetric((Double) metrics.get("Temperature (C)"), 145.0);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.12, Double.NaN);
+		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
+
+	}
+
+	@Test
+	public void drillSitePropertyDeviceTest_normalLoopWrap() throws Exception {
+		// setup
+		String id = "testId";
+		String secret = "testPassword";
+		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
+
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
+
+		// execute
+		for (int i = 0; i < 1500; i++) {
+			device.createMessage();
+		}
+
+		// assert
+		Map<String, Object> metrics = device.getMetrics();
+		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 200.0);
+		assertMetric((Double) metrics.get("Temperature (C)"), 145.0);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.96, Double.NaN);
+		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
+
+	}
+
+	@Test
+	public void drillSitePropertyDeviceTest_eventLoopValue() throws Exception {
+		// setup
+		String id = "testId";
+		String secret = "testPassword";
+		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
+
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
+
+		// execute
+		device.createMessage();
+		device.eventHandler("eventDrillSlowDown");
+		device.createMessage();
+		device.createMessage();
+
+		// assert
+		Map<String, Object> metrics = device.getMetrics();
+		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 110.0);
+		assertMetric((Double) metrics.get("Temperature (C)"), 185.0);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.06, Double.NaN);
+		assertMetric((Double) metrics.get("Vibration (G)"), 4.0);
+
+	}
+
+	@Test
+	public void drillSitePropertyDeviceTest_eventLoopWrapValue() throws Exception {
+		// setup
+		String id = "testId";
+		String secret = "testPassword";
+		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
+
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
+
+		// execute
+		device.createMessage();
+		device.eventHandler("eventDrillSlowDown");
+		for (int i = 0; i < 5902; i++) {
+			device.createMessage();
+		}
+
+		// assert
+		Map<String, Object> metrics = device.getMetrics();
+		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 110.0);
+		assertMetric((Double) metrics.get("Temperature (C)"), 185.0);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.05, Double.NaN);
+		assertMetric((Double) metrics.get("Vibration (G)"), 4.0);
+
+	}
+
+	@Test
+	public void drillSitePropertyDeviceTest_eventHold() throws Exception {
+		// setup
+		String id = "testId";
+		String secret = "testPassword";
+		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
+
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
+
+		// execute
+		device.createMessage();
+		device.createMessage();
+		device.eventHandler("eventDrillFailure");
+		device.createMessage();
+		device.createMessage();
+		device.createMessage();
+
+		// assert
+		Map<String, Object> metrics = device.getMetrics();
+		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 0.0);
+		assertMetric((Double) metrics.get("Temperature (C)"), 25.0);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.08, Double.NaN);
+		assertMetric((Double) metrics.get("Vibration (G)"), 0.0);
+
 	}
 
 	private void assertMetric(Double metric, Double defaultValue) {
