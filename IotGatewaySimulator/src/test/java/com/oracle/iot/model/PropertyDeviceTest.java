@@ -62,7 +62,7 @@ public class PropertyDeviceTest {
 
 		// assert
 		metrics = device.getMetrics();
-		assertTrue(((Double) metrics.get("Output Temp (C)")).compareTo(originalTemp + 10.0) == 0);
+		assertEquals(((Double) metrics.get("Output Temp (C)")), originalTemp + 10.0, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
 		assertMetric((Double) metrics.get("Oil Viscosity (cP)"), 0.25);
 		assertMetric((Double) metrics.get("Motor Amperage (A)"), 50.0);
