@@ -32,10 +32,10 @@ public class ScheduledTasks {
 		List<IOTDevice> allDevices = deviceService.findAll();
 		if (allDevices != null && allDevices.size() > 0) {
 			log.debug("Device Count: " + allDevices.size());
-			boolean error = messageService.sendMessages(allDevices, systemConfigService.getHost(),
+			boolean sent = messageService.sendMessages(allDevices, systemConfigService.getHost(),
 					systemConfigService.getPort(), systemConfigService.getMessageStatus());
 			deviceService.updateAll(allDevices);
-			if (error) {
+			if (!sent) {
 				log.error("Error detected, turning off messages!");
 				systemConfigService.setMessageStatus(false);
 			}

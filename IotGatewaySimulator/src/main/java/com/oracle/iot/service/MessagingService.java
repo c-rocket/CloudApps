@@ -23,20 +23,24 @@ public class MessagingService {
 	private MessagingDao dao;
 
 	public boolean sendMessages(List<IOTDevice> devices, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
-		boolean error = false;
+		boolean sent = false;
 		// Note that right now there will only ever be one device as the client
 		// library does not support multiples through their Asyn library class
 		for (IOTDevice device : devices) {
 			DataMessage message = device.createMessage();
-			if (sendMessages && !error) {
+			if (sendMessages) {
 				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
-				error = !getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
-				if (!error) {
+				boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+				// sends true if client connection is made
+				if (madeConnection) {
 					DEVICE_CLIENT.sendMessage(message);
+					sent = true;
+				} else {
+					sent = false;
 				}
 			}
 		}
-		return error;
+		return sent;
 	}
 
 	private boolean getDeviceClientConnection(AsyncDeviceClient client, String iotcsServer, Integer iotcsPort,
