@@ -7,13 +7,13 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oracle.iot.model.Constants;
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 
 import oracle.iot.message.AlertMessage;
 import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
+@Deprecated
 public class FleetTruck extends IOTDevice {
 	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:fleet";
 	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:fleet";
@@ -219,7 +219,7 @@ public class FleetTruck extends IOTDevice {
 
 	@Override
 	public String getResource() {
-		return DeviceType.FLEET_TRUCK.name();
+		return "Cargo Truck";
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import oracle.iot.message.AlertMessage;
 import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
+@Deprecated
 public class DrillSite extends IOTDevice {
 	private static final String DATA_FORMAT = "com:oracle:iot:model:devices:drillsite";
 	private static final String ALERT_FORMAT = "com:oracle:iot:model:devices:alert:drillsite";

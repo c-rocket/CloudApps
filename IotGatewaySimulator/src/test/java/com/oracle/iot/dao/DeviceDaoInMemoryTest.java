@@ -11,10 +11,11 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
-import com.oracle.iot.model.devices.CableModem;
+import com.oracle.iot.model.PropertyDevice;
+import com.oracle.iot.model.PropertyDeviceDetails;
 
 public class DeviceDaoInMemoryTest {
 
@@ -36,7 +37,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		boolean inserted = dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		boolean inserted = dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 
 		// assert
 		assertTrue(inserted);
@@ -50,8 +52,9 @@ public class DeviceDaoInMemoryTest {
 		String id2 = "Test-1234";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
-		dao.insert(DeviceType.CABLE_MODEM, id2, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
+		dao.insert(new PropertyDevice(deviceDetails, id2, "secret"));
 
 		// assert - expected Exception
 	}
@@ -63,8 +66,9 @@ public class DeviceDaoInMemoryTest {
 		String id2 = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
-		boolean inserted = dao.insert(DeviceType.CABLE_MODEM, id2, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
+		boolean inserted = dao.insert(new PropertyDevice(deviceDetails, id2, "secret"));
 
 		// assert
 		assertFalse(inserted);
@@ -77,7 +81,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 		boolean deleted = dao.delete(id);
 
 		// assert
@@ -104,7 +109,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 		IOTDevice device = dao.findById(id);
 
 		// assert
@@ -130,7 +136,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 		List<IOTDevice> devices = dao.findAll();
 
 		// assert
@@ -153,14 +160,15 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
-		CableModem device = (CableModem) dao.findById(id);
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
+		PropertyDevice device = (PropertyDevice) dao.findById(id);
 		device.animateMetrics();
 
 		boolean updated = dao.updateAll(Arrays.asList((IOTDevice) device));
 
 		// assert
-		CableModem actual = (CableModem) dao.findById(id);
+		PropertyDevice actual = (PropertyDevice) dao.findById(id);
 		assertEquals(device.getMetrics(), actual.getMetrics());
 		assertTrue(updated);
 	}
@@ -171,7 +179,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		CableModem device = (CableModem) DeviceType.CABLE_MODEM.getDevice(id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, "secret");
 		device.animateMetrics();
 
 		boolean updated = dao.updateAll(Arrays.asList((IOTDevice) device));
@@ -186,14 +195,15 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
-		CableModem device = (CableModem) dao.findById(id);
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
+		PropertyDevice device = (PropertyDevice) dao.findById(id);
 		device.animateMetrics();
 
 		boolean updated = dao.update((IOTDevice) device);
 
 		// assert
-		CableModem actual = (CableModem) dao.findById(id);
+		PropertyDevice actual = (PropertyDevice) dao.findById(id);
 		assertEquals(device.getMetrics(), actual.getMetrics());
 		assertTrue(updated);
 	}
@@ -204,7 +214,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		CableModem device = (CableModem) DeviceType.CABLE_MODEM.getDevice(id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, "secret");
 		device.animateMetrics();
 
 		boolean updated = dao.update((IOTDevice) device);
@@ -220,7 +231,8 @@ public class DeviceDaoInMemoryTest {
 		String id2 = "ABC-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 		boolean exists = dao.exists(id);
 		boolean exists2 = dao.exists(id2);
 
@@ -247,7 +259,8 @@ public class DeviceDaoInMemoryTest {
 		String id = "Test-123";
 
 		// execute
-		dao.insert(DeviceType.CABLE_MODEM, id, "secret");
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
 		dao.deleteAll();
 
 		// assert

@@ -70,9 +70,9 @@ public final class Constants {
 		return copy;
 	}
 
-	public static Double RandomTenPercent(Double value) {
-		Double plusTen = value * 1.1;
-		Double minusTen = value * 0.9;
+	public static Double RandomFourPercent(Double value) {
+		Double plusTen = value * 1.04;
+		Double minusTen = value * 0.96;
 		return randomDouble(minusTen, plusTen, 2);
 	}
 

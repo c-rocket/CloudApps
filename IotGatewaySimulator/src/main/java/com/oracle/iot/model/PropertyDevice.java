@@ -64,12 +64,12 @@ public class PropertyDevice extends IOTDevice {
 		return currentMetrics;
 	}
 
-	private void animateMetrics() {
+	public void animateMetrics() {
 		Map<PropertyMetric, Double> calcs = new LinkedHashMap<PropertyMetric, Double>();
 		// place default values
 		for (PropertyMetric metric : details.getMetrics()) {
-			Double value = Constants.RandomTenPercent(metric.getDefaultValue());
-			value = calculateAnimatedValue(metric, Constants.RandomTenPercent(metric.getDefaultValue()));
+			Double value = Constants.RandomFourPercent(metric.getDefaultValue());
+			value = calculateAnimatedValue(metric, Constants.RandomFourPercent(metric.getDefaultValue()));
 			calcs.put(metric, value);
 		}
 		// loop through events and change values if needed

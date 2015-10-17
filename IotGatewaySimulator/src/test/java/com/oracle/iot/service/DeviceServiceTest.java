@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -14,17 +15,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.oracle.iot.dao.DeviceDaoInMemory;
-import com.oracle.iot.model.DeviceType;
+import com.oracle.iot.dao.DevicePropertiesLoaderDao;
 import com.oracle.iot.model.IOTDevice;
+import com.oracle.iot.model.PropertyDevice;
+import com.oracle.iot.model.PropertyDeviceDetails;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeviceServiceTest {
 
 	@Mock
 	DeviceDaoInMemory deviceDao;
+
+	@Mock
+	DevicePropertiesLoaderDao loaderDao;
 
 	@InjectMocks
 	DeviceService deviceService;
@@ -33,10 +40,12 @@ public class DeviceServiceTest {
 	public void create() throws Exception {
 		// setup
 		String id = "Test-123";
-		when(deviceDao.insert(DeviceType.CABLE_MODEM, id, "secret")).thenReturn(true);
+		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
+		when(loaderDao.getDevice("hvac")).thenReturn(deviceDetails);
+		when(deviceDao.insert(any(PropertyDevice.class))).thenReturn(true);
 
 		// execute
-		boolean created = deviceService.create(DeviceType.CABLE_MODEM.name(), id, "secret");
+		boolean created = deviceService.create("hvac", id, "secret");
 
 		// assert
 		assertTrue(created);
@@ -59,7 +68,9 @@ public class DeviceServiceTest {
 	public void findAll() throws Exception {
 		// setup
 		String id = "Test-123";
-		when(deviceDao.findAll()).thenReturn(Arrays.asList(DeviceType.CABLE_MODEM.getDevice(id, "secret")));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
 
 		// execute
 		List<IOTDevice> devices = deviceService.findAll();
@@ -74,21 +85,25 @@ public class DeviceServiceTest {
 	public void findById() throws Exception {
 		// setup
 		String id = "Test-123";
-		when(deviceDao.findById(id)).thenReturn(DeviceType.CABLE_MODEM.getDevice(id, "secret"));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		when(deviceDao.findById(id)).thenReturn(device);
 
 		// execute
-		IOTDevice device = deviceService.findById(id);
+		IOTDevice actualDevice = deviceService.findById(id);
 
 		// assert
-		assertNotNull(device);
-		assertEquals(device.getId(), id);
+		assertNotNull(actualDevice);
+		assertEquals(actualDevice.getId(), id);
 	}
 
 	@Test
 	public void updateAll() throws Exception {
 		// setup
 		String id = "Test-123";
-		List<IOTDevice> devices = (Arrays.asList(DeviceType.CABLE_MODEM.getDevice(id, "secret")));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		List<IOTDevice> devices = (Arrays.asList(device));
 		when(deviceDao.updateAll(devices)).thenReturn(true);
 
 		// execute
@@ -102,7 +117,8 @@ public class DeviceServiceTest {
 	public void updateDevice() throws Exception {
 		// setup
 		String id = "Test-123";
-		IOTDevice device = DeviceType.CABLE_MODEM.getDevice(id, "secret");
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
 		when(deviceDao.update(device)).thenReturn(true);
 
 		// execute
@@ -116,14 +132,16 @@ public class DeviceServiceTest {
 	public void getCurrentDeviceExistingDevice() throws Exception {
 		// setup
 		String id = "Test-123";
-		when(deviceDao.findAll()).thenReturn(Arrays.asList(DeviceType.CABLE_MODEM.getDevice(id, "secret")));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
 
 		// execute
-		IOTDevice device = deviceService.getCurrentDevice();
+		IOTDevice actualDevice = deviceService.getCurrentDevice();
 
 		// assert
-		assertNotNull(device);
-		assertEquals(device.getId(), id);
+		assertNotNull(actualDevice);
+		assertEquals(actualDevice.getId(), id);
 	}
 
 	@Test

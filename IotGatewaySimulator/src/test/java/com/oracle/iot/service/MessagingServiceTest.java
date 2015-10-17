@@ -16,12 +16,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.oracle.iot.dao.MessagingDao;
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 
 import oracle.iot.client.device.async.AsyncDeviceClient;
@@ -53,7 +53,9 @@ public class MessagingServiceTest {
 		Integer iotcsPort = 9001;
 		Boolean sendMessages = true;
 		byte[] key = "privatebyteSizedKey".getBytes();
-		List<IOTDevice> devices = Arrays.asList(DeviceType.CABLE_MODEM.getDevice(id, "secret"));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		List<IOTDevice> devices = Arrays.asList(device);
 
 		when(dao.getPrivateKey(id)).thenReturn(key);
 
@@ -75,7 +77,10 @@ public class MessagingServiceTest {
 		Integer iotcsPort = 9001;
 		Boolean sendMessages = true;
 		byte[] key = "privatebyteSizedKey".getBytes();
-		List<IOTDevice> devices = Arrays.asList(DeviceType.CABLE_MODEM.getDevice(id, secret));
+		IOTDevice device = Mockito.mock(IOTDevice.class);
+		when(device.getId()).thenReturn(id);
+		when(device.getSecret()).thenReturn(secret);
+		List<IOTDevice> devices = Arrays.asList(device);
 
 		when(dao.getPrivateKey(id)).thenReturn(null);
 		PowerMockito.when(mockedClient.activate(secret)).thenReturn(key);

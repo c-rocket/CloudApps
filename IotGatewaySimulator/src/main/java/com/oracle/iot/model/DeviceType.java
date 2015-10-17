@@ -1,7 +1,5 @@
 package com.oracle.iot.model;
 
-import com.oracle.iot.model.devices.CableModem;
-import com.oracle.iot.model.devices.FleetTruck;
 import com.oracle.iot.model.devices.Pipeline;
 
 public enum DeviceType {
@@ -16,16 +14,16 @@ public enum DeviceType {
 	// return new DrillSite(id, secret);
 	// }
 	// },
-	CABLE_MODEM("Cable Modem") {
-		public IOTDevice getDevice(String id, String secret) {
-			return new CableModem(id, secret);
-		}
-	},
-	FLEET_TRUCK("Shipping Truck") {
-		public IOTDevice getDevice(String id, String secret) {
-			return new FleetTruck(id, secret);
-		}
-	},
+	// CABLE_MODEM("Cable Modem") {
+	// public IOTDevice getDevice(String id, String secret) {
+	// return new CableModem(id, secret);
+	// }
+	// },
+	// FLEET_TRUCK("Shipping Truck") {
+	// public IOTDevice getDevice(String id, String secret) {
+	// return new FleetTruck(id, secret);
+	// }
+	// },
 	PIPELINE("Pipeline") {
 		public IOTDevice getDevice(String id, String secret) {
 			return new Pipeline(id, secret);
