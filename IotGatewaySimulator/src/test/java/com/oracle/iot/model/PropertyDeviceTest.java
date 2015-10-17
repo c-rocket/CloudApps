@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,6 +45,7 @@ public class PropertyDeviceTest {
 	}
 
 	@Test
+	@Ignore
 	public void hvacPropertyDeviceTest_eventMotorOverheat_increment() throws Exception {
 		// setup
 		String id = "testId";
