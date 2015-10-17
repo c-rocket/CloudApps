@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -32,8 +33,13 @@ public class DevicePropertiesLoaderDao {
 
 	private void loadDevices() {
 		ClassLoader classLoader = getClass().getClassLoader();
-		File directory = new File(classLoader.getResource("devices").getFile());
-		logger.info("Loading " + directory.listFiles().length + " files from: " + directory.getAbsolutePath());
+		URL resource = classLoader.getResource("devices");
+		if (resource == null) {
+			logger.error(
+					"Could not load the properties directory for some reason...maybe it spontaneously combusted!!");
+			return;
+		}
+		File directory = new File(resource.getFile());
 		for (File device : directory.listFiles()) {
 			Properties prop = new Properties();
 			try {

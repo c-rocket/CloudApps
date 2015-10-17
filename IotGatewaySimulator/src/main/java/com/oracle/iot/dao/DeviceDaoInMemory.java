@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 
 @Repository
@@ -18,18 +17,6 @@ public class DeviceDaoInMemory {
 
 	public boolean exists(String id) {
 		return (this.device != null && this.device.getId().equals(id));
-	}
-
-	public boolean insert(DeviceType deviceType, String id, String secret) {
-		if (exists(id)) {
-			return false;
-		}
-		if (this.device != null) {
-			throw new RuntimeException("Device exists, please remove and close properly first");
-		}
-		this.device = deviceType.getDevice(id, secret).copy();
-		return true;
-
 	}
 
 	public boolean insert(IOTDevice device) {

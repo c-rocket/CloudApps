@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.oracle.iot.dao.DeviceDaoInMemory;
 import com.oracle.iot.dao.DevicePropertiesLoaderDao;
-import com.oracle.iot.model.DeviceType;
 import com.oracle.iot.model.IOTDevice;
 import com.oracle.iot.model.PropertyDevice;
 import com.oracle.iot.model.PropertyDeviceDetails;
@@ -24,13 +23,8 @@ public class DeviceService {
 	private DevicePropertiesLoaderDao loaderDao;
 
 	public boolean create(String name, String id, String secret) {
-		DeviceType deviceType = DeviceType.findByName(name);
-		if (deviceType == null) {
-			PropertyDeviceDetails deviceDetails = loaderDao.getDevice(name);
-			return deviceDao.insert(new PropertyDevice(deviceDetails, id, secret));
-		} else {
-			return deviceDao.insert(deviceType, id, secret);
-		}
+		PropertyDeviceDetails deviceDetails = loaderDao.getDevice(name);
+		return deviceDao.insert(new PropertyDevice(deviceDetails, id, secret));
 	}
 
 	public List<IOTDevice> findAll() {

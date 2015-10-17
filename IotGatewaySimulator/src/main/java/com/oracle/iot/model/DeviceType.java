@@ -1,7 +1,6 @@
 package com.oracle.iot.model;
 
-import com.oracle.iot.model.devices.Pipeline;
-
+@Deprecated
 public enum DeviceType {
 
 	// HVAC2("HVAC2") {
@@ -24,11 +23,12 @@ public enum DeviceType {
 	// return new FleetTruck(id, secret);
 	// }
 	// },
-	PIPELINE("Pipeline") {
-		public IOTDevice getDevice(String id, String secret) {
-			return new Pipeline(id, secret);
-		}
-	};
+	// PIPELINE("Pipeline") {
+	// public IOTDevice getDevice(String id, String secret) {
+	// return new Pipeline(id, secret);
+	// }
+	// };
+	Generic("Generic");
 
 	private String display;
 
