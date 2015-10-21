@@ -1,17 +1,22 @@
 package com.oracle.iot.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.iot.model.EventMetric;
 import com.oracle.iot.model.PropertyAlert;
@@ -188,6 +193,41 @@ public class DevicePropertiesLoaderDaoTest {
 		assertTrue(eventMetrics.get(2).getHold());
 		assertEquals(eventMetrics.get(3).getMetricName(), "vibration");
 		assertEquals(eventMetrics.get(3).getEventValue(), 0, Double.NaN);
+	}
+
+	@Test
+	public void loadDevice() throws Exception {
+		// setup
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/hvactest.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+
+		// execute
+		dao.loadNewDevice(multipartFile);
+
+		// assert
+		assertNotNull(dao.getDevice("hvactest"));
+	}
+
+	@Test
+	public void getDevicesInOrder() throws Exception {
+		// execute
+		List<String> devices = dao.getDeviceNames();
+
+		// assert
+		assertEquals("cablemodem", devices.get(0));
+		assertEquals("cargotruck", devices.get(1));
+	}
+
+	@Test
+	public void getTypesInOrder() throws Exception {
+		// execute
+		List<Map<String, String>> devices = dao.getTypes();
+
+		// assert
+		assertEquals("Cable Modem", devices.get(0).get("display"));
+		assertEquals("Cargo Truck", devices.get(1).get("display"));
 	}
 
 }
