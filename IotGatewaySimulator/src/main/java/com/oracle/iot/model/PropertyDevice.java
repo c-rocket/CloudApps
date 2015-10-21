@@ -200,13 +200,24 @@ public class PropertyDevice extends IOTDevice {
 		alertBuilder.description(description);
 
 		for (String key : currentMetrics.keySet()) {
-			Double metric = (Double) currentMetrics.get(key);
-			alertBuilder.dataItem(key, metric);
+			Double metricValue = (Double) currentMetrics.get(key);
+			String id = getMetricNameByDisplayName(key);
+			if (id != null)
+				alertBuilder.dataItem(id, metricValue);
 		}
 
 		alertBuilder.severity(AlertMessage.Severity.CRITICAL);
 		log.info("Created Alert: " + alertBuilder.build().toString());
 		return alertBuilder.build();
+	}
+
+	private String getMetricNameByDisplayName(String displayName) {
+		for (PropertyMetric metric : details.getMetrics()) {
+			if (metric.getDisplayName().equals(displayName)) {
+				return metric.getName();
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -231,8 +242,11 @@ public class PropertyDevice extends IOTDevice {
 
 		for (String key : currentMetrics.keySet()) {
 			Double metric = (Double) currentMetrics.get(key);
-			msgBuilder.dataItem(key, metric);
-			addToChart(messageDate, key, metric);
+			String id = getMetricNameByDisplayName(key);
+			if (id != null) {
+				msgBuilder.dataItem(id, metric);
+				addToChart(messageDate, key, metric);
+			}
 		}
 		msgBuilder.reliability(Message.Reliability.BEST_EFFORT);
 		msgBuilder.priority(Message.Priority.MEDIUM);

@@ -43,8 +43,8 @@ public class DevicePropertiesLoaderDaoTest {
 		PropertyDeviceDetails device = dao.getDevice("hvac");
 		assertEquals(device.getDisplayName(), "HVAC");
 		assertEquals(device.getPicture(), "hvac.png");
-		assertEquals(device.getDataFormat(), "com:oracle:iot:model:devices:hvac");
-		assertEquals(device.getAlertFormat(), "com:oracle:iot:model:devices:alert:hvac");
+		assertEquals(device.getDataFormat(), "urn:com:oracle:iot:model:devices:hvac");
+		assertEquals(device.getAlertFormat(), "urn:com:oracle:iot:model:devices:alert:hvac");
 
 		List<PropertyMetric> metrics = device.getMetrics();
 		assertEquals(metrics.size(), 4);
@@ -150,8 +150,8 @@ public class DevicePropertiesLoaderDaoTest {
 		PropertyDeviceDetails device = dao.getDevice("drillsite");
 		assertEquals(device.getDisplayName(), "Drill Site");
 		assertEquals(device.getPicture(), "drill.png");
-		assertEquals(device.getDataFormat(), "com:oracle:iot:model:devices:drillsite");
-		assertEquals(device.getAlertFormat(), "com:oracle:iot:model:devices:alert:drillsite");
+		assertEquals(device.getDataFormat(), "urn:com:oracle:iot:model:devices:drillsite");
+		assertEquals(device.getAlertFormat(), "urn:com:oracle:iot:model:devices:alert:drillsite");
 
 		List<PropertyMetric> metrics = device.getMetrics();
 		assertEquals(metrics.size(), 4);
