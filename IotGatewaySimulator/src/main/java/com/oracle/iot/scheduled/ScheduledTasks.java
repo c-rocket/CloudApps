@@ -35,7 +35,9 @@ public class ScheduledTasks {
 			boolean sent = messageService.sendMessages(allDevices, systemConfigService.getHost(),
 					systemConfigService.getPort(), systemConfigService.getMessageStatus());
 			deviceService.updateAll(allDevices);
-			if (!sent) {
+			// we only care about sending if the message status was supposed to
+			// send
+			if (!sent && systemConfigService.getMessageStatus()) {
 				log.error("Error detected, turning off messages!");
 				systemConfigService.setMessageStatus(false);
 			}

@@ -15,6 +15,16 @@
 		<level value="info" />
 	</logger>
 	
+	<!-- Application Loggers -->
+	<logger name="com.oracle.iot.client.TrustManager">
+		<level value="warn" />
+	</logger>
+	
+	<!-- Application Loggers -->
+	<logger name="com.oracle.iot.client.device.async.AsyncMessageDispatcher">
+		<level value="warn" />
+	</logger>
+	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />

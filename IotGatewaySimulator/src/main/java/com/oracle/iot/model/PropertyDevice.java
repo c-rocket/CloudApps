@@ -194,6 +194,7 @@ public class PropertyDevice extends IOTDevice {
 				break;
 			}
 		}
+
 		AlertMessage.Builder alertBuilder = new AlertMessage.Builder();
 		alertBuilder.format(details.getAlertFormat());
 		alertBuilder.source(getId());
