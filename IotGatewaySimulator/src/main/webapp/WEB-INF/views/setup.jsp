@@ -22,6 +22,19 @@ form label {
 form input {
 	font-variant: small-caps;
 }
+
+fieldset legend {
+	font-variant: small-caps;
+}
+
+table td {
+	padding-right: 20px;
+}
+
+table {
+	font-size: 10pt;
+	font-variant: small-caps;
+}
 </style>
 </head>
 <body>
@@ -39,15 +52,35 @@ form input {
 	<br />
 	<hr />
 	<h2>Device Selection</h2>
+	<table>
+		<th>
+			<label for="devices.all">Select All</label>
+		</th>
+		<td>
+			<input type="checkbox" name="devices.all" id="devices.all" onClick="toggle(this)" />
+		</td>
+	</table>
 	<form method="POST" action="<c:url value='/device/setup/select'/>">
-		<fieldset style="width: 500px;">
+		<fieldset style="width: 800px;">
 			<legend>Enable/Disable Devices</legend>
-			<c:forEach items="${devices}" var="device" varStatus="deviceIndex">
-				<label for="devices.${device.name}">${device.display}</label>
-				<input type="checkbox" <c:if test="${device.enabled}">checked="checked"</c:if> id="devices.${device.name}"
-					name="devices.${device.name}" />
-				<br />
-			</c:forEach>
+			<table>
+				<tr>
+					<c:forEach items="${devices}" var="device" varStatus="deviceIndex">
+						<c:if test="${deviceIndex.index%6 == 5}">
+				</tr>
+				<tr>
+					</c:if>
+					<th style="text-align: left;">
+						<label for="devices.${device.name}">${device.display}:</label>
+					</th>
+					<td>
+						<input type="checkbox" <c:if test="${device.enabled}">checked="checked"</c:if> id="devices.${device.name}"
+							name="devices.${device.name}" />
+						<br />
+					</td>
+					</c:forEach>
+				</tr>
+			</table>
 			<br />
 			<input type="submit" value="Submit" />
 		</fieldset>
@@ -56,5 +89,24 @@ form input {
 	<br />
 	<hr />
 	<a href="<c:url value='/'/>">Return to Main</a>
+	<script type="text/javascript">
+		function getCheckboxes() {
+			var inputs = document.forms[1].elements;
+			var checkboxes = [];
+			for (var i = 0; i < inputs.length; i++) {
+				if (inputs[i].type == "checkbox") {
+					checkboxes.push(inputs[i]);
+				}
+			}
+			return checkboxes;
+		}
+
+		function toggle(value) {
+			var checkboxes = getCheckboxes();
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = value.checked;
+			}
+		}
+	</script>
 </body>
 </html>

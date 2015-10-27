@@ -172,7 +172,6 @@ public class DevicePropertiesLoaderDao {
 				list.add(map);
 			}
 		}
-		logger.info("Returning Types count: " + list.size());
 		Collections.sort(list, new Comparator<Map<String, Object>>() {
 
 			@Override
