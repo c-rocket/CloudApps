@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE HTML>
 <html data-ng-app="simulatorApp">
 <head>
@@ -26,7 +27,7 @@ form input {
 <body>
 	<h2>Device Configuration</h2>
 	<form method="POST" enctype="multipart/form-data" action="<c:url value='/device/setup/upload'/>">
-		<fieldset style="width:500px;">
+		<fieldset style="width: 500px;">
 			<legend>Upload New Device</legend>
 			<label for="file">Please select a .properties file to upload:</label>
 			<input type="file" id="file" name="file" />
@@ -36,6 +37,24 @@ form input {
 	</form>
 	<br />
 	<br />
+	<hr />
+	<h2>Device Selection</h2>
+	<form method="POST" action="<c:url value='/device/setup/select'/>">
+		<fieldset style="width: 500px;">
+			<legend>Enable/Disable Devices</legend>
+			<c:forEach items="${devices}" var="device" varStatus="deviceIndex">
+				<label for="devices.${device.name}">${device.display}</label>
+				<input type="checkbox" <c:if test="${device.enabled}">checked="checked"</c:if> id="devices.${device.name}"
+					name="devices.${device.name}" />
+				<br />
+			</c:forEach>
+			<br />
+			<input type="submit" value="Submit" />
+		</fieldset>
+	</form>
+	<br />
+	<br />
+	<hr />
 	<a href="<c:url value='/'/>">Return to Main</a>
 </body>
 </html>

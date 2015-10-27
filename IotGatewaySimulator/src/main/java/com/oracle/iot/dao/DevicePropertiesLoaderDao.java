@@ -160,20 +160,26 @@ public class DevicePropertiesLoaderDao {
 		return devices.get(name);
 	}
 
-	public List<Map<String, String>> getTypes() {
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+	public List<Map<String, Object>> getTypes(boolean all) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		for (String name : devices.keySet()) {
-			Map<String, String> map = new LinkedHashMap<String, String>();
+			Map<String, Object> map = new LinkedHashMap<String, Object>();
 			map.put("name", name);
 			map.put("display", devices.get(name).getDisplayName());
-			list.add(map);
+			map.put("enabled", devices.get(name).getEnabled());
+			// only add if we want all or it is an enabled device
+			if (all || devices.get(name).getEnabled()) {
+				list.add(map);
+			}
 		}
 		logger.info("Returning Types count: " + list.size());
-		Collections.sort(list, new Comparator<Map<String, String>>() {
+		Collections.sort(list, new Comparator<Map<String, Object>>() {
 
 			@Override
-			public int compare(Map<String, String> o1, Map<String, String> o2) {
-				return o1.get("display").compareToIgnoreCase(o2.get("display"));
+			public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+				String display1 = (String) o1.get("display");
+				String display2 = (String) o2.get("display");
+				return display1.compareToIgnoreCase(display2);
 			}
 
 		});

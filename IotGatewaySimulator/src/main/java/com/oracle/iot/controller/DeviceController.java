@@ -95,7 +95,7 @@ public class DeviceController {
 
 	@RequestMapping(value = "/device/types", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, String>> getDeviceTypes() {
-		return deviceService.getTypes();
+	public List<Map<String, Object>> getDeviceTypes() {
+		return deviceService.getEnabledTypes();
 	}
 }

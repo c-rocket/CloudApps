@@ -13,6 +13,7 @@ public class PropertyDeviceDetails {
 	private String displayName;
 	private String dataFormat;
 	private String alertFormat;
+	private Boolean enabled = true;
 
 	private List<PropertyMetric> metrics = new ArrayList<PropertyMetric>();
 	private List<PropertyAlert> alerts = new ArrayList<PropertyAlert>();
@@ -101,4 +102,15 @@ public class PropertyDeviceDetails {
 		propertyEvent.addEventMetric(metricName, boolSet);
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void enable() {
+		this.enabled = true;
+	}
+
+	public void disable() {
+		this.enabled = false;
+	}
 }

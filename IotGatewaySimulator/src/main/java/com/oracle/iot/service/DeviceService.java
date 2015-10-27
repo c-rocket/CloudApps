@@ -52,8 +52,26 @@ public class DeviceService {
 		return (devices.size() > 0) ? devices.get(0) : null;
 	}
 
-	public List<Map<String, String>> getTypes() {
-		return loaderDao.getTypes();
+	public List<Map<String, Object>> getAllTypes() {
+		return loaderDao.getTypes(true);
+	}
+
+	public List<Map<String, Object>> getEnabledTypes() {
+		return loaderDao.getTypes(false);
+	}
+
+	public void updateTypes(List<Map<String, Object>> devices) {
+		for (Map<String, Object> item : devices) {
+			String name = (String) item.get("name");
+			Boolean enabled = (Boolean) item.get("enabled");
+
+			PropertyDeviceDetails device = loaderDao.getDevice(name);
+			if (enabled) {
+				device.enable();
+			} else {
+				device.disable();
+			}
+		}
 	}
 
 }

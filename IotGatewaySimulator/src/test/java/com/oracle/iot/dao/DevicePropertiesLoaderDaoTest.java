@@ -223,11 +223,11 @@ public class DevicePropertiesLoaderDaoTest {
 	@Test
 	public void getTypesInOrder() throws Exception {
 		// execute
-		List<Map<String, String>> devices = dao.getTypes();
+		List<Map<String, Object>> devices = dao.getTypes(false);
 
 		// assert
-		assertEquals("Cable Modem", devices.get(0).get("display"));
-		assertEquals("Cargo Truck", devices.get(1).get("display"));
+		assertEquals("Cable Modem", (String) devices.get(0).get("display"));
+		assertEquals("Cargo Truck", (String) devices.get(1).get("display"));
 	}
 
 	@Test

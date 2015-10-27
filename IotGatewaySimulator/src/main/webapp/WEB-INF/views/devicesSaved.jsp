@@ -2,8 +2,8 @@
 
 <html>
 <body>
-	<h2>New device has been uploaded successfully</h2>
-	<a href="<c:url value='/device/setup'/>">Configure Device</a>
+	<h2>Device config has been saved</h2>
+	<a href="<c:url value='/device/setup'/>">Configure Devices</a>
 	<br />
 	<br />
 	<a href="<c:url value='/'/>">Return to Main</a>
