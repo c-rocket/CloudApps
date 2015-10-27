@@ -67,7 +67,7 @@ public class DevicePropertiesLoaderDao {
 				prop.load(stream);
 
 				// load device specific details
-				String name = prop.getProperty("name");
+				String name = Constants.removeWhiteSpace(prop.getProperty("name"));
 				PropertyDeviceDetails newDevice = extractDeviceFromProperties(prop, name);
 				devices.put(name, newDevice);
 			}
@@ -80,24 +80,34 @@ public class DevicePropertiesLoaderDao {
 	}
 
 	private PropertyDeviceDetails extractDeviceFromProperties(Properties prop, String name) {
-		PropertyDeviceDetails newDevice = new PropertyDeviceDetails(name, prop.getProperty("display.name"),
-				prop.getProperty("data.format"), prop.getProperty("alert.format"), prop.getProperty("picture"));
+		String deviceName = prop.getProperty("display.name");
+		String dataFormat = Constants.removeWhiteSpace(prop.getProperty("data.format"));
+		String alertFormat = Constants.removeWhiteSpace(prop.getProperty("alert.format"));
+		String picture = prop.getProperty("picture", "widget.png");
+		PropertyDeviceDetails newDevice = new PropertyDeviceDetails(name, deviceName, dataFormat, alertFormat, picture);
 
 		// load metrics
-		List<String> metrics = Arrays.asList(prop.getProperty("metrics").split(","));
+		List<String> metrics = Constants.removeWhiteSpace(Arrays.asList(prop.getProperty("metrics").split(",")));
 		for (String metric : metrics) {
-			String displayName = prop.getProperty("metrics." + metric + ".display");
-			Double defaultValue = Double.valueOf(prop.getProperty("metrics." + metric + ".default"));
-			Double increment = Constants.doubleOrNull(prop.getProperty("metrics." + metric + ".increment"));
-			Double alternate = Constants.doubleOrNull(prop.getProperty("metrics." + metric + ".alternate"));
-			Double loop = Constants.doubleOrNull(prop.getProperty("metrics." + metric + ".loop"));
-			Double max = Constants.doubleOrNull(prop.getProperty("metrics." + metric + ".max"));
-			Double min = Constants.doubleOrNull(prop.getProperty("metrics." + metric + ".min"));
-			newDevice.addMetric(metric, displayName, defaultValue, increment, alternate, loop, max, min);
+			String prefix = "metrics.";
+			String displayName = prop.getProperty(prefix + metric + ".display");
+			String flag = prop.getProperty(prefix + metric + ".boolean");
+			if (flag != null) {
+				Boolean boolSet = flag.equalsIgnoreCase("true");
+				newDevice.addMetric(metric, displayName, boolSet);
+			} else {
+				Double defaultValue = Double.valueOf(prop.getProperty(prefix + metric + ".default"));
+				Double increment = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".increment"));
+				Double alternate = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".alternate"));
+				Double loop = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".loop"));
+				Double max = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".max"));
+				Double min = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".min"));
+				newDevice.addMetric(metric, displayName, defaultValue, increment, alternate, loop, max, min);
+			}
 		}
 
 		// load alerts
-		List<String> alerts = Arrays.asList(prop.getProperty("alerts").split(","));
+		List<String> alerts = Constants.removeWhiteSpace(Arrays.asList(prop.getProperty("alerts").split(",")));
 		for (String alert : alerts) {
 			String displayName = prop.getProperty("alerts." + alert + ".display");
 			newDevice.addAlert(alert, displayName);
@@ -106,21 +116,28 @@ public class DevicePropertiesLoaderDao {
 		// load events
 		List<String> events = Arrays.asList(prop.getProperty("events").split(","));
 		for (String event : events) {
-			String displayName = prop.getProperty("events." + event + ".display");
-			Integer priority = Integer.valueOf(prop.getProperty("events." + event + ".priority", "1"));
+			String prefix = "events.";
+			String displayName = prop.getProperty(prefix + event + ".display");
+			Integer priority = Integer.valueOf(prop.getProperty(prefix + event + ".priority", "1"));
 			for (PropertyMetric eventMetric : newDevice.getMetrics()) {
 				String metricName = eventMetric.getName();
-				String eventMetricBase = "events." + event + "." + metricName;
-				Double value = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".value"));
-				Double increment = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".increment"));
-				Double loop = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".loop"));
-				Boolean hold = prop.getProperty(eventMetricBase + ".hold", "false").equalsIgnoreCase("true");
-				if (value != null || increment != null || loop != null || hold) {
-					Double alternate = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".alternate"));
-					Double max = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".max"));
-					Double min = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".min"));
-					newDevice.addEvent(event, displayName, priority, metricName, value, increment, alternate, loop, max,
-							min, hold);
+				String eventMetricBase = prefix + event + "." + metricName;
+				String flag = prop.getProperty(eventMetricBase + ".boolean");
+				if (flag != null) {
+					Boolean boolSet = Boolean.getBoolean(flag.toLowerCase());
+					newDevice.addEvent(event, displayName, priority, metricName, boolSet);
+				} else {
+					Double value = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".value"));
+					Double increment = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".increment"));
+					Double loop = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".loop"));
+					Boolean hold = prop.getProperty(eventMetricBase + ".hold", "false").equalsIgnoreCase("true");
+					if (value != null || increment != null || loop != null || hold) {
+						Double alternate = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".alternate"));
+						Double max = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".max"));
+						Double min = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".min"));
+						newDevice.addEvent(event, displayName, priority, metricName, value, increment, alternate, loop,
+								max, min, hold);
+					}
 				}
 			}
 		}

@@ -88,4 +88,17 @@ public class PropertyDeviceDetails {
 		return picture;
 	}
 
+	public void addMetric(String name, String display, Boolean boolSet) {
+		metrics.add(new PropertyMetric(name, display, boolSet));
+	}
+
+	public void addEvent(String name, String displayName, Integer priority, String metricName, Boolean boolSet) {
+		PropertyEvent propertyEvent = events.get(name);
+		if (propertyEvent == null) {
+			propertyEvent = new PropertyEvent(name, displayName, priority);
+			events.put(name, propertyEvent);
+		}
+		propertyEvent.addEventMetric(metricName, boolSet);
+	}
+
 }

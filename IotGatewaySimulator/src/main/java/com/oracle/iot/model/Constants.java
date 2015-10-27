@@ -90,4 +90,23 @@ public final class Constants {
 		return new BigDecimal(value).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
 	}
 
+	public static List<String> removeWhiteSpace(List<String> asList) {
+		if (asList == null) {
+			return null;
+		}
+		List<String> list = new ArrayList<String>();
+		for (String item : asList) {
+			if (item != null)
+				list.add(item.replaceAll("\\s+", ""));
+		}
+		return list;
+	}
+
+	public static String removeWhiteSpace(String str) {
+		if (str == null) {
+			return null;
+		}
+		return str.replaceAll("\\s+", "");
+	}
+
 }

@@ -30,7 +30,11 @@ public class PropertyDevice extends IOTDevice {
 		super(id, secret);
 		this.details = details;
 		for (PropertyMetric metric : details.getMetrics()) {
-			currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
+			if (metric.getBoolSet() != null) {
+				currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
+			} else {
+				currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
+			}
 		}
 		log.info("Creating Events: " + details.getEvents().size());
 		for (PropertyEvent event : details.getEvents()) {
@@ -65,12 +69,16 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	public void animateMetrics() {
-		Map<PropertyMetric, Double> calcs = new LinkedHashMap<PropertyMetric, Double>();
+		Map<PropertyMetric, Object> calcs = new LinkedHashMap<PropertyMetric, Object>();
 		// place default values
 		for (PropertyMetric metric : details.getMetrics()) {
-			Double value = Constants.RandomFourPercent(metric.getDefaultValue());
-			value = calculateAnimatedValue(metric, Constants.RandomFourPercent(metric.getDefaultValue()));
-			calcs.put(metric, value);
+			if (metric.getBoolSet() != null) {
+				calcs.put(metric, (boolean) metric.getBoolSet());
+			} else {
+				Double value = Constants.RandomFourPercent(metric.getDefaultValue());
+				value = calculateAnimatedValue(metric, Constants.RandomFourPercent(metric.getDefaultValue()));
+				calcs.put(metric, value);
+			}
 		}
 		// loop through events and change values if needed
 		for (PropertyEvent event : eventTriggers.keySet()) {
@@ -78,18 +86,27 @@ public class PropertyDevice extends IOTDevice {
 			if (eventTriggers.get(event)) {
 				for (EventMetric eventMetric : event.getEventMetrics()) {
 					PropertyMetric metric = getPropertyMetric(calcs, eventMetric);
-					Double value = calcs.get(metric);
-					value = calculateAnimatedEventValue(eventMetric, metric, value);
+					if (calcs.get(metric) instanceof Double) {
+						Double value = (Double) calcs.get(metric);
+						value = calculateAnimatedEventValue(eventMetric, metric, value);
+						calcs.put(metric, value);
+					} else if (calcs.get(metric) instanceof Boolean) {
+						Boolean value = eventMetric.getBoolSet();
+						calcs.put(metric, value);
+					}
 
-					calcs.put(metric, value);
 				}
 			}
 		}
 
 		// write out updated values as current values
 		for (PropertyMetric metric : calcs.keySet()) {
-			Double newValue = Constants.scale(calcs.get(metric), 2);
-			currentMetrics.put(metric.getDisplayName(), newValue);
+			if (calcs.get(metric) instanceof Double) {
+				Double newValue = Constants.scale((Double) calcs.get(metric), 2);
+				currentMetrics.put(metric.getDisplayName(), newValue);
+			} else if (calcs.get(metric) instanceof Boolean) {
+				currentMetrics.put(metric.getDisplayName(), (Boolean) calcs.get(metric));
+			}
 		}
 	}
 
@@ -176,7 +193,7 @@ public class PropertyDevice extends IOTDevice {
 		return value;
 	}
 
-	private PropertyMetric getPropertyMetric(Map<PropertyMetric, Double> list, EventMetric eventMetric) {
+	private PropertyMetric getPropertyMetric(Map<PropertyMetric, Object> list, EventMetric eventMetric) {
 		for (PropertyMetric metric : list.keySet()) {
 			if (metric.getName().equals(eventMetric.getMetricName())) {
 				return metric;
@@ -242,11 +259,17 @@ public class PropertyDevice extends IOTDevice {
 		msgBuilder.source(getId());
 
 		for (String key : currentMetrics.keySet()) {
-			Double metric = (Double) currentMetrics.get(key);
 			String id = getMetricNameByDisplayName(key);
 			if (id != null) {
-				msgBuilder.dataItem(id, metric);
-				addToChart(messageDate, key, metric);
+				if (currentMetrics.get(key) instanceof Double) {
+					Double metric = (Double) currentMetrics.get(key);
+					msgBuilder.dataItem(id, metric);
+					addToChart(messageDate, key, metric);
+				} else if (currentMetrics.get(key) instanceof Boolean) {
+					Boolean metric = (Boolean) currentMetrics.get(key);
+					msgBuilder.dataItem(id, metric);
+					addToChart(messageDate, key, metric ? 1d : 0d);
+				}
 			}
 		}
 		msgBuilder.reliability(Message.Reliability.BEST_EFFORT);

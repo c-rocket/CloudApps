@@ -1,14 +1,15 @@
 package com.oracle.iot.model;
 
 public class EventMetric {
-	private String metricName;
-	private Double eventValue;
-	private Double increment;
-	private Double alternate;
-	private Double loop;
-	private Double max;
-	private Double min;
+	private String metricName = null;
+	private Double eventValue = null;
+	private Double increment = null;
+	private Double alternate = null;
+	private Double loop = null;
+	private Double max = null;
+	private Double min = null;
 	private Boolean hold = Boolean.FALSE;
+	private Boolean boolSet = null;
 
 	public EventMetric(String metricName, Double eventValue, Double increment, Double alternate, Double loop,
 			Double max, Double min, Boolean hold) {
@@ -21,6 +22,12 @@ public class EventMetric {
 		this.max = max;
 		this.min = min;
 		this.hold = hold;
+	}
+
+	public EventMetric(String metricName, Boolean boolSet) {
+		super();
+		this.metricName = metricName;
+		this.boolSet = boolSet;
 	}
 
 	public String getMetricName() {
@@ -53,6 +60,10 @@ public class EventMetric {
 
 	public Boolean getHold() {
 		return hold;
+	}
+
+	public Boolean getBoolSet() {
+		return boolSet;
 	}
 
 }

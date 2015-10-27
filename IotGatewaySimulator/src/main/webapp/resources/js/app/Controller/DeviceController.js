@@ -11,8 +11,6 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 
 	Chart.defaults.global.colours = [ "#0090B5", "#CC5100", "#007A6E", "#FFD800", "#3BC600", "#57007F", "#63C66F" ]
 
-	var color = [ 'blue', 'green', 'yellow', 'purple', 'navy', 'orange' ]
-
 	$scope.device = {};
 	$scope.systemConfig = {};
 	$scope.createDevice = {};

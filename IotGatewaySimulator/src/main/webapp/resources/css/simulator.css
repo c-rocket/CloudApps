@@ -152,13 +152,6 @@ ul {
 	background: radial-gradient(circle, #FFE566, #FFD800); /* Standard syntax */
 }
 
-.tile5 {
-	background: -webkit-radial-gradient(circle, #9967AF, #57007F); /* Safari */
-	background: -o-radial-gradient(circle, #9967AF, #57007F); /* Opera 11.6 to 12.0 */
-	background: -moz-radial-gradient(circle, #9967AF, #57007F); /* Firefox 3.6 to 15 */
-	background: radial-gradient(circle, #9967AF, #57007F); /* Standard syntax */
-}
-
 .tile4 {
 	background: -webkit-radial-gradient(circle, #4CFF00, #3BC600); /* Safari */
 	background: -o-radial-gradient(circle, #4CFF00, #3BC600); /* Opera 11.6 to 12.0 */
@@ -166,6 +159,19 @@ ul {
 	background: radial-gradient(circle, #4CFF00, #3BC600); /* Standard syntax */
 }
 
+.tile5 {
+	background: -webkit-radial-gradient(circle, #9967AF, #57007F); /* Safari */
+	background: -o-radial-gradient(circle, #9967AF, #57007F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #9967AF, #57007F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #9967AF, #57007F); /* Standard syntax */
+}
+
+ .tile6 {
+	background: -webkit-radial-gradient(circle, #91C196, #63C66F); /* Safari */
+	background: -o-radial-gradient(circle, #91C196, #63C66F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #91C196, #63C66F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #91C196, #63C66F); /* Standard syntax */
+}
 .grey {
 	background: -webkit-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Safari */
 	background: -o-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Opera 11.6 to 12.0 */

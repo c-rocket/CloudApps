@@ -38,4 +38,8 @@ public class PropertyEvent {
 		return priority;
 	}
 
+	public void addEventMetric(String metricName, Boolean boolSet) {
+		eventMetrics.add(new EventMetric(metricName, boolSet));
+	}
+
 }

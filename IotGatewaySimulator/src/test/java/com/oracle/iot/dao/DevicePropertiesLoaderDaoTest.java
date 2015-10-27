@@ -230,4 +230,23 @@ public class DevicePropertiesLoaderDaoTest {
 		assertEquals("Cargo Truck", devices.get(1).get("display"));
 	}
 
+	@Test
+	public void loadDeviceWithBooleanMetric() throws Exception {
+		// setup
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/template.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+
+		// execute
+		dao.loadNewDevice(multipartFile);
+		PropertyDeviceDetails device = dao.getDevice("templatedevice");
+
+		// assert
+		assertNotNull(device);
+		PropertyMetric metric = device.getMetrics().get(4);
+		assertEquals("metric5", metric.getName());
+		assertTrue(metric.getBoolSet());
+	}
+
 }

@@ -59,10 +59,10 @@
 			</div>
 		</section>
 		</md-grid-tile> <md-grid-tile ng-show="currentId" data-ng-repeat="(key, value) in device.metrics"
-			class="md-whiteframe-z4 tile{{$index%5}}">
+			class="md-whiteframe-z4 tile{{$index%7}}">
 		<section layout="row">
 			<div class="metricLabel">{{key}}</div>
-			<div class="metricValue">{{value | number : 2}}</div>
+			<div class="metricValue">{{value | metricFilter}}</div>
 		</section>
 		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 grey" ng-show="currentId"> <img
 			ng-src="<c:url value='/resources/pictures/'/>{{ device.picture }}" height="75%" ng-show="currentId" /> </md-grid-tile> <md-grid-tile

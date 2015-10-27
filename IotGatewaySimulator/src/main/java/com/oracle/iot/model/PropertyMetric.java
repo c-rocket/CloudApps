@@ -2,14 +2,15 @@ package com.oracle.iot.model;
 
 public class PropertyMetric {
 
-	private String name;
-	private String displayName;
-	private Double defaultValue;
-	private Double increment;
-	private Double alternate;
-	private Double loop;
-	private Double max;
-	private Double min;
+	private String name = null;
+	private String displayName = null;
+	private Double defaultValue = null;
+	private Double increment = null;
+	private Double alternate = null;
+	private Double loop = null;
+	private Double max = null;
+	private Double min = null;
+	private Boolean boolSet = null;
 
 	public PropertyMetric(String name, String displayName, Double defaultValue, Double increment, Double alternate,
 			Double loop, Double max, Double min) {
@@ -22,6 +23,13 @@ public class PropertyMetric {
 		this.loop = loop;
 		this.max = max;
 		this.min = min;
+	}
+
+	public PropertyMetric(String name, String displayName, Boolean boolSet) {
+		super();
+		this.name = name;
+		this.displayName = displayName;
+		this.boolSet = boolSet;
 	}
 
 	public String getName() {
@@ -54,6 +62,10 @@ public class PropertyMetric {
 
 	public Double getMin() {
 		return min;
+	}
+
+	public Boolean getBoolSet() {
+		return boolSet;
 	}
 
 }
