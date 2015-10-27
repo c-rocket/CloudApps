@@ -218,15 +218,22 @@ public class PropertyDevice extends IOTDevice {
 		alertBuilder.description(description);
 
 		for (String key : currentMetrics.keySet()) {
-			Double metricValue = (Double) currentMetrics.get(key);
 			String id = getMetricNameByDisplayName(key);
-			if (id != null)
-				alertBuilder.dataItem(id, metricValue);
+			if (id != null) {
+				if (currentMetrics.get(key) instanceof Double) {
+					Double metricValue = (Double) currentMetrics.get(key);
+					alertBuilder.dataItem(id, metricValue);
+				} else if (currentMetrics.get(key) instanceof Boolean) {
+					Boolean metricValue = (Boolean) currentMetrics.get(key);
+					alertBuilder.dataItem(id, metricValue);
+				}
+			}
 		}
 
 		alertBuilder.severity(AlertMessage.Severity.CRITICAL);
 		log.info("Created Alert: " + alertBuilder.build().toString());
 		return alertBuilder.build();
+
 	}
 
 	private String getMetricNameByDisplayName(String displayName) {
