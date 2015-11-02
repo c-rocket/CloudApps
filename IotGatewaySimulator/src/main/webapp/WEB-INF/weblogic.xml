@@ -9,7 +9,7 @@
 		<debug>true</debug>
 	</jsp-descriptor>
 	<logging>
-		<log-filename>DeviceSimulator.log</log-filename>
+		<log-filename>logs/DeviceSimulator.log</log-filename>
 		<logging-enabled>true</logging-enabled>
 	</logging>
 	<container-descriptor>
