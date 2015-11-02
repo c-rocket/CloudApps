@@ -68,4 +68,12 @@ public class PropertyMetric {
 		return boolSet;
 	}
 
+	public void setDefaultValue(Double defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public void setBoolSet(Boolean boolSet) {
+		this.boolSet = boolSet;
+	}
+
 }

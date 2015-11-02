@@ -1,9 +1,12 @@
 package com.oracle.iot.dao;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+
+import com.oracle.iot.model.DeviceResource;
 
 import oracle.iot.client.device.async.AsyncDeviceClient;
 
@@ -11,6 +14,8 @@ import oracle.iot.client.device.async.AsyncDeviceClient;
 public class MessagingDao {
 
 	private Map<String, byte[]> privateKeys = new LinkedHashMap<String, byte[]>();
+
+	private AsyncDeviceClient client;
 
 	public byte[] getPrivateKey(String id) {
 		return privateKeys.get(id);
@@ -28,8 +33,16 @@ public class MessagingDao {
 		privateKeys = new LinkedHashMap<String, byte[]>();
 	}
 
-	public AsyncDeviceClient getAsyncClient(String iotcsServer, Integer iotcsPort, String id) {
-		return new AsyncDeviceClient(iotcsServer, iotcsPort, id);
+	public AsyncDeviceClient getAsyncClient(String iotcsServer, Integer iotcsPort, String id,
+			List<DeviceResource> resources) {
+		if (!exists(id)) {
+			this.client = new AsyncDeviceClient(iotcsServer, iotcsPort, id);
+		}
+		return this.client;
+	}
+
+	public boolean exists(String id) {
+		return client != null && client.getEndpointId().equalsIgnoreCase(id);
 	}
 
 }

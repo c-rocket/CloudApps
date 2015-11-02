@@ -1,6 +1,9 @@
 package com.oracle.iot.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -8,9 +11,16 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import oracle.iot.client.device.Resource;
+import oracle.iot.client.device.Resource.Builder;
+import oracle.iot.client.device.Resource.Method;
 import oracle.iot.message.AlertMessage;
 import oracle.iot.message.DataMessage;
+import oracle.iot.message.HttpRequestMessage;
+import oracle.iot.message.HttpResponseMessage;
 import oracle.iot.message.Message;
+import oracle.iot.message.RequestMessageHandler;
+import oracle.iot.message.StatusCode;
 
 public class PropertyDevice extends IOTDevice {
 	@JsonIgnore
@@ -25,6 +35,8 @@ public class PropertyDevice extends IOTDevice {
 	Map<String, Object> currentMetrics = new LinkedHashMap<String, Object>();
 	@JsonIgnore
 	Map<PropertyEvent, Boolean> eventTriggers = new LinkedHashMap<PropertyEvent, Boolean>();
+	@JsonIgnore
+	List<DeviceResource> resources = new ArrayList<DeviceResource>();
 
 	public PropertyDevice(PropertyDeviceDetails details, String id, String secret) {
 		super(id, secret);
@@ -35,11 +47,74 @@ public class PropertyDevice extends IOTDevice {
 			} else {
 				currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
 			}
+			final PropertyDevice me = this;
+			Builder resourceBuilder = getResourceBuilder(id, metric);
+			DeviceResource resource = new DeviceResource(resourceBuilder.build(), new RequestMessageHandler() {
+
+				@Override
+				public HttpResponseMessage handleRequest(HttpRequestMessage request) throws Exception {
+					String metricName = request.getURL();
+					try {
+						if (request.getMethod().equalsIgnoreCase("get")) {
+							PropertyMetric metric = me.details.getMetricByName(metricName);
+							if (metric != null) {
+								String defaultValue;
+								if (metric.getBoolSet() == null) {
+									defaultValue = metric.getDefaultValue().toString();
+								} else {
+									defaultValue = metric.getBoolSet().toString();
+								}
+								return new HttpResponseMessage.Builder().header(metricName, Arrays.asList(defaultValue))
+										.contentType("text/xml").url(metricName).body(defaultValue)
+										.statusCode(StatusCode.OK).source(me.getId()).clientId(request.getClientId())
+										.sender(request.getDestination()).destination(request.getSender())
+										.requestId(request.getId()).build();
+							}
+						} else if (request.getMethod().equalsIgnoreCase("put")) {
+							String value = request.getBodyString();
+							PropertyMetric metric = me.details.getMetricByName(metricName);
+							if (metric != null) {
+								if (metric.getBoolSet() == null) {
+									metric.setDefaultValue(Double.valueOf(value));
+								} else {
+									metric.setBoolSet(Boolean.valueOf(value));
+								}
+								return new HttpResponseMessage.Builder().header(metricName, Arrays.asList(value))
+										.contentType("text/xml").url(metricName).body(value)
+										.statusCode(StatusCode.ACCEPTED).source(me.getId())
+										.clientId(request.getClientId()).sender(request.getDestination())
+										.destination(request.getSender()).requestId(request.getId()).build();
+							}
+						}
+					} catch (Exception e) {
+						log.error("Problem with Endpoint manipulation", e);
+					}
+					return new HttpResponseMessage.Builder().header(metricName, null).contentType("text/xml")
+							.url(metricName).body("invalid request").statusCode(StatusCode.BAD_REQUEST)
+							.source(me.getId()).clientId(request.getClientId()).sender(request.getDestination())
+							.destination(request.getSender()).requestId(request.getId()).build();
+				}
+			});
+			resources.add(resource);
 		}
 		log.info("Creating Events: " + details.getEvents().size());
-		for (PropertyEvent event : details.getEvents()) {
+		for (
+
+		PropertyEvent event : details.getEvents())
+
+		{
 			eventTriggers.put(event, false);
 		}
+
+	}
+
+	private Builder getResourceBuilder(String id, PropertyMetric metric) {
+		List<Method> methods = new ArrayList<Method>();
+		methods.add(Method.PUT); // allow values to be updated
+		methods.add(Method.GET); // allow user to request the value
+		Builder resourceBuilder = new Resource.Builder();
+		resourceBuilder.endpointName(id).name(metric.getName()).path(metric.getName()).methods(methods);
+		return resourceBuilder;
 	}
 
 	@Override
@@ -302,6 +377,11 @@ public class PropertyDevice extends IOTDevice {
 	@Override
 	public IOTDevice copy() {
 		return this;
+	}
+
+	@Override
+	public List<DeviceResource> getResources() {
+		return resources;
 	}
 
 }

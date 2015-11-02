@@ -113,4 +113,13 @@ public class PropertyDeviceDetails {
 	public void disable() {
 		this.enabled = false;
 	}
+
+	public PropertyMetric getMetricByName(String metricName) {
+		for (PropertyMetric metric : this.metrics) {
+			if (metric.getName().equalsIgnoreCase(metricName)) {
+				return metric;
+			}
+		}
+		return null;
+	}
 }

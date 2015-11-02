@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.oracle.iot.client.ConnectionManager;
 import com.oracle.iot.client.TrustManager;
 import com.oracle.iot.dao.MessagingDao;
+import com.oracle.iot.model.DeviceResource;
 import com.oracle.iot.model.IOTDevice;
 
 import oracle.iot.client.device.async.AsyncDeviceClient;
@@ -29,7 +30,8 @@ public class MessagingService {
 		for (IOTDevice device : devices) {
 			DataMessage message = device.createMessage();
 			if (sendMessages) {
-				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
+				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
+						device.getResources());
 				boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 				// sends true if client connection is made
 				if (madeConnection) {
@@ -50,6 +52,9 @@ public class MessagingService {
 		if (privateKey == null) {
 			try {
 				privateKey = client.activate(device.getSecret());
+				for (DeviceResource resource : device.getResources()) {
+					client.registerRequestHandler(resource.getResource(), resource.getHandler());
+				}
 				dao.savePrivateKey(device.getId(), privateKey);
 			} catch (final IllegalStateException EXCEPTION) {
 				log.error("The device has already been activated, but there is no private key", EXCEPTION);
@@ -76,7 +81,8 @@ public class MessagingService {
 			Boolean sendMessages) {
 		if (sendMessages) {
 			Message message = device.createAlertMessage(alert);
-			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
+			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
+					device.getResources());
 			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 			DEVICE_CLIENT.sendMessage(message);
 		}
@@ -85,7 +91,8 @@ public class MessagingService {
 
 	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
 		if (sendMessages) {
-			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId());
+			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
+					device.getResources());
 			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
 			TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
 			ConnectionManager.getInstance(trustManager).close();

@@ -42,7 +42,8 @@ public class MessagingServiceTest {
 	public void setUp() {
 		mockedClient = PowerMockito.mock(AsyncDeviceClient.class);
 		PowerMockito.mockStatic(AsyncDeviceClient.class);
-		when(dao.getAsyncClient(any(String.class), any(Integer.class), any(String.class))).thenReturn(mockedClient);
+		when(dao.getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class)))
+				.thenReturn(mockedClient);
 	}
 
 	@Test
@@ -64,7 +65,7 @@ public class MessagingServiceTest {
 
 		// assert
 		assertTrue(sent);
-		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class));
+		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
 		verify(dao, never()).savePrivateKey(id, key);
 	}
 
@@ -90,7 +91,7 @@ public class MessagingServiceTest {
 
 		// assert
 		assertTrue(sent);
-		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class));
+		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
 		verify(dao, times(1)).savePrivateKey(eq(id), eq(key));
 	}
 }

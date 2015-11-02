@@ -91,4 +91,6 @@ public abstract class IOTDevice {
 
 	public abstract IOTDevice copy();
 
+	public abstract List<DeviceResource> getResources();
+
 }
