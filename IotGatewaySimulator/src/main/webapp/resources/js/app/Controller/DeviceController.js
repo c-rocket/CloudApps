@@ -177,7 +177,7 @@ app.controller('DeviceController', function($scope, $http, $mdSidenav, $mdToast,
 
 			$interval(function() {
 				DeviceService.getDevice($http, $scope.baseUrl, $scope.currentId, metricsAndChartHandler);
-			}, 500, 1);
+			}, 2000, 1);
 
 			$scope.$on('$destroy', function() {
 				$interval.cancel(true);

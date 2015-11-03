@@ -26,7 +26,7 @@ public class ScheduledTasks {
 	private DeviceService deviceService;
 
 	// execute 5 seconds after the last message was sent
-	@Scheduled(fixedDelay = 1000)
+	@Scheduled(fixedDelay = 2000)
 	public void reportCurrentTime() {
 		// check if sending messages is turned on
 		List<IOTDevice> allDevices = deviceService.findAll();
