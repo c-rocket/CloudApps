@@ -82,7 +82,7 @@
 			}} </md-switch>
 		</section>
 		</md-grid-tile> <md-grid-tile md-rowspan="1" md-colspan="1" class="md-whiteframe-z4 turquoise" ng-show="currentId"> <md-grid-tile-header>
-		<h2>Device Details</h2>
+		<h2>Device Details ({{ device.id }})</h2>
 		</md-grid-tile-header>
 		<div class="device-info">
 			<ul>
