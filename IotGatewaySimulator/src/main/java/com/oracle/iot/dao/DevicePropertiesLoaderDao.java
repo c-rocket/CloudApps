@@ -81,8 +81,8 @@ public class DevicePropertiesLoaderDao {
 
 	private PropertyDeviceDetails extractDeviceFromProperties(Properties prop, String name) {
 		String deviceName = prop.getProperty("display.name");
-		String dataFormat = Constants.removeWhiteSpace(prop.getProperty("data.format"));
-		String alertFormat = Constants.removeWhiteSpace(prop.getProperty("alert.format"));
+		String dataFormat = "urn:com:oracle:iot:model:devicesimulator:" + name;
+		String alertFormat = "urn:com:oracle:iot:model:devicesimulator:alert:" + name;
 		String picture = prop.getProperty("picture", "widget.png");
 		PropertyDeviceDetails newDevice = new PropertyDeviceDetails(name, deviceName, dataFormat, alertFormat, picture);
 
