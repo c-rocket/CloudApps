@@ -247,11 +247,10 @@ public class PropertyDevice extends IOTDevice {
 		else if (metric.getAlternate() != null) {
 			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
 					metric.getAlternate())) {
-				value = metric.getAlternate();
+				return metric.getAlternate();
 			} else {
-				value = metric.getDefaultValue();
+				return metric.getDefaultValue();
 			}
-			value = Constants.randomDoubleWithinVariation(value);
 		} else {
 			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue());
 		}

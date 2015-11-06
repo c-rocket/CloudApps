@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.oracle.iot.dao.DevicePropertiesLoaderDao;
+import com.oracle.iot.util.Constants;
 
 import oracle.iot.message.AlertMessage;
 
@@ -63,7 +64,7 @@ public class PropertyDeviceTest {
 
 		// assert
 		metrics = device.getMetrics();
-		assertEquals(((Double) metrics.get("Output Temp (C)")), originalTemp + 10.0, Double.NaN);
+		assertEquals(((Double) metrics.get("Output Temp (C)")), Constants.scale(originalTemp + 10.0, 2), Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
 		assertMetric((Double) metrics.get("Oil Viscosity (cP)"), 0.25);
 		assertMetric((Double) metrics.get("Motor Amperage (A)"), 50.0);
