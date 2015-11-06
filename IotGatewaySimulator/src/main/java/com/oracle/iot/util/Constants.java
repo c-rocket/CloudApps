@@ -1,4 +1,4 @@
-package com.oracle.iot.model;
+package com.oracle.iot.util;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,7 +11,12 @@ import java.util.Random;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import com.oracle.iot.model.IOTDevice;
+
 public final class Constants {
+
+	private static final double VARIATION_PERCENT_MINUS = 0.98;
+	private static final double VARIATION_PERCENT_PLUS = 1.02;
 
 	public static String formatChartLabel(DateTime date) {
 		return DateTimeFormat.forPattern("MM/dd/yy kk:mm:ss").print(date);
@@ -70,10 +75,10 @@ public final class Constants {
 		return copy;
 	}
 
-	public static Double RandomFourPercent(Double value) {
-		Double plusTen = value * 1.04;
-		Double minusTen = value * 0.96;
-		return randomDouble(minusTen, plusTen, 2);
+	public static Double randomDoubleWithinVariation(Double value) {
+		Double plus = value * VARIATION_PERCENT_PLUS;
+		Double minus = value * VARIATION_PERCENT_MINUS;
+		return randomDouble(minus, plus, 2);
 	}
 
 	public static Double doubleOrNull(String str) {
@@ -107,6 +112,16 @@ public final class Constants {
 			return null;
 		}
 		return str.replaceAll("\\s+", "");
+	}
+
+	public static boolean isWithinVariation(Double value, Double setValue) {
+		Double plus = setValue * VARIATION_PERCENT_PLUS;
+		Double minus = setValue * VARIATION_PERCENT_MINUS;
+		if (setValue >= 0) {
+			return value <= plus && value >= minus;
+		} else {
+			return value >= plus && value <= minus;
+		}
 	}
 
 }

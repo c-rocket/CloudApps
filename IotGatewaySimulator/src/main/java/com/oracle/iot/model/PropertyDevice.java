@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oracle.iot.util.Constants;
 
 import oracle.iot.client.device.Resource;
 import oracle.iot.client.device.Resource.Builder;
@@ -150,9 +151,8 @@ public class PropertyDevice extends IOTDevice {
 			if (metric.getBoolSet() != null) {
 				calcs.put(metric, (boolean) metric.getBoolSet());
 			} else {
-				Double value = Constants.RandomFourPercent(metric.getDefaultValue());
-				value = calculateAnimatedValue(metric, Constants.RandomFourPercent(metric.getDefaultValue()));
-				calcs.put(metric, value);
+				Double value = calculateAnimatedValue(metric, metric.getDefaultValue());
+				calcs.put(metric, Constants.randomDoubleWithinVariation(value));
 			}
 		}
 		// loop through events and change values if needed
@@ -162,8 +162,7 @@ public class PropertyDevice extends IOTDevice {
 				for (EventMetric eventMetric : event.getEventMetrics()) {
 					PropertyMetric metric = getPropertyMetric(calcs, eventMetric);
 					if (calcs.get(metric) instanceof Double) {
-						Double value = (Double) calcs.get(metric);
-						value = calculateAnimatedEventValue(eventMetric, metric, value);
+						Double value = calculateAnimatedEventValue(eventMetric, metric, (Double) calcs.get(metric));
 						calcs.put(metric, value);
 					} else if (calcs.get(metric) instanceof Boolean) {
 						Boolean value = eventMetric.getBoolSet();
@@ -220,7 +219,8 @@ public class PropertyDevice extends IOTDevice {
 		}
 		// alternate
 		if (eventMetric.getAlternate() != null) {
-			if (((Double) currentMetrics.get(metric.getDisplayName())).compareTo(eventMetric.getAlternate()) != 0) {
+			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
+					eventMetric.getAlternate())) {
 				value = eventMetric.getAlternate();
 			} else {
 				value = eventMetric.getEventValue();
@@ -230,6 +230,8 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	private Double calculateAnimatedValue(PropertyMetric metric, Double value) {
+		// if we have no current metric (first time)
+		// then start using the default value
 		if (currentMetrics.get(metric.getDisplayName()) == null) {
 			value = metric.getDefaultValue();
 		}
@@ -259,7 +261,8 @@ public class PropertyDevice extends IOTDevice {
 		}
 		// alternate
 		if (metric.getAlternate() != null) {
-			if (value.compareTo(metric.getAlternate()) != 0) {
+			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
+					metric.getAlternate())) {
 				value = metric.getAlternate();
 			} else {
 				value = metric.getDefaultValue();

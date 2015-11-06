@@ -11,7 +11,9 @@ import com.oracle.iot.dao.MessagingDao;
 import com.oracle.iot.model.DeviceResource;
 import com.oracle.iot.model.IOTDevice;
 
+import oracle.iot.client.ClientException;
 import oracle.iot.client.device.async.AsyncDeviceClient;
+import oracle.iot.client.device.async.MessageReceipt;
 import oracle.iot.message.DataMessage;
 import oracle.iot.message.Message;
 
@@ -21,58 +23,37 @@ public class MessagingService {
 	@Resource
 	private MessagingDao dao;
 
-	public boolean sendMessages(IOTDevice currentDevice, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
-		boolean sent = false;
-		try {
-			DataMessage message = currentDevice.createMessage();
-			if (sendMessages) {
-				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, currentDevice.getId(),
-						currentDevice.getResources());
-				boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort,
-						currentDevice);
-				// sends true if client connection is made
-				if (madeConnection) {
-					DEVICE_CLIENT.sendMessage(message);
-					sent = true;
-				} else {
-					sent = false;
-				}
+	public MessageReceipt sendMessages(IOTDevice currentDevice, String iotcsServer, Integer iotcsPort,
+			Boolean sendMessages) throws ClientException {
+		DataMessage message = currentDevice.createMessage();
+		if (sendMessages) {
+			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, currentDevice.getId(),
+					currentDevice.getResources());
+			boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, currentDevice);
+			// sends true if client connection is made
+			if (madeConnection) {
+				return DEVICE_CLIENT.sendMessage(message);
 			}
-		} catch (Exception e) {
-			log.error("Error sending message", e);
-			sent = false;
+		} else {
+			return null;
 		}
-		return sent;
+		throw new RuntimeException("could not send message");
 	}
 
 	private boolean getDeviceClientConnection(AsyncDeviceClient client, String iotcsServer, Integer iotcsPort,
-			IOTDevice device) {
+			IOTDevice device) throws ClientException {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
 		byte[] privateKey = dao.getPrivateKey(device.getId());
 		if (privateKey == null) {
-			try {
-				privateKey = client.activate(device.getSecret());
-				for (DeviceResource resource : device.getResources()) {
-					client.registerRequestHandler(resource.getResource(), resource.getHandler());
-				}
-				dao.savePrivateKey(device.getId(), privateKey);
-			} catch (final IllegalStateException EXCEPTION) {
-				log.error("The device has already been activated, but there is no private key", EXCEPTION);
-				log.error("Enroll a new device and try again.", EXCEPTION);
-				return false;
-			} catch (Exception e) {
-				log.error("Error activating client", e);
-				return false;
+			privateKey = client.activate(device.getSecret());
+			for (DeviceResource resource : device.getResources()) {
+				client.registerRequestHandler(resource.getResource(), resource.getHandler());
 			}
+			dao.savePrivateKey(device.getId(), privateKey);
 		} else {
 			// Authenticate with, and connect to, the server
 			System.out.println("\nConnecting with client-assertion...");
-			try {
-				client.authenticate(privateKey);
-			} catch (Exception e) {
-				log.error("Error authenticating client", e);
-				return false;
-			}
+			client.authenticate(privateKey);
 		}
 		return true;
 	}
@@ -83,20 +64,34 @@ public class MessagingService {
 			Message message = device.createAlertMessage(alert);
 			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
 					device.getResources());
-			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
-			DEVICE_CLIENT.sendMessage(message);
+			try {
+				getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+				DEVICE_CLIENT.sendMessage(message);
+			} catch (Exception e) {
+				log.error("Error sending alert", e);
+				return false;
+			}
 		}
 		return true;
 	}
 
 	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
-		if (sendMessages) {
+		if (dao.exists(device.getId())) {
 			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
 					device.getResources());
-			getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
-			TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
-			ConnectionManager.getInstance(trustManager).close();
-			DEVICE_CLIENT.close();
+			try {
+				getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+
+				for (DeviceResource resource : device.getResources()) {
+					DEVICE_CLIENT.unregisterRequestHandler(resource.getResource());
+				}
+
+				TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
+				ConnectionManager.getInstance(trustManager).close();
+				DEVICE_CLIENT.close();
+			} catch (Exception e) {
+				log.error("Problem closing connection", e);
+			}
 		}
 	}
 }

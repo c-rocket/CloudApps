@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.oracle.iot.model.Constants;
 import com.oracle.iot.model.PropertyDeviceDetails;
 import com.oracle.iot.model.PropertyMetric;
+import com.oracle.iot.util.Constants;
 
 @Repository
 public class DevicePropertiesLoaderDao {

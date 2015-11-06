@@ -1,6 +1,6 @@
 package com.oracle.iot.service;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -24,6 +24,8 @@ import com.oracle.iot.dao.MessagingDao;
 import com.oracle.iot.model.IOTDevice;
 
 import oracle.iot.client.device.async.AsyncDeviceClient;
+import oracle.iot.client.device.async.MessageReceipt;
+import oracle.iot.message.Message;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(AsyncDeviceClient.class)
@@ -44,6 +46,7 @@ public class MessagingServiceTest {
 		PowerMockito.mockStatic(AsyncDeviceClient.class);
 		when(dao.getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class)))
 				.thenReturn(mockedClient);
+		when(mockedClient.sendMessage(any(Message.class))).thenReturn(PowerMockito.mock(MessageReceipt.class));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,10 +64,10 @@ public class MessagingServiceTest {
 		when(dao.getPrivateKey(id)).thenReturn(key);
 
 		// execute
-		boolean sent = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
+		MessageReceipt receipt = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
 
 		// assert
-		assertTrue(sent);
+		assertNotNull(receipt);
 		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
 		verify(dao, never()).savePrivateKey(id, key);
 	}
@@ -87,10 +90,10 @@ public class MessagingServiceTest {
 		PowerMockito.when(mockedClient.activate(secret)).thenReturn(key);
 
 		// execute
-		boolean sent = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
+		MessageReceipt receipt = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
 
 		// assert
-		assertTrue(sent);
+		assertNotNull(receipt);
 		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
 		verify(dao, times(1)).savePrivateKey(eq(id), eq(key));
 	}
