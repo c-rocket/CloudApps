@@ -152,7 +152,7 @@ public class PropertyDevice extends IOTDevice {
 				calcs.put(metric, (boolean) metric.getBoolSet());
 			} else {
 				Double value = calculateAnimatedValue(metric, metric.getDefaultValue());
-				calcs.put(metric, Constants.randomDoubleWithinVariation(value));
+				calcs.put(metric, value);
 			}
 		}
 		// loop through events and change values if needed
@@ -187,7 +187,7 @@ public class PropertyDevice extends IOTDevice {
 	private Double calculateAnimatedEventValue(EventMetric eventMetric, PropertyMetric metric, Double value) {
 		// hold number at current value
 		if (eventMetric.getHold()) {
-			value = (Double) currentMetrics.get(metric.getDisplayName());
+			return (Double) currentMetrics.get(metric.getDisplayName());
 		}
 		// set straight up value
 		if (eventMetric.getEventValue() != null) {
@@ -200,6 +200,15 @@ public class PropertyDevice extends IOTDevice {
 		// loop
 		if (eventMetric.getLoop() != null) {
 			value = (Double) currentMetrics.get(metric.getDisplayName()) + eventMetric.getLoop();
+		}
+		// alternate
+		if (eventMetric.getAlternate() != null) {
+			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
+					eventMetric.getAlternate())) {
+				return eventMetric.getAlternate();
+			} else {
+				return eventMetric.getEventValue();
+			}
 		}
 		// max
 		if (eventMetric.getMax() != null && value > eventMetric.getMax()) {
@@ -217,15 +226,6 @@ public class PropertyDevice extends IOTDevice {
 				value = eventMetric.getEventValue();
 			}
 		}
-		// alternate
-		if (eventMetric.getAlternate() != null) {
-			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
-					eventMetric.getAlternate())) {
-				value = eventMetric.getAlternate();
-			} else {
-				value = eventMetric.getEventValue();
-			}
-		}
 		return value;
 	}
 
@@ -233,15 +233,27 @@ public class PropertyDevice extends IOTDevice {
 		// if we have no current metric (first time)
 		// then start using the default value
 		if (currentMetrics.get(metric.getDisplayName()) == null) {
-			value = metric.getDefaultValue();
+			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue());
 		}
 		// increment
-		if (metric.getIncrement() != null) {
+		else if (metric.getIncrement() != null) {
 			value = (Double) currentMetrics.get(metric.getDisplayName()) + metric.getIncrement();
 		}
 		// loop
-		if (metric.getLoop() != null) {
+		else if (metric.getLoop() != null) {
 			value = (Double) currentMetrics.get(metric.getDisplayName()) + metric.getLoop();
+		}
+		// alternate
+		else if (metric.getAlternate() != null) {
+			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
+					metric.getAlternate())) {
+				value = metric.getAlternate();
+			} else {
+				value = metric.getDefaultValue();
+			}
+			value = Constants.randomDoubleWithinVariation(value);
+		} else {
+			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue());
 		}
 		// max
 		if (metric.getMax() != null && value > metric.getMax()) {
@@ -259,15 +271,7 @@ public class PropertyDevice extends IOTDevice {
 				value = metric.getDefaultValue();
 			}
 		}
-		// alternate
-		if (metric.getAlternate() != null) {
-			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
-					metric.getAlternate())) {
-				value = metric.getAlternate();
-			} else {
-				value = metric.getDefaultValue();
-			}
-		}
+
 		return value;
 	}
 

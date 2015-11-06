@@ -295,8 +295,7 @@ public class PropertyDeviceTest {
 		Map<String, Object> metrics = device.getMetrics();
 		assertMetric((Double) metrics.get("Drill Speed (rpm)"), 200.0);
 		assertMetric((Double) metrics.get("Temperature (C)"), 145.0);
-		// assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.96,
-		// Double.NaN);
+		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.96, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
 
 	}
