@@ -1,7 +1,5 @@
 package com.oracle.iot.scheduled;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -29,12 +27,12 @@ public class ScheduledTasks {
 	@Scheduled(fixedDelay = 2000)
 	public void reportCurrentTime() {
 		// check if sending messages is turned on
-		List<IOTDevice> allDevices = deviceService.findAll();
-		if (allDevices != null && allDevices.size() > 0) {
-			log.debug("Device Count: " + allDevices.size());
-			boolean sent = messageService.sendMessages(allDevices, systemConfigService.getHost(),
+		IOTDevice currentDevice = deviceService.getCurrentDevice();
+		if (currentDevice != null) {
+			log.debug("Device: " + currentDevice.getId());
+			boolean sent = messageService.sendMessages(currentDevice, systemConfigService.getHost(),
 					systemConfigService.getPort(), systemConfigService.getMessageStatus());
-			deviceService.updateAll(allDevices);
+			deviceService.updateDevice(currentDevice);
 			// we only care about sending if the message status was supposed to
 			// send
 			if (!sent && systemConfigService.getMessageStatus()) {

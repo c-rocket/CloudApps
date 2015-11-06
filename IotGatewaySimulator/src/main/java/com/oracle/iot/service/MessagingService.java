@@ -1,7 +1,5 @@
 package com.oracle.iot.service;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -23,16 +21,15 @@ public class MessagingService {
 	@Resource
 	private MessagingDao dao;
 
-	public boolean sendMessages(List<IOTDevice> devices, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
+	public boolean sendMessages(IOTDevice currentDevice, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
 		boolean sent = false;
-		// Note that right now there will only ever be one device as the client
-		// library does not support multiples through their Asyn library class
-		for (IOTDevice device : devices) {
-			DataMessage message = device.createMessage();
+		try {
+			DataMessage message = currentDevice.createMessage();
 			if (sendMessages) {
-				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
-						device.getResources());
-				boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort, device);
+				AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, currentDevice.getId(),
+						currentDevice.getResources());
+				boolean madeConnection = getDeviceClientConnection(DEVICE_CLIENT, iotcsServer, iotcsPort,
+						currentDevice);
 				// sends true if client connection is made
 				if (madeConnection) {
 					DEVICE_CLIENT.sendMessage(message);
@@ -41,6 +38,9 @@ public class MessagingService {
 					sent = false;
 				}
 			}
+		} catch (Exception e) {
+			log.error("Error sending message", e);
+			sent = false;
 		}
 		return sent;
 	}

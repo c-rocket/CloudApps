@@ -8,7 +8,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -38,6 +37,7 @@ public class MessagingServiceTest {
 
 	AsyncDeviceClient mockedClient;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() {
 		mockedClient = PowerMockito.mock(AsyncDeviceClient.class);
@@ -46,6 +46,7 @@ public class MessagingServiceTest {
 				.thenReturn(mockedClient);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void sendMessagesServerSendingIsOnExistingPrivateKey() throws Exception {
 		// setup
@@ -56,12 +57,11 @@ public class MessagingServiceTest {
 		byte[] key = "privatebyteSizedKey".getBytes();
 		IOTDevice device = Mockito.mock(IOTDevice.class);
 		when(device.getId()).thenReturn(id);
-		List<IOTDevice> devices = Arrays.asList(device);
 
 		when(dao.getPrivateKey(id)).thenReturn(key);
 
 		// execute
-		boolean sent = service.sendMessages(devices, iotcsServer, iotcsPort, sendMessages);
+		boolean sent = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
 
 		// assert
 		assertTrue(sent);
@@ -69,6 +69,7 @@ public class MessagingServiceTest {
 		verify(dao, never()).savePrivateKey(id, key);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void sendMessagesServerSendingIsOnNoExistingPrivateKey() throws Exception {
 		// setup
@@ -81,13 +82,12 @@ public class MessagingServiceTest {
 		IOTDevice device = Mockito.mock(IOTDevice.class);
 		when(device.getId()).thenReturn(id);
 		when(device.getSecret()).thenReturn(secret);
-		List<IOTDevice> devices = Arrays.asList(device);
 
 		when(dao.getPrivateKey(id)).thenReturn(null);
 		PowerMockito.when(mockedClient.activate(secret)).thenReturn(key);
 
 		// execute
-		boolean sent = service.sendMessages(devices, iotcsServer, iotcsPort, sendMessages);
+		boolean sent = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
 
 		// assert
 		assertTrue(sent);
