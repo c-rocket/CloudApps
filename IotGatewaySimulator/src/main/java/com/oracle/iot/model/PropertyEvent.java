@@ -30,8 +30,8 @@ public class PropertyEvent {
 	}
 
 	public void addEventMetric(String metricName, Double value, Double increment, Double alternate, Double loop,
-			Double max, Double min, Boolean hold) {
-		eventMetrics.add(new EventMetric(metricName, value, increment, alternate, loop, max, min, hold));
+			Double max, Double min, Boolean hold, Double variation) {
+		eventMetrics.add(new EventMetric(metricName, value, increment, alternate, loop, max, min, hold, variation));
 	}
 
 	public Integer getPriority() {

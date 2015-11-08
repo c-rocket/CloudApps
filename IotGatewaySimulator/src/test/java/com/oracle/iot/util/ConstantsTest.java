@@ -14,7 +14,7 @@ public class ConstantsTest {
 		Double setValue = 100d;
 
 		// execute
-		boolean isWithin = Constants.isWithinVariation(value1, setValue);
+		boolean isWithin = Constants.isWithinVariation(value1, setValue, 0.02d);
 
 		// assert
 		assertTrue(isWithin);
@@ -27,7 +27,7 @@ public class ConstantsTest {
 		Double setValue = 100d;
 
 		// execute
-		boolean isWithin = Constants.isWithinVariation(value1, setValue);
+		boolean isWithin = Constants.isWithinVariation(value1, setValue, 0.02d);
 
 		// assert
 		assertFalse(isWithin);
@@ -40,7 +40,7 @@ public class ConstantsTest {
 		Double setValue = -100d;
 
 		// execute
-		boolean isWithin = Constants.isWithinVariation(value1, setValue);
+		boolean isWithin = Constants.isWithinVariation(value1, setValue, 0.02d);
 
 		// assert
 		assertTrue(isWithin);
@@ -53,9 +53,22 @@ public class ConstantsTest {
 		Double setValue = -100d;
 
 		// execute
-		boolean isWithin = Constants.isWithinVariation(value1, setValue);
+		boolean isWithin = Constants.isWithinVariation(value1, setValue, 0.02d);
 
 		// assert
 		assertFalse(isWithin);
+	}
+
+	@Test
+	public void testWithin_NoVariance() throws Exception {
+		// setup
+		Double value1 = -97d;
+		Double setValue = -97d;
+
+		// execute
+		boolean isWithin = Constants.isWithinVariation(value1, setValue, 0d);
+
+		// assert
+		assertTrue(isWithin);
 	}
 }

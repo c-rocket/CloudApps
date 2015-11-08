@@ -191,7 +191,7 @@ public class PropertyDevice extends IOTDevice {
 		}
 		// set straight up value
 		if (eventMetric.getEventValue() != null) {
-			value = eventMetric.getEventValue();
+			value = Constants.randomDoubleWithinVariation(eventMetric.getEventValue(), eventMetric.getVariation());
 		}
 		// increment
 		if (eventMetric.getIncrement() != null) {
@@ -204,10 +204,10 @@ public class PropertyDevice extends IOTDevice {
 		// alternate
 		if (eventMetric.getAlternate() != null) {
 			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
-					eventMetric.getAlternate())) {
-				return eventMetric.getAlternate();
+					eventMetric.getAlternate(), eventMetric.getVariation())) {
+				return Constants.randomDoubleWithinVariation(eventMetric.getAlternate(), eventMetric.getVariation());
 			} else {
-				return eventMetric.getEventValue();
+				return Constants.randomDoubleWithinVariation(eventMetric.getEventValue(), eventMetric.getVariation());
 			}
 		}
 		// max
@@ -233,10 +233,15 @@ public class PropertyDevice extends IOTDevice {
 		// if we have no current metric (first time)
 		// then start using the default value
 		if (currentMetrics.get(metric.getDisplayName()) == null) {
-			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue());
+			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue(), metric.getVariation());
+		}
+		if (metric.getHold()) {
+			return (Double) currentMetrics.get(metric.getDisplayName());
+		} else {
+			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue(), metric.getVariation());
 		}
 		// increment
-		else if (metric.getIncrement() != null) {
+		if (metric.getIncrement() != null) {
 			value = (Double) currentMetrics.get(metric.getDisplayName()) + metric.getIncrement();
 		}
 		// loop
@@ -246,13 +251,11 @@ public class PropertyDevice extends IOTDevice {
 		// alternate
 		else if (metric.getAlternate() != null) {
 			if (!Constants.isWithinVariation((Double) currentMetrics.get(metric.getDisplayName()),
-					metric.getAlternate())) {
-				return metric.getAlternate();
+					metric.getAlternate(), metric.getVariation())) {
+				return Constants.randomDoubleWithinVariation(metric.getAlternate(), metric.getVariation());
 			} else {
-				return metric.getDefaultValue();
+				return Constants.randomDoubleWithinVariation(metric.getDefaultValue(), metric.getVariation());
 			}
-		} else {
-			value = Constants.randomDoubleWithinVariation(metric.getDefaultValue());
 		}
 		// max
 		if (metric.getMax() != null && value > metric.getMax()) {

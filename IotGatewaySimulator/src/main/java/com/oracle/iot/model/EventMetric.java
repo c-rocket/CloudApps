@@ -10,9 +10,10 @@ public class EventMetric {
 	private Double min = null;
 	private Boolean hold = Boolean.FALSE;
 	private Boolean boolSet = null;
+	private Double variation = null;
 
 	public EventMetric(String metricName, Double eventValue, Double increment, Double alternate, Double loop,
-			Double max, Double min, Boolean hold) {
+			Double max, Double min, Boolean hold, Double variation) {
 		super();
 		this.metricName = metricName;
 		this.eventValue = eventValue;
@@ -22,6 +23,7 @@ public class EventMetric {
 		this.max = max;
 		this.min = min;
 		this.hold = hold;
+		this.variation = variation;
 	}
 
 	public EventMetric(String metricName, Boolean boolSet) {
@@ -64,6 +66,10 @@ public class EventMetric {
 
 	public Boolean getBoolSet() {
 		return boolSet;
+	}
+
+	public Double getVariation() {
+		return variation;
 	}
 
 }

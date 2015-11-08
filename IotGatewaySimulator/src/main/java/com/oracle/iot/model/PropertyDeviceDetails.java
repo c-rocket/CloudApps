@@ -30,8 +30,9 @@ public class PropertyDeviceDetails {
 	}
 
 	public void addMetric(String name, String display, Double defaultValue, Double increment, Double alternate,
-			Double loop, Double max, Double min) {
-		metrics.add(new PropertyMetric(name, display, defaultValue, increment, alternate, loop, max, min));
+			Double loop, Double max, Double min, Double variation, Boolean hold) {
+		metrics.add(
+				new PropertyMetric(name, display, defaultValue, increment, alternate, loop, max, min, variation, hold));
 	}
 
 	public List<PropertyMetric> getMetrics() {
@@ -47,14 +48,14 @@ public class PropertyDeviceDetails {
 	}
 
 	public void addEvent(String name, String displayName, Integer priority, String metricName, Double value,
-			Double increment, Double alternate, Double loop, Double max, Double min, Boolean hold) {
+			Double increment, Double alternate, Double loop, Double max, Double min, Boolean hold, Double variation) {
 		PropertyEvent propertyEvent = events.get(name);
 
 		if (propertyEvent == null) {
 			propertyEvent = new PropertyEvent(name, displayName, priority);
 			events.put(name, propertyEvent);
 		}
-		propertyEvent.addEventMetric(metricName, value, increment, alternate, loop, max, min, hold);
+		propertyEvent.addEventMetric(metricName, value, increment, alternate, loop, max, min, hold, variation);
 	}
 
 	public void addAlert(String alert, String displayName) {

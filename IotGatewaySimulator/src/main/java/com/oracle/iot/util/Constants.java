@@ -15,9 +15,6 @@ import com.oracle.iot.model.IOTDevice;
 
 public final class Constants {
 
-	private static final double VARIATION_PERCENT_MINUS = 0.98;
-	private static final double VARIATION_PERCENT_PLUS = 1.02;
-
 	public static String formatChartLabel(DateTime date) {
 		return DateTimeFormat.forPattern("MM/dd/yy kk:mm:ss").print(date);
 	}
@@ -75,9 +72,12 @@ public final class Constants {
 		return copy;
 	}
 
-	public static Double randomDoubleWithinVariation(Double value) {
-		Double plus = value * VARIATION_PERCENT_PLUS;
-		Double minus = value * VARIATION_PERCENT_MINUS;
+	public static Double randomDoubleWithinVariation(Double value, Double variationPercent) {
+		if (variationPercent.compareTo(0d) == 0) {
+			return value;
+		}
+		Double plus = value * (1 + variationPercent);
+		Double minus = value * (1 - variationPercent);
 		return randomDouble(minus, plus, 2);
 	}
 
@@ -114,9 +114,12 @@ public final class Constants {
 		return str.replaceAll("\\s+", "");
 	}
 
-	public static boolean isWithinVariation(Double value, Double setValue) {
-		Double plus = setValue * VARIATION_PERCENT_PLUS;
-		Double minus = setValue * VARIATION_PERCENT_MINUS;
+	public static boolean isWithinVariation(Double value, Double setValue, Double variationPercent) {
+		if (variationPercent.compareTo(0d) == 0) {
+			return value.compareTo(setValue) == 0;
+		}
+		Double plus = setValue * (1 + variationPercent);
+		Double minus = setValue * (1 - variationPercent);
 		if (setValue >= 0) {
 			return value <= plus && value >= minus;
 		} else {

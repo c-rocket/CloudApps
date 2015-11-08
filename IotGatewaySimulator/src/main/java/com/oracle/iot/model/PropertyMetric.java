@@ -11,9 +11,11 @@ public class PropertyMetric {
 	private Double max = null;
 	private Double min = null;
 	private Boolean boolSet = null;
+	private Double variation = null;
+	private Boolean hold = null;
 
 	public PropertyMetric(String name, String displayName, Double defaultValue, Double increment, Double alternate,
-			Double loop, Double max, Double min) {
+			Double loop, Double max, Double min, Double variation, Boolean hold) {
 		super();
 		this.name = name;
 		this.displayName = displayName;
@@ -23,6 +25,8 @@ public class PropertyMetric {
 		this.loop = loop;
 		this.max = max;
 		this.min = min;
+		this.variation = variation;
+		this.hold = hold;
 	}
 
 	public PropertyMetric(String name, String displayName, Boolean boolSet) {
@@ -74,6 +78,14 @@ public class PropertyMetric {
 
 	public void setBoolSet(Boolean boolSet) {
 		this.boolSet = boolSet;
+	}
+
+	public Double getVariation() {
+		return variation;
+	}
+
+	public Boolean getHold() {
+		return hold;
 	}
 
 }

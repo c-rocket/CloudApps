@@ -102,7 +102,10 @@ public class DevicePropertiesLoaderDao {
 				Double loop = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".loop"));
 				Double max = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".max"));
 				Double min = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".min"));
-				newDevice.addMetric(metric, displayName, defaultValue, increment, alternate, loop, max, min);
+				Double variation = Constants.doubleOrNull(prop.getProperty(prefix + metric + ".variation", "0")) / 100;
+				Boolean hold = prop.getProperty(prefix + metric + ".hold", "false").equalsIgnoreCase("true");
+				newDevice.addMetric(metric, displayName, defaultValue, increment, alternate, loop, max, min, variation,
+						hold);
 			}
 		}
 
@@ -135,8 +138,10 @@ public class DevicePropertiesLoaderDao {
 						Double alternate = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".alternate"));
 						Double max = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".max"));
 						Double min = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".min"));
+						Double variation = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".variation", "0"))
+								/ 100;
 						newDevice.addEvent(event, displayName, priority, metricName, value, increment, alternate, loop,
-								max, min, hold);
+								max, min, hold, variation);
 					}
 				}
 			}
