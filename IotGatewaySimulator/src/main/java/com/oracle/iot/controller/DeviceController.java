@@ -45,8 +45,7 @@ public class DeviceController {
 		if (currentDevice == null) {
 			return deviceService.create(device.get("type").toString(), id, secret);
 		} else {
-			messagingService.close(currentDevice, systemConfigService.getHost(), systemConfigService.getPort(),
-					systemConfigService.getMessageStatus());
+			messagingService.close(currentDevice, systemConfigService.getHost(), systemConfigService.getPort());
 			deviceService.delete(currentDevice.getId());
 			return deviceService.create(device.get("type").toString(), id, secret);
 		}
@@ -63,8 +62,7 @@ public class DeviceController {
 	public Boolean deleteDevice(@PathVariable String id) {
 		IOTDevice device = deviceService.findById(id);
 		Boolean removed = deviceService.delete(id);
-		messagingService.close(device, systemConfigService.getHost(), systemConfigService.getPort(),
-				systemConfigService.getMessageStatus());
+		messagingService.close(device, systemConfigService.getHost(), systemConfigService.getPort());
 		return removed;
 	}
 

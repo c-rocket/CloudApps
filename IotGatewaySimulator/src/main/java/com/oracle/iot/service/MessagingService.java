@@ -75,7 +75,7 @@ public class MessagingService {
 		return true;
 	}
 
-	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages) {
+	public void close(IOTDevice device, String iotcsServer, Integer iotcsPort) {
 		if (dao.exists(device.getId())) {
 			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
 					device.getResources());
@@ -88,6 +88,7 @@ public class MessagingService {
 
 				TrustManager trustManager = TrustManager.getInstance(DEVICE_CLIENT);
 				ConnectionManager.getInstance(trustManager).close();
+				trustManager.close();
 				DEVICE_CLIENT.close();
 			} catch (Exception e) {
 				log.error("Problem closing connection", e);

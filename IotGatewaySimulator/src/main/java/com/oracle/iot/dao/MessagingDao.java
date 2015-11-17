@@ -41,6 +41,14 @@ public class MessagingDao {
 		return this.client;
 	}
 
+	public String getCurrentId() {
+		if (this.client == null) {
+			return null;
+		} else {
+			return client.getEndpointId();
+		}
+	}
+
 	public boolean exists(String id) {
 		return client != null && client.getEndpointId().equalsIgnoreCase(id);
 	}
