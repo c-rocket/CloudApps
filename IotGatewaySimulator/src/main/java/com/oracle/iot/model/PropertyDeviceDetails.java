@@ -123,4 +123,8 @@ public class PropertyDeviceDetails {
 		}
 		return null;
 	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 }

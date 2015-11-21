@@ -13,8 +13,8 @@ public class DevicePropertiesLoaderService {
 	@Resource
 	private DevicePropertiesLoaderDao dao;
 
-	public Boolean load(MultipartFile multipartFile) {
-		return dao.loadNewDevice(multipartFile);
+	public Boolean load(MultipartFile propertyFile, MultipartFile imageFile) {
+		return dao.loadNewDevice(propertyFile, imageFile);
 	}
 
 }

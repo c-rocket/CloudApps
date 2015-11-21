@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.oracle.iot.controller.bind.FileUploadForm;
 import com.oracle.iot.service.DevicePropertiesLoaderService;
 import com.oracle.iot.service.DeviceService;
 
@@ -39,9 +40,11 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/device/setup/upload", method = RequestMethod.POST)
-	public String uploadDevicePost(@RequestParam("file") MultipartFile multipartFile) {
-		if (!multipartFile.isEmpty()) {
-			if (service.load(multipartFile)) {
+	public String uploadDevicePost(@ModelAttribute("uploadForm") FileUploadForm uploadForm) {
+		MultipartFile propertyFile = uploadForm.getFiles().get(0);
+		MultipartFile imageFile = uploadForm.getFiles().get(1);
+		if (!propertyFile.isEmpty()) {
+			if (service.load(propertyFile, imageFile)) {
 				return "uploadSuccess";
 			}
 			return "uploadError";

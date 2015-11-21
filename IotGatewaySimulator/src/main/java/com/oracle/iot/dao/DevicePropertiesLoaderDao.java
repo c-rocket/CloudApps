@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,12 +34,21 @@ public class DevicePropertiesLoaderDao {
 		loadDevices();
 	}
 
-	public Boolean loadNewDevice(MultipartFile multipartFile) {
+	public Boolean loadNewDevice(MultipartFile propertyFile, MultipartFile imageFile) {
 		try {
+
 			Properties prop = new Properties();
-			prop.load(multipartFile.getInputStream());
+			prop.load(propertyFile.getInputStream());
 			String name = prop.getProperty("name");
 			PropertyDeviceDetails newDevice = extractDeviceFromProperties(prop, name);
+			if (imageFile != null && !imageFile.isEmpty()) {
+				byte[] imageBytes = imageFile.getBytes();
+				String image = Base64.getEncoder().encodeToString(imageBytes);
+				newDevice.setPicture(image);
+			} else {
+				newDevice.setPicture(loadPicture("widget.png"));
+			}
+
 			devices.put(name, newDevice);
 			return true;
 		} catch (Exception e) {
@@ -79,11 +90,17 @@ public class DevicePropertiesLoaderDao {
 
 	}
 
-	private PropertyDeviceDetails extractDeviceFromProperties(Properties prop, String name) {
+	private String loadPicture(String name) throws IOException {
+		InputStream stream = this.getClass().getClassLoader().getResourceAsStream("pictures/" + name);
+		byte[] bytes = IOUtils.toByteArray(stream);
+		return Base64.getEncoder().encodeToString(bytes);
+	}
+
+	private PropertyDeviceDetails extractDeviceFromProperties(Properties prop, String name) throws IOException {
 		String deviceName = prop.getProperty("display.name");
 		String dataFormat = "urn:com:oracle:iot:model:devicesimulator:" + name;
 		String alertFormat = "urn:com:oracle:iot:model:devicesimulator:alert:" + name;
-		String picture = prop.getProperty("picture", "widget.png");
+		String picture = loadPicture(prop.getProperty("picture", "widget.png"));
 		PropertyDeviceDetails newDevice = new PropertyDeviceDetails(name, deviceName, dataFormat, alertFormat, picture);
 
 		// load metrics

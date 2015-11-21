@@ -39,15 +39,18 @@ table {
 </head>
 <body>
 	<h2>Device Configuration</h2>
-	<form method="POST" enctype="multipart/form-data" action="<c:url value='/device/setup/upload'/>">
+	<form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
 		<fieldset style="width: 500px;">
 			<legend>Upload New Device</legend>
-			<label for="file">Please select a .properties file to upload:</label>
-			<input type="file" id="file" name="file" />
+			<label>Please select a .properties file to upload:</label>
+			<input type="file" name="files[0]" />
+			<br />
+			<label>Please select an image file to upload (optional):</label>
+			<input type="file" name="files[1]" />
 			<br />
 			<input type="submit" value="upload" />
 		</fieldset>
-	</form>
+	</form:form>
 	<br />
 	<br />
 	<hr />

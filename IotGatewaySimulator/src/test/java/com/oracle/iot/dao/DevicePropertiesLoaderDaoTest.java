@@ -42,7 +42,7 @@ public class DevicePropertiesLoaderDaoTest {
 
 		PropertyDeviceDetails device = dao.getDevice("hvac");
 		assertEquals(device.getDisplayName(), "HVAC");
-		assertEquals(device.getPicture(), "hvac.png");
+		assertNotNull(device.getPicture());
 		assertEquals(device.getDataFormat(), "urn:com:oracle:iot:model:devicesimulator:hvac");
 		assertEquals(device.getAlertFormat(), "urn:com:oracle:iot:model:devicesimulator:alert:hvac");
 
@@ -149,7 +149,7 @@ public class DevicePropertiesLoaderDaoTest {
 
 		PropertyDeviceDetails device = dao.getDevice("drillsite");
 		assertEquals(device.getDisplayName(), "Drill Site");
-		assertEquals(device.getPicture(), "drill.png");
+		assertNotNull(device.getPicture());
 		assertEquals(device.getDataFormat(), "urn:com:oracle:iot:model:devicesimulator:drillsite");
 		assertEquals(device.getAlertFormat(), "urn:com:oracle:iot:model:devicesimulator:alert:drillsite");
 
@@ -204,7 +204,7 @@ public class DevicePropertiesLoaderDaoTest {
 		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
 
 		// execute
-		dao.loadNewDevice(multipartFile);
+		dao.loadNewDevice(multipartFile, null);
 
 		// assert
 		assertNotNull(dao.getDevice("hvactest"));
@@ -239,7 +239,7 @@ public class DevicePropertiesLoaderDaoTest {
 		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
 
 		// execute
-		dao.loadNewDevice(multipartFile);
+		dao.loadNewDevice(multipartFile, null);
 		PropertyDeviceDetails device = dao.getDevice("templatedevice");
 
 		// assert

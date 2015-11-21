@@ -65,7 +65,7 @@
 			<div class="metricValue">{{value | metricFilter}}</div>
 		</section>
 		</md-grid-tile> <md-grid-tile md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 grey" ng-show="currentId"> <img
-			ng-src="<c:url value='/resources/pictures/'/>{{ device.picture }}" height="75%" ng-show="currentId" /> </md-grid-tile> <md-grid-tile
+			ng-src="data:image/jpeg;base64,{{ device.picture }}" height="75%" ng-show="currentId" /> </md-grid-tile> <md-grid-tile
 			md-rowspan="2" md-colspan="1" class="md-whiteframe-z4 purple" ng-show="currentId"> <md-grid-tile-header>
 		<h2>Signal Alerts</h2>
 		</md-grid-tile-header>
