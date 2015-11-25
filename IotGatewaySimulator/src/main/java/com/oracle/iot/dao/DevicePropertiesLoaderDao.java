@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -43,7 +43,7 @@ public class DevicePropertiesLoaderDao {
 			PropertyDeviceDetails newDevice = extractDeviceFromProperties(prop, name);
 			if (imageFile != null && !imageFile.isEmpty()) {
 				byte[] imageBytes = imageFile.getBytes();
-				String image = Base64.getEncoder().encodeToString(imageBytes);
+				String image = Base64.encodeBase64String(imageBytes);
 				newDevice.setPicture(image);
 			} else {
 				newDevice.setPicture(loadPicture("widget.png"));
@@ -93,7 +93,7 @@ public class DevicePropertiesLoaderDao {
 	private String loadPicture(String name) throws IOException {
 		InputStream stream = this.getClass().getClassLoader().getResourceAsStream("pictures/" + name);
 		byte[] bytes = IOUtils.toByteArray(stream);
-		return Base64.getEncoder().encodeToString(bytes);
+		return Base64.encodeBase64String(bytes);
 	}
 
 	private PropertyDeviceDetails extractDeviceFromProperties(Properties prop, String name) throws IOException {
