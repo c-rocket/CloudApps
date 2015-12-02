@@ -359,7 +359,7 @@ public class PropertyDevice extends IOTDevice {
 				} else if (currentMetrics.get(key) instanceof Boolean) {
 					Boolean metric = (Boolean) currentMetrics.get(key);
 					msgBuilder.dataItem(id, metric);
-					addToChart(messageDate, key, metric ? 1d : 0d);
+					// addToChart(messageDate, key, metric ? 1d : 0d);
 				}
 			}
 		}

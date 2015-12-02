@@ -144,7 +144,7 @@ public class DevicePropertiesLoaderDao {
 				String eventMetricBase = prefix + event + "." + metricName;
 				String flag = prop.getProperty(eventMetricBase + ".boolean");
 				if (flag != null) {
-					Boolean boolSet = Boolean.getBoolean(flag.toLowerCase());
+					Boolean boolSet = flag.equalsIgnoreCase("true");
 					newDevice.addEvent(event, displayName, priority, metricName, boolSet);
 				} else {
 					Double value = Constants.doubleOrNull(prop.getProperty(eventMetricBase + ".value"));
