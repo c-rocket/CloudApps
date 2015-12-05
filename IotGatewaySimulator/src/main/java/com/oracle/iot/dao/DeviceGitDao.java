@@ -3,9 +3,7 @@ package com.oracle.iot.dao;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
+@org.springframework.stereotype.Repository
 public class DeviceGitDao {
 	private String repoLocation = "";
 
@@ -16,6 +14,13 @@ public class DeviceGitDao {
 	}
 
 	public Map<String, String> pullDevices() {
+		try {
+			// File gitWorkDir = new File(repoLocation);
+			// Git git = Git.open(gitWorkDir);
+			// Repository repo = git.getRepository();
+		} catch (Exception e) {
+
+		}
 		return devices;
 	}
 
