@@ -21,6 +21,10 @@
 			<name>Iot Device Simulator</name>
 			<url>https://developer.us2.oraclecloud.com/profile/developer81684-metcsgse00209/s/developer81684-metcsgse00209_iotdevicesimulator/maven/</url>
 		</repository>
+		<repository>
+			<id>jgit-repository</id>
+			<url>https://repo.eclipse.org/content/groups/releases/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -52,16 +56,16 @@
 
 		<!-- File Upload -->
 		<dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
 		<dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -131,7 +135,7 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
-		</dependency>				
+		</dependency>
 
 		<!-- IoT Client Library -->
 		<dependency>
@@ -162,6 +166,13 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.4.3</version>
+		</dependency>
+
+		<!-- JGIT -->
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>4.1.1.201511131810-r</version>
 		</dependency>
 
 		<!-- Test -->
