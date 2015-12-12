@@ -35,9 +35,33 @@ table {
 	font-size: 10pt;
 	font-variant: small-caps;
 }
+
+.message {
+	color: blue;
+	font-size: 11pt;
+	font-variant: small-caps;
+}
+
+.message legend {
+	font-size: 9pt;
+}
+
+.message fieldset {
+	border: 1px solid #999;
+	border-radius: 8px;
+	box-shadow: 0 0 10px #999;
+}
 </style>
 </head>
 <body>
+	<c:if test="${not empty message}">
+		<div class="message">
+			<fieldset>
+				<legend>Update</legend>
+				<label>${ message }</label>
+			</fieldset>
+		</div>
+	</c:if>
 	<h2>Device Configuration</h2>
 	<form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
 		<fieldset style="width: 500px;">
@@ -54,7 +78,7 @@ table {
 	<br />
 	<br />
 	<hr />
-	<h2>Device Selection</h2>
+	<h2>Local Device Selection</h2>
 	<table>
 		<th>
 			<label for="devices.all">Select All</label>
@@ -79,6 +103,36 @@ table {
 					<td>
 						<input type="checkbox" <c:if test="${device.enabled}">checked="checked"</c:if> id="devices.${device.name}"
 							name="devices.${device.name}" />
+						<br />
+					</td>
+					</c:forEach>
+				</tr>
+			</table>
+			<br />
+			<input type="submit" value="Submit" />
+		</fieldset>
+	</form>
+	<br />
+	<br />
+	<hr />
+	<h2>Device Central Selection</h2>
+	<form method="POST" action="<c:url value='/device/setup/centralselect'/>">
+		<fieldset style="width: 800px;">
+			<legend>Enable/Disable Devices</legend>
+			<table>
+				<tr>
+					<c:forEach items="${centralDevices}" var="centralDevice" varStatus="centralDeviceIndex">
+						<c:if test="${centralDeviceIndex.index%6 == 5}">
+				</tr>
+				<tr>
+					</c:if>
+					<th style="text-align: left;">
+						<label for="devices.${centralDevice.name}">${centralDevice.name}:</label>
+					</th>
+					<td>
+						<input type="checkbox" <c:if test="${centralDevice.enabled}">checked="checked"</c:if> 
+						<c:if test="${centralDevice.disabled}">disabled readonly</c:if> 
+							id="devices.${centralDevice.name}" name="devices.${centralDevice.name}" />
 						<br />
 					</td>
 					</c:forEach>

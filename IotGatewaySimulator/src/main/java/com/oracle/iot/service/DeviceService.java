@@ -1,12 +1,20 @@
 package com.oracle.iot.service;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.oracle.iot.dao.DeviceCentralDao;
 import com.oracle.iot.dao.DeviceDaoInMemory;
 import com.oracle.iot.dao.DevicePropertiesLoaderDao;
 import com.oracle.iot.model.IOTDevice;
@@ -16,11 +24,16 @@ import com.oracle.iot.model.PropertyDeviceDetails;
 @Service
 public class DeviceService {
 
+	private static final Logger logger = Logger.getLogger(DeviceService.class);
+
 	@Resource
 	private DeviceDaoInMemory deviceDao;
 
 	@Resource
 	private DevicePropertiesLoaderDao loaderDao;
+
+	@Resource
+	private DeviceCentralDao centralDao;
 
 	public boolean create(String name, String id, String secret) {
 		PropertyDeviceDetails deviceDetails = loaderDao.getDevice(name);
@@ -56,8 +69,16 @@ public class DeviceService {
 		return loaderDao.getTypes(true);
 	}
 
+	public List<String> getAllNames() {
+		return loaderDao.getNames();
+	}
+
 	public List<Map<String, Object>> getEnabledTypes() {
 		return loaderDao.getTypes(false);
+	}
+
+	public PropertyDeviceDetails load(MultipartFile propertyFile, MultipartFile imageFile) {
+		return loaderDao.loadNewDevice(propertyFile, imageFile);
 	}
 
 	public void updateTypes(List<Map<String, Object>> devices) {
@@ -74,4 +95,63 @@ public class DeviceService {
 		}
 	}
 
+	public boolean uploadToDeviceCentral(String name, MultipartFile propertyFile, MultipartFile imageFile) {
+		try {
+			String device = IOUtils.toString(propertyFile.getInputStream());
+			String image = null;
+			if (imageFile != null && !imageFile.isEmpty()) {
+				byte[] imageBytes = imageFile.getBytes();
+				image = Base64.encodeBase64String(imageBytes);
+			} else {
+				InputStream stream = this.getClass().getClassLoader().getResourceAsStream("pictures/widget.png");
+				byte[] imageBytes = IOUtils.toByteArray(stream);
+				image = Base64.encodeBase64String(imageBytes);
+			}
+			centralDao.saveDevice(name, device, image);
+			return true;
+		} catch (Exception e) {
+			logger.error("Error uploading device", e);
+			return false;
+		}
+	}
+
+	public List<Map<String, Object>> getAllDeviceCentral(List<Map<String, Object>> localDevices) {
+		List<String> centralDevices = centralDao.getDeviceNames();
+		List<Map<String, Object>> centralItems = new ArrayList<>();
+		for (String name : centralDevices) {
+			Map<String, Object> centralItem = new LinkedHashMap<>();
+			centralItem.put("name", name);
+			Map<String, Object> localDevice = findLocally(name, localDevices);
+			if (localDevice != null) {
+				centralItem.put("enabled", localDevice.get("enabled"));
+				centralItem.put("disabled", true);// disable device if it is
+													// already downloaded
+			} else {
+				centralItem.put("disabled", false);
+			}
+			centralItems.add(centralItem);
+		}
+		return centralItems;
+	}
+
+	private Map<String, Object> findLocally(String name, List<Map<String, Object>> localDevices) {
+		for (Map<String, Object> localDevice : localDevices) {
+			if (name.equalsIgnoreCase((String) localDevice.get("name"))) {
+				return localDevice;
+			}
+		}
+		return null;
+	}
+
+	public void downloadFromDeviceCentral(List<Map<String, Object>> centralDevices) {
+		List<String> localDevices = getAllNames();
+		for (Map<String, Object> centralDevice : centralDevices) {
+			// if we already have it locally then ignore it
+			if (!localDevices.contains(centralDevice.get("name"))) {
+				Map<String, Object> downloadDevice = centralDao.downloadDevice((String) centralDevice.get("name"));
+				loaderDao.loadNewDevice((String) downloadDevice.get("DEVICE"), (String) downloadDevice.get("PICTURE"));
+			}
+		}
+
+	}
 }

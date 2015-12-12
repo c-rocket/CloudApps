@@ -118,6 +118,10 @@
 			</md-switch>
 		</form>
 		<md-button ng-click="apply()" class="md-primary">Apply</md-button> <md-button ng-click="cancel()" class="md-primary">Cancel</md-button>
+		<br/>
+		<br/>
+		<hr/>
+		<md-button ng-href="<c:url value='/device/setup'/>" class="md-primary">Setup Devices</md-button>
 		</md-content> </md-sidenav>
 	</section>
 
@@ -139,7 +143,8 @@
 				ng-model="newDevice.secret" md-autofocus> </md-input-container>
 		</form>
 		<md-button ng-click="createDevice()" class="md-primary">Create</md-button> <md-button ng-click="cancelDevice()"
-			class="md-primary">Cancel</md-button> </md-content> </md-sidenav>
+			class="md-primary">Cancel</md-button> 
+			</md-content> </md-sidenav>
 	</section>
 	<input type="hidden" value="<c:url value='/'/>" id="baseUrl" />
 </body>

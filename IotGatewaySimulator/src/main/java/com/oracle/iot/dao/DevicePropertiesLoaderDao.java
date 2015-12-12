@@ -3,6 +3,7 @@ package com.oracle.iot.dao;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,7 +35,7 @@ public class DevicePropertiesLoaderDao {
 		loadDevices();
 	}
 
-	public Boolean loadNewDevice(MultipartFile propertyFile, MultipartFile imageFile) {
+	public PropertyDeviceDetails loadNewDevice(MultipartFile propertyFile, MultipartFile imageFile) {
 		try {
 
 			Properties prop = new Properties();
@@ -50,10 +51,10 @@ public class DevicePropertiesLoaderDao {
 			}
 
 			devices.put(name, newDevice);
-			return true;
+			return newDevice;
 		} catch (Exception e) {
 			logger.error("Something went wrong with your file", e);
-			return false;
+			return null;
 		}
 	}
 
@@ -205,6 +206,35 @@ public class DevicePropertiesLoaderDao {
 
 		});
 		return list;
+	}
+
+	public List<String> getNames() {
+		List<String> list = new ArrayList<>();
+		for (String name : devices.keySet()) {
+			list.add(devices.get(name).getDisplayName());
+		}
+		Collections.sort(list);
+		return list;
+	}
+
+	public PropertyDeviceDetails loadNewDevice(String propertyFile, String imageFile) {
+		try {
+			Properties prop = new Properties();
+			prop.load(new StringReader(propertyFile));
+			String name = prop.getProperty("name");
+			PropertyDeviceDetails newDevice = extractDeviceFromProperties(prop, name);
+			if (imageFile != null && imageFile.length() > 0) {
+				newDevice.setPicture(imageFile);
+			} else {
+				newDevice.setPicture(loadPicture("widget.png"));
+			}
+
+			devices.put(name, newDevice);
+			return newDevice;
+		} catch (Exception e) {
+			logger.error("Something went wrong with your file", e);
+			return null;
+		}
 	}
 
 }
