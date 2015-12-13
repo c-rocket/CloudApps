@@ -51,7 +51,7 @@ public class FileUploadController {
 		if (!propertyFile.isEmpty()) {
 			PropertyDeviceDetails device = deviceService.load(propertyFile, imageFile);
 			if (device != null) {
-				if (deviceService.uploadToDeviceCentral(device.getName(), propertyFile, imageFile)) {
+				if (deviceService.uploadToDeviceCentral(device.getDisplayName(), propertyFile, imageFile)) {
 					modelAndView.addObject("message", "Device Loaded Locally and Uploaded to Device Central");
 				} else {
 					modelAndView.addObject("message", "Device only Loaded Locally");

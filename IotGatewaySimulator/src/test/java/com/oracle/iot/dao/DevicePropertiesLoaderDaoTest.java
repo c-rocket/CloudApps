@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,7 @@ import com.oracle.iot.model.PropertyMetric;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DevicePropertiesLoaderDaoTest {
 
 	@Resource
@@ -140,7 +143,14 @@ public class DevicePropertiesLoaderDaoTest {
 
 	@Test
 	public void loadHvacDevice_NewBitsDrillSite() throws Exception {
+		// setup
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+
 		// execute
+		dao.loadNewDevice(multipartFile, null);
 		List<String> names = dao.getDeviceNames();
 
 		// assert
@@ -216,8 +226,8 @@ public class DevicePropertiesLoaderDaoTest {
 		List<String> devices = dao.getDeviceNames();
 
 		// assert
-		assertEquals("cablemodem", devices.get(0));
-		assertEquals("cargotruck", devices.get(1));
+		assertEquals("hvac", devices.get(0));
+		assertEquals("smartThermostat", devices.get(1));
 	}
 
 	@Test
@@ -226,8 +236,8 @@ public class DevicePropertiesLoaderDaoTest {
 		List<Map<String, Object>> devices = dao.getTypes(false);
 
 		// assert
-		assertEquals("Cable Modem", (String) devices.get(0).get("display"));
-		assertEquals("Cargo Truck", (String) devices.get(1).get("display"));
+		assertEquals("HVAC", (String) devices.get(0).get("display"));
+		assertEquals("Smart Thermostat", (String) devices.get(1).get("display"));
 	}
 
 	@Test

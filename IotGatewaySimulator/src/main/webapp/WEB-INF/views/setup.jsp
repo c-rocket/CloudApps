@@ -8,144 +8,119 @@
 <meta name="keywords" content="Oracle IoT Cloud Service">
 <meta name="author" content="Oracle">
 <link rel="shortcut icon" href="<c:url value='/resources/pictures/favicon.ico'/>" type="image/x-icon" />
-<title>IoT Device Simulator Setup</title>
-<style>
-h2 {
-	font-variant: small-caps;
-}
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" />
+<link rel="stylesheet" href="<c:url value='/resources/charts/angular-chart.min.css'/>" />
+<link rel="stylesheet" href="<c:url value='/resources/css/simulator.css'/>" />
 
-form label {
-	font-size: 10pt;
-	font-variant: small-caps;
-}
+<!-- Angular Dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
-form input {
-	font-variant: small-caps;
-}
+<!-- Angular Material Dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-aria.min.js"></script>
 
-fieldset legend {
-	font-variant: small-caps;
-}
+<!-- Angular Material Javascript using GitCDN to load directly from `bower-material/master` -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
 
-table td {
-	padding-right: 20px;
-}
+<script src="<c:url value='/resources/charts/Chart.min.js'/>"></script>
+<script src="<c:url value='/resources/charts/angular-chart.min.js'/>"></script>
+<script src="<c:url value='/resources/js/app/SimulatorApp.js'/>"></script>
 
-table {
-	font-size: 10pt;
-	font-variant: small-caps;
-}
-
-.message {
-	color: blue;
-	font-size: 11pt;
-	font-variant: small-caps;
-}
-
-.message legend {
-	font-size: 9pt;
-}
-
-.message fieldset {
-	border: 1px solid #999;
-	border-radius: 8px;
-	box-shadow: 0 0 10px #999;
-}
-</style>
+<script src="<c:url value='/resources/js/app/Service/DeviceListService.js'/>"></script>
+<script src="<c:url value='/resources/js/app/Service/DeviceService.js'/>"></script>
+<script src="<c:url value='/resources/js/app/Service/SystemConfigService.js'/>"></script>
+<script src="<c:url value='/resources/js/app/Controller/DeviceController.js'/>"></script>
+<title>IoT Device Simulator</title>
 </head>
-<body>
-	<c:if test="${not empty message}">
-		<div class="message">
-			<fieldset>
-				<legend>Update</legend>
-				<label>${ message }</label>
-			</fieldset>
+<body class="setup-page" class="ui-widget-content">
+	<md-toolbar layout="row" class="md-whiteframe-z2 brand-bar">
+	<div class="md-whiteframe-1dp page-padding">
+		<a class="brand " href="<c:url value='/'/>">
+			<div class="logo">
+				<!-- image  alt="Oracle" src="css/images/t.gif"/ -->
+			</div>
+			<div class="app-name">IoT CS Device Simulator</div>
+		</a>
+		<div class="home">
+			<md-button class="home-button" aria-label="Home" ng-href="<c:url value='/'/>"></md-button>
 		</div>
-	</c:if>
-	<h2>Device Configuration</h2>
-	<form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
-		<fieldset style="width: 500px;">
-			<legend>Upload New Device</legend>
-			<label>Please select a .properties file to upload:</label>
-			<input type="file" name="files[0]" />
+	</div>
+	</md-toolbar>
+	<md-toolbar layout="row" class="md-whiteframe-z2 top-bar"> </md-toolbar>
+	<div flex ng-cloak class="device-content">
+		<md-grid-list id="deviceContent" md-cols-sm="1" md-cols-md="2" md-cols-lg="3" md-cols-gt-lg="4" md-row-height="100px"
+			class="content-grid" md-gutter="30"> <c:if test="${not empty message}">
+			<md-grid-tile md-rowspan="1" md-colspan-sm="1" md-colspan-md="1" md-colspan-lg="1" md-colspan-gt-lg="1"
+				class="md-whiteframe-z4 light-green">
+			<section layout="column">
+					<div class="centered">${ message }</div>
+			</section>
+			</md-grid-tile>
+		</c:if> <md-grid-tile md-rowspan="2" md-colspan-sm="1" md-colspan-md="1" md-colspan-lg="1" md-colspan-gt-lg="1"
+			class="md-whiteframe-z4 config-tile new-upload"> <md-grid-tile-header class="tile-header">
+		<h2>Upload A New Device</h2>
+		</md-grid-tile-header> <form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
+			<label>Select Device Properties file:</label>
+			<input type="file" name="files[0]" class="upload" />
 			<br />
-			<label>Please select an image file to upload (optional):</label>
+			<br />
+			<label>Select an Image(suggested 250x250):</label>
 			<input type="file" name="files[1]" />
 			<br />
+			<br />
 			<input type="submit" value="upload" />
-		</fieldset>
-	</form:form>
-	<br />
-	<br />
-	<hr />
-	<h2>Local Device Selection</h2>
-	<table>
-		<th>
-			<label for="devices.all">Select All</label>
-		</th>
-		<td>
-			<input type="checkbox" name="devices.all" id="devices.all" onClick="toggle(this)" />
-		</td>
-	</table>
-	<form method="POST" action="<c:url value='/device/setup/select'/>">
-		<fieldset style="width: 800px;">
-			<legend>Enable/Disable Devices</legend>
-			<table>
-				<tr>
+		</form:form> </md-grid-tile> 
+		
+		<md-grid-tile md-rowspan="2" md-colspan-sm="1" md-colspan-md="2" md-colspan-lg="2" md-colspan-gt-lg="2"
+			class="md-whiteframe-z4 config-tile new-upload"> <md-grid-tile-header class="tile-header">
+			<h2>Enable/Disable Local Devices</h2>
+			</md-grid-tile-header>
+			<form method="POST" action="<c:url value='/device/setup/select'/>" style="width: 100%; height:250px; overflow:auto;">
+				<ul>
+					<li>
+						<label for="devices.all"><strong>Select All</strong></label>
+						<input type="checkbox" name="devices.all" id="devices.all" onClick="toggle(this)" />
+					</li>
+				</ul>
+				<ul>
 					<c:forEach items="${devices}" var="device" varStatus="deviceIndex">
-						<c:if test="${deviceIndex.index%6 == 5}">
-				</tr>
-				<tr>
-					</c:if>
-					<th style="text-align: left;">
+					<li style="display: inline-block; width: 220px;">
 						<label for="devices.${device.name}">${device.display}:</label>
-					</th>
-					<td>
 						<input type="checkbox" <c:if test="${device.enabled}">checked="checked"</c:if> id="devices.${device.name}"
 							name="devices.${device.name}" />
-						<br />
-					</td>
+					</li>
 					</c:forEach>
-				</tr>
-			</table>
+				</ul>
+				<br />
+				<input type="submit" value="Save Config" />
+			</form>
+		</md-grid-tile>
+		
+		<md-grid-tile md-rowspan="3" md-colspan-sm="1" md-colspan-md="2" md-colspan-lg="3" md-colspan-gt-lg="4"
+			class="md-whiteframe-z4 config-tile new-upload"> <md-grid-tile-header class="tile-header">
+			<h2>Download from Device Central</h2>
+			</md-grid-tile-header>
+		
+		<form method="POST" action="<c:url value='/device/setup/centralselect'/>" style="width: 100%; height:250px; overflow:auto;">
+			<ul>
+				<c:forEach items="${centralDevices}" var="centralDevice" varStatus="centralDeviceIndex">
+				<li style="display: inline-block; width: 220px;">
+					<label for="devices.${centralDevice.name}">${centralDevice.name}:</label>
+					<input type="checkbox" <c:if test="${centralDevice.enabled}">checked="checked"</c:if>
+						<c:if test="${centralDevice.disabled}">disabled readonly</c:if> id="devices.${centralDevice.name}"
+						name="devices.${centralDevice.name}" />
+				</li>
+				</c:forEach>
+			</ul>
 			<br />
-			<input type="submit" value="Submit" />
-		</fieldset>
-	</form>
-	<br />
-	<br />
-	<hr />
-	<h2>Device Central Selection</h2>
-	<form method="POST" action="<c:url value='/device/setup/centralselect'/>">
-		<fieldset style="width: 800px;">
-			<legend>Enable/Disable Devices</legend>
-			<table>
-				<tr>
-					<c:forEach items="${centralDevices}" var="centralDevice" varStatus="centralDeviceIndex">
-						<c:if test="${centralDeviceIndex.index%6 == 5}">
-				</tr>
-				<tr>
-					</c:if>
-					<th style="text-align: left;">
-						<label for="devices.${centralDevice.name}">${centralDevice.name}:</label>
-					</th>
-					<td>
-						<input type="checkbox" <c:if test="${centralDevice.enabled}">checked="checked"</c:if> 
-						<c:if test="${centralDevice.disabled}">disabled readonly</c:if> 
-							id="devices.${centralDevice.name}" name="devices.${centralDevice.name}" />
-						<br />
-					</td>
-					</c:forEach>
-				</tr>
-			</table>
-			<br />
-			<input type="submit" value="Submit" />
-		</fieldset>
-	</form>
-	<br />
-	<br />
-	<hr />
-	<a href="<c:url value='/'/>">Return to Main</a>
+			<input type="submit" value="Download" />
+		</form>
+		
+		</md-grid-tile>
+		</md-grid-list>
+	</div>
+
 	<script type="text/javascript">
 		function getCheckboxes() {
 			var inputs = document.forms[1].elements;

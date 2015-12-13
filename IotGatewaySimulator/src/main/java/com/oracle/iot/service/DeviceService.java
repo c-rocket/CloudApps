@@ -2,6 +2,8 @@ package com.oracle.iot.service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +133,16 @@ public class DeviceService {
 			}
 			centralItems.add(centralItem);
 		}
+		Collections.sort(centralItems, new Comparator<Map<String, Object>>() {
+
+			@Override
+			public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+				String display1 = (String) o1.get("name");
+				String display2 = (String) o2.get("name");
+				return display1.compareToIgnoreCase(display2);
+			}
+
+		});
 		return centralItems;
 	}
 

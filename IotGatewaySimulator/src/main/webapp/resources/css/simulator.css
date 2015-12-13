@@ -405,3 +405,72 @@ md-toolbar{
 		margin: 15px auto auto auto;
 	}
 }
+
+/************************* SETUP PAGE *************************/
+
+.setup-page h2 {
+	font-variant: small-caps;
+}
+
+.setup-page form label {
+	font-size: 12pt;
+	font-variant: small-caps;
+}
+
+.setup-page form input {
+	font-variant: small-caps;
+}
+
+.setup-page .message {
+	color: blue;
+	font-size: 12pt;
+	font-variant: small-caps;
+}
+
+.setup-page .brand-bar .home {
+	line-height: 30px;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+	float: right;
+	vertical-align: bottom;
+	margin-top: 0;
+}
+
+.setup-page .brand-bar .home-button {
+	height: 30px;
+	width: 30px;
+	background: url(../pictures/home.png) no-repeat;
+	min-width: 27px;
+	z-index: 50;
+}
+
+.setup-page .new-upload form{
+	margin: 30px 5px 10px 20px;
+}
+
+.setup-page input.upload {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; 
+}
+
+.config-tile {
+	background: -webkit-radial-gradient(circle, #f7f7f7, #f7f7f7); /* Safari */
+	background: -o-radial-gradient(circle, #f7f7f7, #f7f7f7); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #f7f7f7, #f7f7f7); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #f7f7f7, #f7f7f7); /* Standard syntax */
+}
+
+.tile-header {
+	background-color: #e4e8ea;
+    background-image: -webkit-linear-gradient(top, #fff 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
+    background-image: linear-gradient(to bottom, #fff 0%, #f1f3f4 3.64%, #e8ebed 50%, #e4e8ea 100%);
+    border-color: #c4ced7;
+    color: #000;
+}
+
+.tile-header h2 {
+	font-size: 12pt;
+	font-weight: bolder;
+}

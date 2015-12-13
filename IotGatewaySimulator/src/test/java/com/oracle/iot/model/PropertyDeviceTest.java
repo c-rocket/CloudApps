@@ -4,14 +4,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.iot.dao.DevicePropertiesLoaderDao;
 import com.oracle.iot.util.Constants;
@@ -20,6 +25,7 @@ import oracle.iot.message.AlertMessage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class PropertyDeviceTest {
 	@Resource
 	private DevicePropertiesLoaderDao dao;
@@ -260,6 +266,15 @@ public class PropertyDeviceTest {
 		// setup
 		String id = "testId";
 		String secret = "testPassword";
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+		dao.loadNewDevice(multipartFile, null);
+
+		// execute
+		dao.loadNewDevice(multipartFile, null);
+
 		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
 
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
@@ -283,11 +298,17 @@ public class PropertyDeviceTest {
 		// setup
 		String id = "testId";
 		String secret = "testPassword";
+
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+		dao.loadNewDevice(multipartFile, null);
+
 		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
 
-		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
-
 		// execute
+		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 		for (int i = 0; i < 1500; i++) {
 			device.createMessage();
 		}
@@ -298,7 +319,6 @@ public class PropertyDeviceTest {
 		assertMetric((Double) metrics.get("Temperature (C)"), 145.0);
 		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.96, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 1.0);
-
 	}
 
 	@Test
@@ -306,6 +326,11 @@ public class PropertyDeviceTest {
 		// setup
 		String id = "testId";
 		String secret = "testPassword";
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+		dao.loadNewDevice(multipartFile, null);
 		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
 
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
@@ -322,7 +347,6 @@ public class PropertyDeviceTest {
 		assertMetric((Double) metrics.get("Temperature (C)"), 185.0);
 		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.06, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 4.0);
-
 	}
 
 	@Test
@@ -330,6 +354,11 @@ public class PropertyDeviceTest {
 		// setup
 		String id = "testId";
 		String secret = "testPassword";
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+		dao.loadNewDevice(multipartFile, null);
 		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
 
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
@@ -347,7 +376,6 @@ public class PropertyDeviceTest {
 		assertMetric((Double) metrics.get("Temperature (C)"), 185.0);
 		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.05, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 4.0);
-
 	}
 
 	@Test
@@ -355,6 +383,11 @@ public class PropertyDeviceTest {
 		// setup
 		String id = "testId";
 		String secret = "testPassword";
+		InputStream inputStream = this.getClass().getClassLoader()
+				.getResourceAsStream("deviceLoad/drill_site.properties");
+		MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+		Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+		dao.loadNewDevice(multipartFile, null);
 		PropertyDeviceDetails deviceDetails = dao.getDevice("drillsite");
 
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
@@ -373,7 +406,6 @@ public class PropertyDeviceTest {
 		assertMetric((Double) metrics.get("Temperature (C)"), 25.0);
 		assertEquals((Double) metrics.get("Depth (x100 ft)"), 0.08, Double.NaN);
 		assertMetric((Double) metrics.get("Vibration (G)"), 0.0);
-
 	}
 
 	private void assertMetric(Double metric, Double defaultValue) {
