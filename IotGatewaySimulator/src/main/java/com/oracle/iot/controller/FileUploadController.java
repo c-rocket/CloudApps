@@ -50,7 +50,9 @@ public class FileUploadController {
 		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
 		if (!propertyFile.isEmpty()) {
 			PropertyDeviceDetails device = deviceService.load(propertyFile, imageFile);
-			if (device != null) {
+			if (device != null && (uploadForm.getShare() == null || !uploadForm.getShare())) {
+				modelAndView.addObject("message", "Device ONLY Loaded Locally Please Consider Sharing With Everyone");
+			} else if (device != null) {
 				if (deviceService.uploadToDeviceCentral(device.getDisplayName(), propertyFile, imageFile)) {
 					modelAndView.addObject("message", "Device Loaded Locally and Uploaded to Device Central");
 				} else {

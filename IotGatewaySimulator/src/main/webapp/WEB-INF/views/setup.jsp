@@ -61,13 +61,15 @@
 			class="md-whiteframe-z4 config-tile new-upload"> <md-grid-tile-header class="tile-header">
 		<h2>Upload A New Device</h2>
 		</md-grid-tile-header> <form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
+			<label>Share with Device Central</label>
+			<input type="checkbox" name="share" checked="checked" />
+			<br />
+			<br />
 			<label>Select Device Properties file:</label>
 			<input type="file" name="files[0]" class="upload" />
 			<br />
-			<br />
 			<label>Select an Image(suggested 250x250):</label>
 			<input type="file" name="files[1]" />
-			<br />
 			<br />
 			<input type="submit" value="upload" />
 		</form:form> </md-grid-tile> 

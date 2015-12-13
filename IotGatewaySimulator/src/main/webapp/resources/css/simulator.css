@@ -413,11 +413,12 @@ md-toolbar{
 }
 
 .setup-page form label {
-	font-size: 12pt;
+	font-size: 11pt;
 	font-variant: small-caps;
 }
 
 .setup-page form input {
+	font-size: 9pt;
 	font-variant: small-caps;
 }
 
@@ -471,6 +472,6 @@ md-toolbar{
 }
 
 .tile-header h2 {
-	font-size: 12pt;
+	font-size: 11pt;
 	font-weight: bolder;
 }
