@@ -106,7 +106,7 @@
 			<ul>
 				<c:forEach items="${centralDevices}" var="centralDevice" varStatus="centralDeviceIndex">
 				<li style="display: inline-block; width: 220px;">
-					<label for="devices.${centralDevice.name}">${centralDevice.name}:</label>
+					<label for="devices.${centralDevice.name}">${centralDevice.display}:</label>
 					<input type="checkbox" <c:if test="${centralDevice.enabled}">checked="checked"</c:if>
 						<c:if test="${centralDevice.disabled}">disabled readonly</c:if> id="devices.${centralDevice.name}"
 						name="devices.${centralDevice.name}" />

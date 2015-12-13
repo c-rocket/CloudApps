@@ -122,7 +122,8 @@ public class DeviceService {
 		List<Map<String, Object>> centralItems = new ArrayList<>();
 		for (String name : centralDevices) {
 			Map<String, Object> centralItem = new LinkedHashMap<>();
-			centralItem.put("name", name);
+			centralItem.put("name", name.replaceAll("\\s", ""));
+			centralItem.put("display", name);
 			Map<String, Object> localDevice = findLocally(name, localDevices);
 			if (localDevice != null) {
 				centralItem.put("enabled", localDevice.get("enabled"));
@@ -148,7 +149,7 @@ public class DeviceService {
 
 	private Map<String, Object> findLocally(String name, List<Map<String, Object>> localDevices) {
 		for (Map<String, Object> localDevice : localDevices) {
-			if (name.equalsIgnoreCase((String) localDevice.get("name"))) {
+			if (name.equalsIgnoreCase((String) localDevice.get("display"))) {
 				return localDevice;
 			}
 		}
@@ -159,8 +160,8 @@ public class DeviceService {
 		List<String> localDevices = getAllNames();
 		for (Map<String, Object> centralDevice : centralDevices) {
 			// if we already have it locally then ignore it
-			if (!localDevices.contains(centralDevice.get("name"))) {
-				Map<String, Object> downloadDevice = centralDao.downloadDevice((String) centralDevice.get("name"));
+			if (!localDevices.contains(centralDevice.get("display")) && (Boolean) centralDevice.get("enabled")) {
+				Map<String, Object> downloadDevice = centralDao.downloadDevice((String) centralDevice.get("display"));
 				loaderDao.loadNewDevice((String) downloadDevice.get("DEVICE"), (String) downloadDevice.get("PICTURE"));
 			}
 		}
