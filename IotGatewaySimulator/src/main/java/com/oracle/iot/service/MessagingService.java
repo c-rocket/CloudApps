@@ -44,16 +44,25 @@ public class MessagingService {
 			IOTDevice device) throws ClientException {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
 		byte[] privateKey = dao.getPrivateKey(device.getId());
-		if (privateKey == null) {
-			privateKey = client.activate(device.getSecret());
-			for (DeviceResource resource : device.getResources()) {
-				client.registerRequestHandler(resource.getResource(), resource.getHandler());
+		try {
+			if (privateKey == null) {
+				privateKey = client.activate(device.getSecret());
+				for (DeviceResource resource : device.getResources()) {
+					client.registerRequestHandler(resource.getResource(), resource.getHandler());
+				}
+				dao.savePrivateKey(device.getId(), privateKey);
+			} else {
+				// Authenticate with, and connect to, the server
+				System.out.println("\nConnecting with client-assertion...");
+				client.authenticate(privateKey);
 			}
-			dao.savePrivateKey(device.getId(), privateKey);
-		} else {
-			// Authenticate with, and connect to, the server
-			System.out.println("\nConnecting with client-assertion...");
-			client.authenticate(privateKey);
+		} catch (Exception e) {
+			log.error("Error activating/authenticating", e);
+			TrustManager trustManager = TrustManager.getInstance(client);
+			ConnectionManager.getInstance(trustManager).close();
+			trustManager.close();
+			client.close();
+			throw new RuntimeException("Error activating", e);
 		}
 		return true;
 	}

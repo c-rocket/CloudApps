@@ -126,7 +126,7 @@ public class DeviceService {
 			centralItem.put("display", name);
 			Map<String, Object> localDevice = findLocally(name, localDevices);
 			if (localDevice != null) {
-				centralItem.put("enabled", localDevice.get("enabled"));
+				centralItem.put("enabled", true);
 				centralItem.put("disabled", true);// disable device if it is
 													// already downloaded
 			} else {
