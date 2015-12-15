@@ -1,5 +1,6 @@
 package com.oracle.iot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,8 @@ public class FileUploadController {
 			if (device != null && (uploadForm.getShare() == null || !uploadForm.getShare())) {
 				modelAndView.addObject("message", "Device ONLY Loaded Locally Please Consider Sharing With Everyone");
 			} else if (device != null) {
-				if (deviceService.uploadToDeviceCentral(device.getDisplayName(), propertyFile, imageFile)) {
+				if (deviceService.uploadToDeviceCentral(device.getDisplayName(), uploadForm.getIndustry(), propertyFile,
+						imageFile)) {
 					modelAndView.addObject("message", "Device Loaded Locally and Uploaded to Device Central");
 				} else {
 					modelAndView.addObject("message", "Device only Loaded Locally");
@@ -73,7 +75,7 @@ public class FileUploadController {
 		List<Map<String, Object>> devices = deviceService.getAllTypes();
 		updateLocalDevices(request, devices);
 		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
-		modelAndView.addObject("message", "Devices Saved");
+		modelAndView.addObject("message", "Local Devices Enabled/Disabled");
 		return modelAndView;
 	}
 
@@ -90,19 +92,25 @@ public class FileUploadController {
 	public ModelAndView selectCentralDevices(HttpServletRequest request) {
 		logger.info("updating available devices");
 		List<Map<String, Object>> localDevices = deviceService.getAllTypes();
-		List<Map<String, Object>> devices = deviceService.getAllDeviceCentral(localDevices);
+		Map<String, List<Map<String, Object>>> devices = deviceService.getAllDeviceCentral(localDevices);
 		updateCentralDevices(request, devices);
 		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
-		modelAndView.addObject("message", "Devices Central Devices Downloaded");
+		modelAndView.addObject("message", "Device Central Downloaded Complete");
 		return modelAndView;
 	}
 
-	private void updateCentralDevices(HttpServletRequest request, List<Map<String, Object>> centralDevices) {
-		for (Map<String, Object> item : centralDevices) {
+	private void updateCentralDevices(HttpServletRequest request,
+			Map<String, List<Map<String, Object>>> centralDevices) {
+		List<Map<String, Object>> allDevices = new ArrayList<>();
+		for (List<Map<String, Object>> list : centralDevices.values()) {
+			allDevices.addAll(list);
+		}
+
+		for (Map<String, Object> item : allDevices) {
 			Object attribute = request.getParameter("devices." + (String) item.get("name"));
 			Boolean enabled = attribute != null;
 			item.put("enabled", enabled);
 		}
-		deviceService.downloadFromDeviceCentral(centralDevices);
+		deviceService.downloadFromDeviceCentral(allDevices);
 	}
 }

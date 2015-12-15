@@ -25,7 +25,7 @@ public class DeviceCentralDao {
 	private String deviceDeleteURL = connectionURL + "/device/delete";
 	private String deviceDownloadURL = connectionURL + "/device/show";
 
-	public List<String> getDeviceNames() {
+	public List<Map<String, Object>> getDeviceNames() {
 		try {
 			return getRestTemplate().getForObject(deviceNamesURL, List.class);
 		} catch (Exception e) {
@@ -34,11 +34,12 @@ public class DeviceCentralDao {
 		}
 	}
 
-	public Boolean saveDevice(String name, String device, String image) {
+	public Boolean saveDevice(String name, String industry, String device, String image) {
 		try {
 			MultiValueMap<String, Object> params = new LinkedMultiValueMap<String, Object>();
 
 			params.add("deviceName", name);
+			params.add("industry", industry);
 			params.add("deviceFile", device);
 			params.add("imageFile", image);
 			getRestTemplate().postForObject(deviceUploadURL, params, Map.class);

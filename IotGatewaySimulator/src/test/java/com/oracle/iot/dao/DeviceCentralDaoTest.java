@@ -30,32 +30,43 @@ public class DeviceCentralDaoTest {
 	@Test
 	public void getFileNames() throws Exception {
 		// setup
+		String indusrty = "Oil and Gas";
 		String device = createString(
 				this.getClass().getClassLoader().getResourceAsStream("deviceLoad/template.properties"));
 		String image = createString(this.getClass().getClassLoader().getResourceAsStream("deviceLoad/widget.png"));
 
 		// execute
-		List<String> names = dao.getDeviceNames();
-		dao.saveDevice("Test", device, image);
-		List<String> actualNames = dao.getDeviceNames();
+		List<Map<String, Object>> names = dao.getDeviceNames();
+		dao.saveDevice("Test", indusrty, device, image);
+		List<Map<String, Object>> actualNames = dao.getDeviceNames();
 		dao.deleteByName("Test");
 
 		// assert
 		assertNotNull(names);
 		assertNotNull(actualNames);
 		assertEquals(actualNames.size(), names.size() + 1);
-		assertTrue(actualNames.contains("Test"));
+		assertTrue(containsName(actualNames, "Test"));
+	}
+
+	private boolean containsName(List<Map<String, Object>> actualNames, String string) {
+		for (Map<String, Object> item : actualNames) {
+			if (((String) item.get("NAME")).equalsIgnoreCase(string)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Test
 	public void saveDevice() throws Exception {
 		// setup
+		String indusrty = "Oil and Gas";
 		String device = createString(
 				this.getClass().getClassLoader().getResourceAsStream("deviceLoad/template.properties"));
 		String image = createString(this.getClass().getClassLoader().getResourceAsStream("deviceLoad/widget.png"));
 
 		// execute
-		Boolean saved = dao.saveDevice("Test", device, image);
+		Boolean saved = dao.saveDevice("Test", indusrty, device, image);
 		Boolean deleted = dao.deleteByName("Test");
 
 		// assert
@@ -66,12 +77,13 @@ public class DeviceCentralDaoTest {
 	@Test
 	public void downloadDevice() throws Exception {
 		// setup
+		String indusrty = "Oil and Gas";
 		String device = createString(
 				this.getClass().getClassLoader().getResourceAsStream("deviceLoad/template.properties"));
 		String image = createString(this.getClass().getClassLoader().getResourceAsStream("deviceLoad/widget.png"));
 
 		// execute
-		Boolean saved = dao.saveDevice("Test", device, image);
+		Boolean saved = dao.saveDevice("Test", indusrty, device, image);
 		Map<String, Object> actualDevice = dao.downloadDevice("Test");
 		Boolean deleted = dao.deleteByName("Test");
 
@@ -88,13 +100,14 @@ public class DeviceCentralDaoTest {
 	@Test
 	public void updateDevice() throws Exception {
 		// setup
+		String indusrty = "Oil and Gas";
 		String device = createString(
 				this.getClass().getClassLoader().getResourceAsStream("deviceLoad/template.properties"));
 		String image = createString(this.getClass().getClassLoader().getResourceAsStream("deviceLoad/widget.png"));
 
 		// execute
-		Boolean saved = dao.saveDevice("Test", device, image);
-		Boolean updated = dao.saveDevice("Test", device, image);
+		Boolean saved = dao.saveDevice("Test", indusrty, device, image);
+		Boolean updated = dao.saveDevice("Test", indusrty, device, image);
 		Boolean deleted = dao.deleteByName("Test");
 
 		// assert

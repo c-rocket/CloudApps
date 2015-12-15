@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadForm {
 	private Boolean share;
+	private String industry;
 	private List<MultipartFile> files;
 
 	public List<MultipartFile> getFiles() {
@@ -22,6 +23,14 @@ public class FileUploadForm {
 
 	public void setShare(Boolean share) {
 		this.share = share;
+	}
+
+	public String getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
 	}
 
 }
