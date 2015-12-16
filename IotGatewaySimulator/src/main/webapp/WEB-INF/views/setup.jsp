@@ -119,7 +119,7 @@
 		
 		<md-grid-tile md-rowspan="3" md-colspan-sm="1" md-colspan-md="2" md-colspan-lg="3" md-colspan-gt-lg="4"
 			class="md-whiteframe-z4 config-tile new-upload"> <md-grid-tile-header class="tile-header">
-			<h2>Download from Device Central</h2>
+			<h2>Download from Device Central (Number of Downloads)</h2>
 			</md-grid-tile-header>
 				<div class="content-with-header-3">
 					<form method="POST" action="<c:url value='/device/setup/centralselect'/>">
@@ -129,7 +129,7 @@
 									<c:forEach items="${industryEntry.value}" var="centralDevice" varStatus="centralDeviceIndex">
 									<ul>
 										<li style="display: inline-block; padding-right: 10px;">
-											<label for="devices.${centralDevice.name}">${centralDevice.display}:</label>
+											<label for="devices.${centralDevice.name}">${centralDevice.display} (${centralDevice.download_count}):</label>
 											<input type="checkbox" <c:if test="${centralDevice.enabled}">checked="checked"</c:if>
 												<c:if test="${centralDevice.disabled}">disabled readonly</c:if> id="devices.${centralDevice.name}"
 												name="devices.${centralDevice.name}" />

@@ -139,6 +139,7 @@ public class DeviceService {
 			String name = (String) device.get("NAME");
 			device.put("name", name.replaceAll("\\s", ""));
 			device.put("display", name);
+			device.put("download_count", device.get("DOWNLOAD_COUNT"));
 			Map<String, Object> localDevice = findLocally(name, localDevices);
 			if (localDevice != null) {
 				device.put("enabled", true);
