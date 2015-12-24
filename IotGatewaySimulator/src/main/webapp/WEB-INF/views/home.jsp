@@ -109,9 +109,9 @@
 		<h1 class="title">System Config</h1>
 		</md-toolbar> <md-content layout-padding>
 		<form class="data-form">
-			<md-input-container> <label for="server">IoT CS Server</label> <input type="text" id="server"
+			<md-input-container> <label for="server">IoT CS Server</label> <input type="text" id="server" name="server"
 				required ng-model="systemConfig.server" md-autofocus> </md-input-container>
-			<md-input-container> <label for="port">IoT CS Port</label> <input type="text" id="port" required
+			<md-input-container> <label for="port">IoT CS Port</label> <input type="number" id="port" name="port" required
 				ng-model="systemConfig.port" md-autofocus> </md-input-container>
 			<md-switch id="configSendMessages" class="event-toggle" ng-model="systemConfig.sendingMessages" aria-label="key">
 			Sending Messages: {{systemConfig.sendingMessages}}
