@@ -51,7 +51,6 @@ public abstract class IOTDevice {
 			for (int i = 0; i <= MAX_CHART_SIZE; i++) {
 				seriesValues.add(value);
 			}
-			seriesValues.add(value);
 			chartValues.add(seriesValues);
 		} else {
 			seriesValues = chartValues.get(index);

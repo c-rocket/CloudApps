@@ -1,6 +1,6 @@
 app.service('DeviceListService', function() {
-	this.getDevices = function(http, baseUrl, handler) {
+	this.getDevices = function(http) {
 		var url = baseUrl + 'device/list';
-		http.get(url).success(handler);
+		return http.get(url);
 	};
 });

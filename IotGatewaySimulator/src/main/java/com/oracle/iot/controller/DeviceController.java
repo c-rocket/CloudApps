@@ -31,7 +31,7 @@ public class DeviceController {
 	@Resource
 	private SystemConfigService systemConfigService;
 
-	@RequestMapping(value = "/device/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/device/current", method = RequestMethod.POST)
 	@ResponseBody
 	public Boolean createNewDevice(@RequestBody Map<String, Object> device) {
 		String id = device.get("id").toString();
@@ -57,35 +57,33 @@ public class DeviceController {
 		return deviceService.findAll();
 	}
 
-	@RequestMapping(value = "/device/delete/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/device/current", method = RequestMethod.DELETE)
 	@ResponseBody
-	public Boolean deleteDevice(@PathVariable String id) {
-		IOTDevice device = deviceService.findById(id);
-		Boolean removed = deviceService.delete(id);
-		messagingService.close(device, systemConfigService.getHost(), systemConfigService.getPort());
+	public Boolean deleteDevice() {
+		IOTDevice currentDevice = deviceService.getCurrentDevice();
+		Boolean removed = deviceService.delete(currentDevice.getId());
+		messagingService.close(currentDevice, systemConfigService.getHost(),
+				systemConfigService.getPort());
 		return removed;
 	}
 
-	@RequestMapping(value = "/device/{id}/show", method = RequestMethod.GET)
+	@RequestMapping(value = "/device/current", method = RequestMethod.GET)
 	@ResponseBody
-	public IOTDevice showDevice(@PathVariable String id) {
-		if (id.equals("current")) {
-			return deviceService.getCurrentDevice();
-		}
-		return deviceService.findById(id);
+	public IOTDevice showDevice() {
+		return deviceService.getCurrentDevice();
 	}
 
-	@RequestMapping(value = "/device/{id}/alerts/{alert}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/device/current/alerts/{alert}", method = RequestMethod.PUT)
 	@ResponseBody
-	public Boolean sendAlert(@PathVariable String id, @PathVariable String alert) {
-		return messagingService.sendAlert(deviceService.findById(id), alert, systemConfigService.getHost(),
+	public Boolean sendAlert(@PathVariable String alert) {
+		return messagingService.sendAlert(deviceService.getCurrentDevice(), alert, systemConfigService.getHost(),
 				systemConfigService.getPort(), systemConfigService.getMessageStatus());
 	}
 
-	@RequestMapping(value = "/device/{id}/events/{event}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/device/current/events/{event}", method = RequestMethod.PUT)
 	@ResponseBody
-	public Boolean triggerEvent(@PathVariable String id, @PathVariable String event) {
-		IOTDevice device = deviceService.findById(id);
+	public Boolean triggerEvent(@PathVariable String event) {
+		IOTDevice device = deviceService.getCurrentDevice();
 		Boolean started = device.eventHandler(event);
 		deviceService.updateDevice(device);
 		return started;

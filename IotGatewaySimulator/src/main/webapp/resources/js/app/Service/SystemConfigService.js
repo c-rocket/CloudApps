@@ -1,13 +1,15 @@
-app.service('SystemConfigService', function() {
-	this.getCurrentConfig = function(http, baseUrl, handler) {
-		var url = baseUrl + 'system/config';
-		console.log('Device URL: ' + url);
-		http.get(url).success(handler);
-	};
 
-	this.setConfig = function(http, baseUrl, data, handler) {
-		var url = baseUrl + 'system/config';
-		console.log('Device URL: ' + url);
-		http.put(url, data).success(handler);
-	};
+'use strict';
+
+app.factory('SystemConfigService', function($http) {
+	var SystemConfigService = {
+		getConfig : function() {
+			return $http.get(baseUrl + 'system/config')
+
+		},
+		putConfig : function(payload) {
+			return $http.put(baseUrl + 'system/config', payload);
+		}
+	}
+	return SystemConfigService;
 });
