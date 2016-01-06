@@ -40,7 +40,6 @@ public class ScheduledTasks {
 		Boolean sendingMessages = systemConfigService.getMessageStatus();
 		try {
 			if (currentDevice != null && !waiting()) {
-				log.debug("Device: " + currentDevice.getId());
 				previousMessage = messageService.sendMessages(currentDevice, systemConfigService.getHost(),
 						systemConfigService.getPort(), sendingMessages);
 				if (sendingMessages) {
