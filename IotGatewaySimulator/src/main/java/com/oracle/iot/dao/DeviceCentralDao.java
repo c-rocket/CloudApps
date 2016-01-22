@@ -1,7 +1,9 @@
 package com.oracle.iot.dao;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class DeviceCentralDao {
 			return getRestTemplate().getForObject(deviceNamesURL, List.class);
 		} catch (Exception e) {
 			logger.error("Error getting names", e);
-			return null;
+			return new ArrayList<Map<String, Object>>();
 		}
 	}
 
@@ -62,7 +64,7 @@ public class DeviceCentralDao {
 			return getRestTemplate().postForObject(deviceDownloadURL, params, Map.class);
 		} catch (Exception e) {
 			logger.error("Cannot download devices", e);
-			return null;
+			return new LinkedHashMap<>();
 		}
 	}
 
