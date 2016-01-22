@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -119,39 +120,47 @@ public class DeviceService {
 	}
 
 	public Map<String, List<Map<String, Object>>> getAllDeviceCentral(List<Map<String, Object>> localDevices) {
-		Map<String, List<Map<String, Object>>> deviceByIndustry = new TreeMap<>(new Comparator<String>() {
+		try {
+			Map<String, List<Map<String, Object>>> deviceByIndustry = new TreeMap<>(new Comparator<String>() {
 
-			@Override
-			public int compare(String o1, String o2) {
-				return o1.compareToIgnoreCase(o2);
-			}
+				@Override
+				public int compare(String o1, String o2) {
+					return o1.compareToIgnoreCase(o2);
+				}
 
-		});
-		List<Map<String, Object>> centralDevices = centralDao.getDeviceNames();
-		for (Map<String, Object> device : centralDevices) {
-			String industry = (String) device.get("INDUSTRY");
-			List<Map<String, Object>> list = deviceByIndustry.get(industry);
-			if (list == null) {
-				list = new ArrayList<>();
-				deviceByIndustry.put(industry, list);
+			});
+			List<Map<String, Object>> centralDevices = centralDao.getDeviceNames();
+			if (centralDevices == null) {
+				centralDevices = new ArrayList<>();
 			}
+			for (Map<String, Object> device : centralDevices) {
+				String industry = (String) device.get("INDUSTRY");
+				List<Map<String, Object>> list = deviceByIndustry.get(industry);
+				if (list == null) {
+					list = new ArrayList<>();
+					deviceByIndustry.put(industry, list);
+				}
 
-			String name = (String) device.get("NAME");
-			device.put("name", name.replaceAll("\\s", ""));
-			device.put("display", name);
-			device.put("download_count", device.get("DOWNLOAD_COUNT"));
-			Map<String, Object> localDevice = findLocally(name, localDevices);
-			if (localDevice != null) {
-				device.put("enabled", true);
-				device.put("disabled", true);// disable device if it is
-												// already downloaded
-			} else {
-				device.put("disabled", false);
+				String name = (String) device.get("NAME");
+				device.put("name", name.replaceAll("\\s", ""));
+				device.put("display", name);
+				device.put("download_count", device.get("DOWNLOAD_COUNT"));
+				Map<String, Object> localDevice = findLocally(name, localDevices);
+				if (localDevice != null) {
+					device.put("enabled", true);
+					device.put("disabled", true);// disable device if it is
+													// already downloaded
+				} else {
+					device.put("disabled", false);
+				}
+				list.add(device);
 			}
-			list.add(device);
+			sortIndustryMap(deviceByIndustry);
+			return deviceByIndustry;
+		} catch (Exception e) {
+			logger.error("Error getting info from Device Central", e);
+			return new LinkedHashMap<>();
 		}
-		sortIndustryMap(deviceByIndustry);
-		return deviceByIndustry;
 	}
 
 	private void sortIndustryMap(Map<String, List<Map<String, Object>>> deviceByIndustry) {
