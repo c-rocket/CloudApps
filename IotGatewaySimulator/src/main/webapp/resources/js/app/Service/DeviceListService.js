@@ -1,6 +1,8 @@
-app.service('DeviceListService', function() {
-	this.getDevices = function(http) {
-		var url = baseUrl + 'device/list';
-		return http.get(url);
-	};
+app.factory('DeviceListService', function($http) {
+	var deviceListService = {
+		getDevices : function() {
+			return $http.get(baseUrl + '/device/list');
+		}
+	}
+	return deviceListService;
 });

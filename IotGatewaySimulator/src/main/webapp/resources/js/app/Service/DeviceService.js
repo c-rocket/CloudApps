@@ -9,7 +9,7 @@ app.factory('DeviceService', function($http) {
 			});
 		},
 		getCurrent : function(){
-			return $http.get(baseUrl + '/device/current')
+			return $http.get(baseUrl + '/device/current');
 		},
 		getDeviceTypes : function() {
 			var url = baseUrl + 'device/types';
