@@ -153,14 +153,6 @@
 		
 		<dependency>
 			<groupId>com.oracle</groupId>
-			<artifactId>multiclient</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/multi-client-1.0.0.jar</systemPath>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.oracle</groupId>
 			<artifactId>json</artifactId>
 			<version>1.0.1</version>
 			<scope>system</scope>
