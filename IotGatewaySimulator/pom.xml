@@ -156,8 +156,8 @@
 
 		<dependency>
 			<groupId>com.oracle</groupId>
-			<artifactId>java-rt</artifactId>
-			<version>1.0.1</version>
+			<artifactId>multi-client</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- JSON -->
