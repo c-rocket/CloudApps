@@ -28,6 +28,8 @@ public class ScheduledTasks {
 
 	private MessageReceipt previousMessage = null;
 	private Integer waitFor = 0;
+	private String previousID = "";
+	private String currentID = "";
 
 	private static final Integer MAX_WAIT_RETRIES = 25; // 25 * 2 seconds = wait
 														// for 50 seconds
@@ -37,6 +39,10 @@ public class ScheduledTasks {
 	public void reportCurrentTime() {
 		// check if sending messages is turned on
 		IOTDevice currentDevice = deviceService.getCurrentDevice();
+		if (currentDevice != null)
+			currentID = currentDevice.getId();
+		if (previousID.length() == 0)
+			previousID = currentID;
 		Boolean sendingMessages = systemConfigService.getMessageStatus();
 		try {
 			if (currentDevice != null && !waiting()) {
@@ -46,6 +52,7 @@ public class ScheduledTasks {
 					deviceService.updateDevice(currentDevice);
 				}
 				waitFor = 0;
+				previousID = currentID;
 			}
 		} catch (final IllegalStateException ise) {
 			log.error("The device has already been activated, but there is no private key", ise);
@@ -68,7 +75,7 @@ public class ScheduledTasks {
 		if (waitFor >= MAX_WAIT_RETRIES) {
 			throw new RuntimeException("I've been waiting forever!");
 		}
-		if (previousMessage != null) {
+		if (previousMessage != null && (previousID.equals(currentID))) {
 			waitFor++;
 			log.info("Previous Message: " + previousMessage.getStatus().name());
 			return !previousMessage.getStatus().equals(Status.SUCCESS);
