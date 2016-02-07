@@ -1,0 +1,7 @@
+Install Jars into Maven repo
+mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=java-rt -Dversion=1.0.1 -Dpackaging=jar -Dfile="rt.jar" -DrepositoryId=IotDeviceSimulator -Durl=https://developer.us2.oraclecloud.com/profile/developer81684-metcsgse00209/s/developer81684-metcsgse00209_iotdevicesimulator/maven/ -DgeneratePom=true
+mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=json -Dversion=1.0.0 -Dpackaging=jar -Dfile="json-1.0.1.jar" -DrepositoryId=IotDeviceSimulator -Durl=https://developer.us2.oraclecloud.com/profile/developer81684-metcsgse00209/s/developer81684-metcsgse00209_iotdevicesimulator/maven/ -DgeneratePom=true
+
+
+Ability to Create a multi device connection in one appliation was done thanks to Tim Graves:
+https://orahub.oraclecorp.com/tim_graves/TimGIOTCSWork.git

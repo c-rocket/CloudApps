@@ -152,16 +152,12 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>json</artifactId>
 			<version>1.0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/json-1.0.1.jar</systemPath>
 		</dependency>
 
 		<dependency>
-			<groupId>com.java</groupId>
-			<artifactId>rt</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/rt.jar</systemPath>
+			<groupId>com.oracle</groupId>
+			<artifactId>java-rt</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 
 		<!-- JSON -->
