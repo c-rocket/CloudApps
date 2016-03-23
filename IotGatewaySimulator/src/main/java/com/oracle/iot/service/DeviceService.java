@@ -23,6 +23,7 @@ import com.oracle.iot.dao.DevicePropertiesLoaderDao;
 import com.oracle.iot.model.IOTDevice;
 import com.oracle.iot.model.PropertyDevice;
 import com.oracle.iot.model.PropertyDeviceDetails;
+import com.oracle.iot.util.Constants;
 
 @Service
 public class DeviceService {
@@ -37,14 +38,35 @@ public class DeviceService {
 
 	@Resource
 	private DeviceCentralDao centralDao;
-
+	
 	public boolean create(String name, String id, String secret) {
 		PropertyDeviceDetails deviceDetails = loaderDao.getDevice(name);
 		return deviceDao.insert(new PropertyDevice(deviceDetails, id, secret));
 	}
 
-	public List<IOTDevice> findAll() {
-		return deviceDao.findAll();
+	public List<Map<String,Object>> findAll() {
+		List<IOTDevice> findAll = deviceDao.findAll();
+		//TODO: TAKE OUT WHEN DONE TESTING NEW UI
+		if(findAll.size() == 0){
+			create("hvac","0-AM","secret");
+			create("smartThermostat","0-AY","secret");
+			create("hvac","0-AV","secret");
+			create("smartThermostat","0-AB","secret");
+			create("smartThermostat","0-AN","secret");
+			create("hvac","0-AP","secret");
+			create("hvac","0-AL","secret");
+		}
+		List<Map<String,Object>> devices = new ArrayList<>();
+		for(IOTDevice device:deviceDao.findAll()){
+			Map<String,Object> map = new LinkedHashMap<>();
+			map.put("name", device.getId());
+			map.put("secret", device.getSecret());
+			map.put("image", device.getPicture());
+			map.put("type", device.getResource());
+			map.put("display", Constants.splitCamelCase(device.getResource()));
+			devices.add(map);
+		}
+		return devices;
 	}
 
 	public Boolean delete(String id) {
@@ -63,9 +85,8 @@ public class DeviceService {
 		return deviceDao.update(device);
 	}
 
-	public IOTDevice getCurrentDevice() {
-		List<IOTDevice> devices = deviceDao.findAll();
-		return (devices.size() > 0) ? devices.get(0) : null;
+	public IOTDevice getDevice(String id) {
+		return deviceDao.findById(id);
 	}
 
 	public List<Map<String, Object>> getAllTypes() {
@@ -197,5 +218,9 @@ public class DeviceService {
 			}
 		}
 
+	}
+
+	public List<IOTDevice> getAll() {
+		return deviceDao.findAll();
 	}
 }

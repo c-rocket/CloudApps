@@ -374,11 +374,6 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	@Override
-	public String getThumbnail() {
-		return details.getPicture();
-	}
-
-	@Override
 	public String getResource() {
 		return details.getName();
 	}

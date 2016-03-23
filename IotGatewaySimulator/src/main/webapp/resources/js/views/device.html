@@ -1,0 +1,106 @@
+<div id="device-container">
+	<h2 data-bind="text: title"></h2>
+	<div class="demo-scroll-container">
+
+		<div class="demo-grid-sizes demo-flex-display">
+			<div class="oj-flex oj-flex-items-pad">
+				<div class="oj-sm-2 oj-md-2 oj-lg-2 oj-xl-2 oj-flex-item">
+
+					<div class="button-container">
+						<button class="create-button" data-bind="click:createClick, ojComponent: { component: 'ojButton', label: 'Add Device' }"></button>
+					</div>
+					<br />
+					<ul id="listview" aria-label="list using array"
+						data-bind="ojComponent: {component: 'ojListView', data: devicesDatasource, item: {template: 'item_template'}, selectionMode: 'single'}">
+					</ul>
+
+					<script type="text/html" id="item_template">
+   						 <li data-bind="click:deviceClick">
+						<span class="avatar"> <img height="30" aria-hidden="false"
+								data-bind="attr: { src: image}">
+						</span>
+							<div class="device-list-container">
+								<div>
+									<span class="name" data-bind="text: name"></span>
+								</div>
+								<div>
+									<span class="oj-text-xs oj-text-secondary-color" data-bind="text: display"></span>
+								</div>
+							</div></li>
+					</script>
+
+
+				</div>
+				<div class="oj-sm-4 oj-md-6 oj-lg-8 oj-xl-10 oj-flex-item">
+
+					<div id="deviceLayout" data-bind="visible: id, ojComponent: {component: 'ojMasonryLayout'}">
+						<div data-bind="foreach: metrics">
+							<div data-bind="css: sizeClass">
+								<div class="metricLabel" data-bind="text: name"></div>
+								<div class="metricValue" data-bind="text: value"></div>
+							</div>
+						</div>
+						<div class="oj-masonrylayout-tile-2x1 tile blue" id="eventButtons" data-bind="foreach: events">
+							<div class="button-container" data-bind="click:toggleEvent">
+								<label class="event-label" data-bind="text: name"></label> <input
+									data-bind="ojComponent: {component: 'ojSwitch', value:switchValue}" />
+							</div>
+						</div>
+						<div class="oj-masonrylayout-tile-2x1 tile pink" id="alertButtons">
+							<div class="button-container" data-bind="foreach: alerts">
+								<button class="alert-button" data-bind="click:buttonClick, ojComponent: { component: 'ojButton', label: name }"></button>
+							</div>
+						</div>
+						<div class="oj-masonrylayout-tile-3x2 tile" id='chart-container'>
+							<div id="lineChart"
+								data-bind="ojComponent: {
+						        component: 'ojChart', 
+						        type: 'line',
+						        series: lineSeriesValue, 
+						        groups: lineGroupsValue, 
+						        animationOnDisplay: 'auto',
+						        animationOnDataChange: 'auto',
+						        orientation: 'vertical',
+						        hoverBehavior: 'dim'
+						        }"
+								style="width: 100%; height: 250px;"></div>
+						</div>
+						<div class="oj-masonrylayout-tile-2x1 tile grey" style="text-align: center;"">
+							<img height="75%" style="margin: 20px auto;" aria-hidden="false" data-bind="attr: { src: image}">
+						</div>
+						<div class="oj-masonrylayout-tile-2x1 tile dark">
+							<div class="button-container">
+								<button class="delete-button" data-bind="click:deleteClick, ojComponent: { component: 'ojButton', label: 'Delete' }"></button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="dialogWrapper">
+		<div style="display: none" id="modalDialog1" title="Create Device"
+			data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+			<div class="oj-dialog-body">
+				<form id="createForm">
+					<label for="typeSelect">Device Type </label> <select id="typeSelect"
+						data-bind="ojComponent: {component: 'ojSelect', options:deviceTypes, value: typeSelect, rootAttributes: {style:'max-width:20em'}}">
+					</select> <br /> <label for="idInput">Device ID</label> <input id="idInput" type="text"
+						data-bind="ojComponent: {component: 'ojInputText', value: idInput}" /> <br /> <label for="secretInput">Secret</label> <input
+						id="secretInput" type="text" data-bind="ojComponent: {component: 'ojInputText', value: secretInput}" />
+				</form>
+			</div>
+			<div class="oj-dialog-footer">
+				<button id="okButton" data-bind="click:createModalClose, ojComponent: {component: 'ojButton', label: 'OK'}"></button>
+				<button id="cancelButton" data-bind="click:cancelModalClose, ojComponent: {component: 'ojButton', label: 'Cancel'}"></button>
+			</div>
+		</div>
+	</div>
+	<div id="popupWrapper">
+		<div style="display: none" id="toaster" class="toaster" data-bind="ojComponent:{component: 'ojPopup'}">
+			<span data-bind="text:toastText"></span>
+		</div>
+	</div>
+</div>
+

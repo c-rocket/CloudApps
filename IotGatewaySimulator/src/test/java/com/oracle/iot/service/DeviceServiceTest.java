@@ -2,7 +2,6 @@ package com.oracle.iot.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -10,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,12 +73,12 @@ public class DeviceServiceTest {
 		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
 
 		// execute
-		List<IOTDevice> devices = deviceService.findAll();
+		List<Map<String,Object>> devices = deviceService.findAll();
 
 		// assert
 		assertNotNull(devices);
 		assertEquals(devices.size(), 1);
-		assertEquals(devices.get(0).getId(), id);
+		assertEquals(devices.get(0).get("name"), id);
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class DeviceServiceTest {
 		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
 
 		// execute
-		IOTDevice actualDevice = deviceService.getCurrentDevice();
+		IOTDevice actualDevice = deviceService.getDevice(id);
 
 		// assert
 		assertNotNull(actualDevice);
@@ -150,9 +150,9 @@ public class DeviceServiceTest {
 		when(deviceDao.findAll()).thenReturn(new ArrayList<IOTDevice>());
 
 		// execute
-		IOTDevice device = deviceService.getCurrentDevice();
+		List<IOTDevice> devices = deviceService.getAll();
 
 		// assert
-		assertNull(device);
+		assertEquals(devices.size(),0);
 	}
 }

@@ -11,9 +11,6 @@ import com.oracle.iot.service.DeviceService;
 import com.oracle.iot.service.MessagingService;
 import com.oracle.iot.service.SystemConfigService;
 
-import oracle.iot.client.device.async.MessageReceipt;
-import oracle.iot.client.device.async.MessageReceipt.Status;
-
 @Component
 public class ScheduledTasks {
 
@@ -26,33 +23,18 @@ public class ScheduledTasks {
 	@Resource
 	private DeviceService deviceService;
 
-	private MessageReceipt previousMessage = null;
-	private Integer waitFor = 0;
-	private String previousID = "";
-	private String currentID = "";
-
-	private static final Integer MAX_WAIT_RETRIES = 25; // 25 * 2 seconds = wait
-														// for 50 seconds
-
 	// execute 5 seconds after the last message was sent
-	@Scheduled(fixedDelay = 2000)
+	@Scheduled(fixedDelay = 5000)
 	public void reportCurrentTime() {
-		// check if sending messages is turned on
-		IOTDevice currentDevice = deviceService.getCurrentDevice();
-		if (currentDevice != null)
-			currentID = currentDevice.getId();
-		if (previousID.length() == 0)
-			previousID = currentID;
 		Boolean sendingMessages = systemConfigService.getMessageStatus();
+		for(IOTDevice device : deviceService.getAll()){
 		try {
-			if (currentDevice != null && !waiting()) {
-				previousMessage = messageService.sendMessages(currentDevice, systemConfigService.getHost(),
+			if (device != null) {
+				messageService.sendMessages(device, systemConfigService.getHost(),
 						systemConfigService.getPort(), sendingMessages);
 				if (sendingMessages) {
-					deviceService.updateDevice(currentDevice);
+					deviceService.updateDevice(device);
 				}
-				waitFor = 0;
-				previousID = currentID;
 			}
 		} catch (final IllegalStateException ise) {
 			log.error("The device has already been activated, but there is no private key", ise);
@@ -62,6 +44,7 @@ public class ScheduledTasks {
 			log.error("Error sending message", e);
 			disableMessages();
 		}
+		}
 	}
 
 	private void disableMessages() {
@@ -69,17 +52,5 @@ public class ScheduledTasks {
 			log.error("Error detected, turning off messages!");
 			systemConfigService.setMessageStatus(false);
 		}
-	}
-
-	private boolean waiting() {
-		if (waitFor >= MAX_WAIT_RETRIES) {
-			throw new RuntimeException("I've been waiting forever!");
-		}
-		if (previousMessage != null && (previousID.equals(currentID))) {
-			waitFor++;
-			log.info("Previous Message: " + previousMessage.getStatus().name());
-			return !previousMessage.getStatus().equals(Status.SUCCESS);
-		}
-		return false;
 	}
 }

@@ -74,8 +74,6 @@ public abstract class IOTDevice {
 
 	public abstract String getPicture();
 
-	public abstract String getThumbnail();
-
 	public String getSecret() {
 		return this.authToken.getSecret();
 	}

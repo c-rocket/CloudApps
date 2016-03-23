@@ -1,0 +1,285 @@
+@font-face {
+  font-family: 'AppFont';
+  src: url("fonts/App_iconfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.demo-icon-font, .demo-icon-font-24 {
+  font-family: AppFont;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.demo-icon-font:before, .demo-icon-font-24:before {
+  display: inline-block;
+}
+
+.demo-icon-font-24 {
+  font-size: 24px;
+}
+
+/* Icons with a suffix "-16" were designed to look best at 16px. */
+.demo-bookmark-icon-16:before {
+  content: "\e606";
+}
+
+.demo-grid-icon-16:before {
+  content: "\e607";
+}
+
+.demo-list-icon-16:before {
+  content: "\e608";
+}
+
+.demo-gear-icon-16:before {
+  content: "\e609";
+}
+
+/* Icons with a suffix "-24" were designed to look best at 24px. */
+.demo-home-icon-24:before {
+  content: "\e600";
+}
+
+.demo-education-icon-24:before {
+  content: "\e601";
+}
+
+.demo-catalog-icon-24:before {
+  content: "\e602";
+}
+
+.demo-palette-icon-24:before {
+  content: "\e603";
+}
+
+.demo-library-icon-24:before {
+  content: "\e604";
+}
+
+.demo-chat-icon-24:before {
+  content: "\e605";
+}
+
+.demo-oracle-icon {
+  width: 137px;
+  height: 18px;
+}
+.demo-oracle-icon:before {
+  content: url("images/oracle_logo.svg");
+  display: inline;
+}
+/* Adds padding between logo and application name */
+html:not([dir="rtl"]) .demo-oracle-icon {
+  padding-right: 4px;
+}
+html[dir="rtl"] .demo-oracle-icon {
+  padding-left: 4px;
+}
+
+.demo-avatar-icon {
+  width:24px;
+  height:24px;
+}
+.demo-avatar-icon:before {
+  content:url("images/avatar_24px.png")
+}
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi), (min-resolution: 1.5dppx) {
+  .demo-avatar-icon:before{
+    content:url("images/avatar_24px_2x.png");
+    -webkit-transform:translate(-25%, -25%) scale(0.5);transform:translate(-25%, -25%) scale(0.5)
+  }
+}
+
+/* DEVICE SIMULATOR STUFF */
+.metricLabel {
+	font-variant: small-caps;
+	font-size: 15pt;
+	padding: 0;
+	margin: 15px 0 10px 15px;
+}
+
+.metricValue {
+	font-variant: small-caps;
+	font-size: 22pt;
+	text-align: right;
+	margin: 10px 15px 15px 0;
+}
+
+.detailsValue {
+	font-variant: small-caps;
+	font-size: 15pt;
+	padding: 0;
+	margin: 15px;
+	text-align: center;
+}
+
+.tile {
+	box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+	font-variant: small-caps;
+	padding: 10px;
+}
+
+.tile0 {
+	background: -webkit-radial-gradient(circle, #00A6D4, #0090B5); /* Safari */
+	background: -o-radial-gradient(circle, #00A6D4, #0090B5); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #00A6D4, #0090B5); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #00A6D4, #0090B5); /* Standard syntax */
+}
+
+.tile1 {
+	background: -webkit-radial-gradient(circle, #FF6A00, #CC5100); /* Safari */
+	background: -o-radial-gradient(circle, #FF6A00, #CC5100); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FF6A00, #CC5100); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FF6A00, #CC5100); /* Standard syntax */
+}
+
+.tile2 {
+	background: -webkit-radial-gradient(circle, #009688, #007A6E); /* Safari */
+	background: -o-radial-gradient(circle, #009688, #007A6E); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #009688, #007A6E); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #009688, #007A6E); /* Standard syntax */
+}
+
+.tile3 {
+	background: -webkit-radial-gradient(circle, #FFE566, #FFD800); /* Safari */
+	background: -o-radial-gradient(circle, #FFE566, #FFD800); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FFE566, #FFD800); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FFE566, #FFD800); /* Standard syntax */
+}
+
+.tile4 {
+	background: -webkit-radial-gradient(circle, #4CFF00, #3BC600); /* Safari */
+	background: -o-radial-gradient(circle, #4CFF00, #3BC600); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #4CFF00, #3BC600); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #4CFF00, #3BC600); /* Standard syntax */
+}
+
+.tile5 {
+	background: -webkit-radial-gradient(circle, #9967AF, #57007F); /* Safari */
+	background: -o-radial-gradient(circle, #9967AF, #57007F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #9967AF, #57007F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #9967AF, #57007F); /* Standard syntax */
+}
+
+ .tile6 {
+	background: -webkit-radial-gradient(circle, #91C196, #63C66F); /* Safari */
+	background: -o-radial-gradient(circle, #91C196, #63C66F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #91C196, #63C66F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #91C196, #63C66F); /* Standard syntax */
+}
+
+.grey {
+	background: -webkit-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Safari */
+	background: -o-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #C6C6C6, #7F7F7F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #C6C6C6, #7F7F7F); /* Standard syntax */
+}
+
+.light-green {
+	background: -webkit-radial-gradient(circle, #72E580, #63C66F); /* Safari */
+	background: -o-radial-gradient(circle, #72E580, #63C66F); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #72E580, #63C66F); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #72E580, #63C66F); /* Standard syntax */
+}
+
+.turquoise {
+	background: -webkit-radial-gradient(circle, #00E0E0,#00BCBC); /* Safari */
+	background: -o-radial-gradient(circle, #00E0E0,#00BCBC); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #00E0E0,#00BCBC); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #00E0E0,#00BCBC); /* Standard syntax */
+}
+
+.blue {
+	background: -webkit-radial-gradient(circle, #8D9AD6, #6176D3); /* Safari */
+	background: -o-radial-gradient(circle, #8D9AD6, #6176D3); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #8D9AD6, #6176D3); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #8D9AD6, #6176D3); /* Standard syntax */
+}
+
+.pink {
+	background: -webkit-radial-gradient(circle, #FF7F7F, #D36969); /* Safari */
+	background: -o-radial-gradient(circle, #FF7F7F, #D36969); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #FF7F7F, #D36969); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #FF7F7F, #D36969); /* Standard syntax */
+}
+
+.purple {
+	background: -webkit-radial-gradient(circle, #DF9BE1, #B57EB7); /* Safari */
+	background: -o-radial-gradient(circle, #DF9BE1, #B57EB7); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #DF9BE1, #B57EB7); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #DF9BE1, #B57EB7); /* Standard syntax */
+}
+
+.dark {
+	background: -webkit-radial-gradient(circle, #878787, #404040); /* Safari */
+	background: -o-radial-gradient(circle, #878787, #404040); /* Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(circle, #878787, #404040); /* Firefox 3.6 to 15 */
+	background: radial-gradient(circle, #878787, #404040); /* Standard syntax */
+}
+
+.center-image {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alert-button {
+	width: 200px;
+	margin: 2px auto;
+}
+
+.delete-button {
+	width: 100px;
+	margin: 40px auto;
+}
+
+.create-button {
+	width: 150px;
+	margin: 2px auto;
+}
+
+.event-label {
+	width: 100px;
+	margin: 2px 10px 2px 5px;
+	font-weight: bold;
+}
+
+.button-container {
+	text-align: center;
+}
+
+.avatar {
+    border-radius: 50%;
+    background-size: 35px 35px;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    margin: 2px;
+}
+
+.device-list-container .name {
+    font-weight: bold;
+}
+
+.device-list-container {
+    display: inline-block;
+    margin: 0 5px;
+    vertical-align: top;
+    margin: 0 0 0 10px;
+    font-variant: small-caps;
+}
+
+.toaster {
+	font-variant: small-caps;
+}

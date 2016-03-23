@@ -69,7 +69,7 @@ public class MessagingService {
 
 	public Boolean sendAlert(IOTDevice device, String alert, String iotcsServer, Integer iotcsPort,
 			Boolean sendMessages) {
-		if (sendMessages) {
+		if (sendMessages && device != null) {
 			Message message = device.createAlertMessage(alert);
 			AsyncDeviceClient DEVICE_CLIENT = dao.getAsyncClient(iotcsServer, iotcsPort, device.getId(),
 					device.getResources());
