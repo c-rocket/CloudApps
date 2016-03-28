@@ -5,13 +5,10 @@
 /**
  * Main content module
  */
-var baseUrl = '';
-$(document).ready(function() {
-	baseUrl = $('#baseUrl').val();
-});
 define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylayout', 'ojs/ojbutton', 'ojs/ojswitch', 'ojs/ojchart',
 		'ojs/ojlistview', 'ojs/ojdialog', 'ojs/ojinputtext', 'ojs/ojselectcombobox', 'ojs/ojarraytabledatasource' ], function(oj, ko, $) {
 
+	var baseUrl = '';
 	function alertClick(data, event) {
 		var alertDisplay = data.name;
 		$.ajax({
@@ -27,11 +24,11 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		});
 		return true;
 	}
-	
-	function toaster(text){
+
+	function toaster(text) {
 		vm.toastText(text)
 		$('#toaster').ojPopup('open', '#device-container');
-		setTimeout(function(){
+		setTimeout(function() {
 			$('#toaster').ojPopup('close');
 		}, 1500);
 	}
@@ -170,11 +167,10 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 			secret : data.secretInput(),
 			type : data.typeSelect()[0]
 		});
-		alert(data);
 		$.ajax({
-			headers: { 
-				'Accept': 'application/json',
-				'Content-Type': 'application/json' 
+			headers : {
+				'Accept' : 'application/json',
+				'Content-Type' : 'application/json'
 			},
 			type : 'POST',
 			url : baseUrl + '/device/',
@@ -256,7 +252,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		}, 2000);
 	}
 
-	var vm = new viewModel;
+	var vm = new viewModel();
 
 	function getDeviceTypes() {
 		vm.deviceTypes.removeAll();
@@ -265,15 +261,18 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		}).then(function(data) {
 			$.each(data, function(index, value) {
 				if (value.enabled != null)
-					if(index == 0){
-						vm.typeSelect([value.name]);
+					if (index == 0) {
+						vm.typeSelect([ value.name ]);
 					}
-					vm.deviceTypes.push({
-						value : value.name,
-						label : value.display
-					})
+				vm.deviceTypes.push({
+					value : value.name,
+					label : value.display
+				})
 			});
 		});
 	}
+	$(document).ready(function() {
+		baseUrl = $('#baseUrl').val();
+	});
 	return vm;
 });

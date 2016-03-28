@@ -20,6 +20,11 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/simulator-jet.css'/>" />
 
 <!-- RequireJS configuration file -->
+<script type="text/javascript">
+    var require = {
+        urlArgs : "bust="+new Date().getTime()
+    };
+</script>
 <script data-main="<c:url value='/resources/js/main'/>" src="<c:url value='/resources/js/libs/require/require-debug.js'/>"></script>
 </head>
 <body>

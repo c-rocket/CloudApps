@@ -70,6 +70,7 @@ public class DeviceServiceTest {
 		String id = "Test-123";
 		IOTDevice device = Mockito.mock(IOTDevice.class);
 		when(device.getId()).thenReturn(id);
+		when(device.getResource()).thenReturn("displayInfo");
 		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
 
 		// execute
@@ -134,7 +135,7 @@ public class DeviceServiceTest {
 		String id = "Test-123";
 		IOTDevice device = Mockito.mock(IOTDevice.class);
 		when(device.getId()).thenReturn(id);
-		when(deviceDao.findAll()).thenReturn(Arrays.asList(device));
+		when(deviceDao.findById(id)).thenReturn(device);
 
 		// execute
 		IOTDevice actualDevice = deviceService.getDevice(id);

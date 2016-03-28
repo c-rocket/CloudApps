@@ -45,20 +45,6 @@ public class DeviceDaoInMemoryTest {
 		assertTrue(dao.exists(id));
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void insertExistingDifferentId() throws Exception {
-		// setup
-		String id = "Test-123";
-		String id2 = "Test-1234";
-
-		// execute
-		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
-		dao.insert(new PropertyDevice(deviceDetails, id, "secret"));
-		dao.insert(new PropertyDevice(deviceDetails, id2, "secret"));
-
-		// assert - expected Exception
-	}
-
 	@Test
 	public void insertExistingSameId() throws Exception {
 		// setup
@@ -174,22 +160,6 @@ public class DeviceDaoInMemoryTest {
 	}
 
 	@Test
-	public void updateAllDeviceDoesNotExists() throws Exception {
-		// setup
-		String id = "Test-123";
-
-		// execute
-		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
-		PropertyDevice device = new PropertyDevice(deviceDetails, id, "secret");
-		device.animateMetrics();
-
-		boolean updated = dao.updateAll(Arrays.asList((IOTDevice) device));
-
-		// assert
-		assertFalse(updated);
-	}
-
-	@Test
 	public void updateDeviceExists() throws Exception {
 		// setup
 		String id = "Test-123";
@@ -206,22 +176,6 @@ public class DeviceDaoInMemoryTest {
 		PropertyDevice actual = (PropertyDevice) dao.findById(id);
 		assertEquals(device.getMetrics(), actual.getMetrics());
 		assertTrue(updated);
-	}
-
-	@Test
-	public void updateDeviceDoesNotExist() throws Exception {
-		// setup
-		String id = "Test-123";
-
-		// execute
-		PropertyDeviceDetails deviceDetails = Mockito.mock(PropertyDeviceDetails.class);
-		PropertyDevice device = new PropertyDevice(deviceDetails, id, "secret");
-		device.animateMetrics();
-
-		boolean updated = dao.update((IOTDevice) device);
-
-		// assert
-		assertFalse(updated);
 	}
 
 	@Test

@@ -47,15 +47,15 @@ public class DeviceService {
 	public List<Map<String,Object>> findAll() {
 		List<IOTDevice> findAll = deviceDao.findAll();
 		//TODO: TAKE OUT WHEN DONE TESTING NEW UI
-		if(findAll.size() == 0){
-			create("hvac","0-AM","secret");
-			create("smartThermostat","0-AY","secret");
-			create("hvac","0-AV","secret");
-			create("smartThermostat","0-AB","secret");
-			create("smartThermostat","0-AN","secret");
-			create("hvac","0-AP","secret");
-			create("hvac","0-AL","secret");
-		}
+//		if(findAll.size() == 0){
+//			create("hvac","0-AM","secret");
+//			create("smartThermostat","0-AY","secret");
+//			create("hvac","0-AV","secret");
+//			create("smartThermostat","0-AB","secret");
+//			create("smartThermostat","0-AN","secret");
+//			create("hvac","0-AP","secret");
+//			create("hvac","0-AL","secret");
+//		}
 		List<Map<String,Object>> devices = new ArrayList<>();
 		for(IOTDevice device:deviceDao.findAll()){
 			Map<String,Object> map = new LinkedHashMap<>();

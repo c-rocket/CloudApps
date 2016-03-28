@@ -1,6 +1,5 @@
 package com.oracle.iot.service;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -8,27 +7,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.oracle.iot.dao.MessagingDao;
 import com.oracle.iot.model.IOTDevice;
 
-import oracle.iot.client.device.async.AsyncDeviceClient;
-import oracle.iot.client.device.async.MessageReceipt;
-import oracle.iot.message.Message;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(AsyncDeviceClient.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MessagingServiceTest {
 
 	@Mock
@@ -37,19 +26,6 @@ public class MessagingServiceTest {
 	@InjectMocks
 	MessagingService service;
 
-	AsyncDeviceClient mockedClient;
-
-	@SuppressWarnings("unchecked")
-	@Before
-	public void setUp() {
-		mockedClient = PowerMockito.mock(AsyncDeviceClient.class);
-		PowerMockito.mockStatic(AsyncDeviceClient.class);
-		when(dao.getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class)))
-				.thenReturn(mockedClient);
-		when(mockedClient.sendMessage(any(Message.class))).thenReturn(PowerMockito.mock(MessageReceipt.class));
-	}
-
-	@SuppressWarnings("unchecked")
 	@Test
 	public void sendMessagesServerSendingIsOnExistingPrivateKey() throws Exception {
 		// setup
@@ -64,15 +40,15 @@ public class MessagingServiceTest {
 		when(dao.getPrivateKey(id)).thenReturn(key);
 
 		// execute
-		MessageReceipt receipt = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
+		service.sendMessages(device, iotcsServer, iotcsPort, sendMessages, "username","password");
 
 		// assert
-		assertNotNull(receipt);
-		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
+		verify(dao, times(1)).createConnection(any(String.class), any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class));
+		verify(dao, times(1)).authenticate(any(byte[].class), any(String.class));
+		verify(dao, never()).activateDevice(any(String.class));
 		verify(dao, never()).savePrivateKey(id, key);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void sendMessagesServerSendingIsOnNoExistingPrivateKey() throws Exception {
 		// setup
@@ -81,20 +57,19 @@ public class MessagingServiceTest {
 		String iotcsServer = "server";
 		Integer iotcsPort = 9001;
 		Boolean sendMessages = true;
-		byte[] key = "privatebyteSizedKey".getBytes();
 		IOTDevice device = Mockito.mock(IOTDevice.class);
 		when(device.getId()).thenReturn(id);
 		when(device.getSecret()).thenReturn(secret);
 
 		when(dao.getPrivateKey(id)).thenReturn(null);
-		PowerMockito.when(mockedClient.activate(secret)).thenReturn(key);
 
 		// execute
-		MessageReceipt receipt = service.sendMessages(device, iotcsServer, iotcsPort, sendMessages);
+		service.sendMessages(device, iotcsServer, iotcsPort, sendMessages,"username","password");
 
 		// assert
-		assertNotNull(receipt);
-		verify(dao, times(1)).getAsyncClient(any(String.class), any(Integer.class), any(String.class), any(List.class));
-		verify(dao, times(1)).savePrivateKey(eq(id), eq(key));
+		verify(dao, times(1)).createConnection(any(String.class), any(Integer.class), any(String.class), any(String.class), any(String.class), any(String.class));
+		verify(dao, never()).authenticate(any(byte[].class), any(String.class));
+		verify(dao, times(1)).activateDevice(any(String.class));
+		verify(dao, times(1)).savePrivateKey(eq(id), any(byte[].class));
 	}
 }

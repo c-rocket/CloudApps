@@ -137,10 +137,6 @@
 			<version>1.10</version>
 		</dependency>
 
-		<!-- IoT Client Library -->
-		<!-- <dependency> <groupId>com.oracle.iot</groupId> <artifactId>client-library</artifactId> 
-			<version>1.0.0</version> </dependency> -->
-
 		<!-- Joda Time -->
 		<dependency>
 			<groupId>joda-time</groupId>

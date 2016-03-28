@@ -28,6 +28,7 @@ public class MessagingDaoTest {
 		byte[] key = "privateByteSizedKey".getBytes();
 
 		// execute
+		dao.createConnection("server", 7001, "username", "password", id, "secret");
 		dao.savePrivateKey(id, key);
 		byte[] actualKey = dao.getPrivateKey(id);
 

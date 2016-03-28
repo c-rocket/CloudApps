@@ -27,23 +27,23 @@ public class ScheduledTasks {
 	@Scheduled(fixedDelay = 5000)
 	public void reportCurrentTime() {
 		Boolean sendingMessages = systemConfigService.getMessageStatus();
-		for(IOTDevice device : deviceService.getAll()){
-		try {
-			if (device != null) {
-				messageService.sendMessages(device, systemConfigService.getHost(),
-						systemConfigService.getPort(), sendingMessages);
-				if (sendingMessages) {
-					deviceService.updateDevice(device);
+		for (IOTDevice device : deviceService.getAll()) {
+			try {
+				if (device != null) {
+					messageService.sendMessages(device, systemConfigService.getHost(), systemConfigService.getPort(),
+							sendingMessages, systemConfigService.getUsername(), systemConfigService.getPassword());
+					if (sendingMessages) {
+						deviceService.updateDevice(device);
+					}
 				}
+			} catch (final IllegalStateException ise) {
+				log.error("The device has already been activated, but there is no private key", ise);
+				log.error("Enroll a new device and try again.", ise);
+				disableMessages();
+			} catch (Exception e) {
+				log.error("Error sending message", e);
+				disableMessages();
 			}
-		} catch (final IllegalStateException ise) {
-			log.error("The device has already been activated, but there is no private key", ise);
-			log.error("Enroll a new device and try again.", ise);
-			disableMessages();
-		} catch (Exception e) {
-			log.error("Error sending message", e);
-			disableMessages();
-		}
 		}
 	}
 
