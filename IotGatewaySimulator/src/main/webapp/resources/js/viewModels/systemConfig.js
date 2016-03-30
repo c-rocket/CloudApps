@@ -1,5 +1,5 @@
 define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext', 'ojs/ojinputnumber', 'ojs/ojbutton', 'ojs/ojswitch',
-		'ojs/ojpopup' ], function(oj, ko) {
+		'ojs/ojpopup' ], function(oj, ko, $) {
 	var baseUrl = '';
 
 	function toaster(text) {
@@ -11,7 +11,8 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 	}
 
 	function applyConfigChanges(data, event) {
-		var data = JSON.stringify({
+		console.log(data);
+		var jsonData = JSON.stringify({
 			server : data.hostname(),
 			port : data.port(),
 			username : data.username(),
@@ -26,8 +27,9 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 			type : 'PUT',
 			url : baseUrl + '/system/config',
 			dataType : 'json',
-			data : data,
-			success : function(jsonData) {
+			data : jsonData,
+			success : function(responseData) {
+				console.log(responseData);
 				getConfig();
 				toaster('System Configuraiton Updated');
 			},

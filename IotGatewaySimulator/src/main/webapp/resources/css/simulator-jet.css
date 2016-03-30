@@ -283,3 +283,7 @@ html[dir="rtl"] .demo-oracle-icon {
 .toaster {
 	font-variant: small-caps;
 }
+
+.device-title {
+	font-variant: small-caps;
+}

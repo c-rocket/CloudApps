@@ -20,6 +20,7 @@ public class MessagingService {
 
 	public void sendMessages(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages,
 			String username, String password) throws ClientException {
+		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
 		DataMessage message = device.createMessage();
 		if (sendMessages) {
 			dao.createConnection(iotcsServer, iotcsPort, username, password, device.getId(), device.getSecret());

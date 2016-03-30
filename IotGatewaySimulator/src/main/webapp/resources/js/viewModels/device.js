@@ -81,9 +81,10 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 
 	function loadDevice(id) {
 		$.getJSON(baseUrl + '/device/' + id).then(function(device) {
+			console.log(device);
 			vm.id(device.id);
-			vm.type(device.type);
-			vm.title(device.type + ': ' + device.id)
+			vm.type(device.resource);
+			vm.title(device.resource + ': ' + device.id)
 			vm.image('data:image/jpeg;base64,' + device.picture);
 			vm.metrics.removeAll();
 			var colorIndex = 0;
@@ -201,11 +202,22 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		});
 	}
 
-	function buildChart() {
-		var self = this;
-		self.lineGroups = [ "Group A", "Group B", "Group C", "Group D", "Group E" ];
-
-		return self;
+	function getDeviceTypes() {
+		vm.deviceTypes.removeAll();
+		$.ajax({
+			url : baseUrl + '/device/types'
+		}).then(function(data) {
+			$.each(data, function(index, value) {
+				if (value.enabled != null)
+					if (index == 0) {
+						vm.typeSelect([ value.name ]);
+					}
+				vm.deviceTypes.push({
+					value : value.name,
+					label : value.display
+				})
+			});
+		});
 	}
 
 	function viewModel() {
@@ -232,7 +244,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		self.devicesDatasource = new oj.ArrayTableDataSource([], {
 			idAttribute : "name"
 		});
-		loadDevices(self.devicesDatasource);
+		
 
 		self.createClick = createClick;
 
@@ -254,25 +266,9 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 
 	var vm = new viewModel();
 
-	function getDeviceTypes() {
-		vm.deviceTypes.removeAll();
-		$.ajax({
-			url : baseUrl + '/device/types'
-		}).then(function(data) {
-			$.each(data, function(index, value) {
-				if (value.enabled != null)
-					if (index == 0) {
-						vm.typeSelect([ value.name ]);
-					}
-				vm.deviceTypes.push({
-					value : value.name,
-					label : value.display
-				})
-			});
-		});
-	}
 	$(document).ready(function() {
 		baseUrl = $('#baseUrl').val();
+		loadDevices(vm.devicesDatasource);
 	});
 	return vm;
 });

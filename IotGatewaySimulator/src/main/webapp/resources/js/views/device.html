@@ -1,5 +1,5 @@
 <div id="device-container">
-	<h2 data-bind="text: title"></h2>
+	<h2 data-bind="text: title" class="device-title"></h2>
 	<div class="demo-scroll-container">
 
 		<div class="demo-grid-sizes demo-flex-display">
@@ -15,7 +15,7 @@
 					</ul>
 
 					<script type="text/html" id="item_template">
-   						 <li data-bind="click:deviceClick">
+   						<li data-bind="click:deviceClick">
 						<span class="avatar"> <img height="30" aria-hidden="false"
 								data-bind="attr: { src: image}">
 						</span>
@@ -103,4 +103,3 @@
 		</div>
 	</div>
 </div>
-

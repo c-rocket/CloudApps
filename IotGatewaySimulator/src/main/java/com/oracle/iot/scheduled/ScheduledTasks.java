@@ -24,7 +24,7 @@ public class ScheduledTasks {
 	private DeviceService deviceService;
 
 	// execute 5 seconds after the last message was sent
-	@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 2000)
 	public void reportCurrentTime() {
 		Boolean sendingMessages = systemConfigService.getMessageStatus();
 		for (IOTDevice device : deviceService.getAll()) {

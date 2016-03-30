@@ -11,8 +11,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Repository;
@@ -42,7 +43,7 @@ import oracle.iot.message.MessageParsingException;
 public class MessagingDao {
 	private org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessagingDao.class);
 
-//	private final static String ENDPOINTS_URL = "/iot/api/v1/endpoints";
+	// private final static String ENDPOINTS_URL = "/iot/api/v1/endpoints";
 	private final static String TOKEN_URL = "/iot/api/v1/oauth2/token";
 	private final static String POLICY_URL = "/iot/api/v1/activation/policy";
 	private final static String ACTIVATION_URL = "/iot/api/v1/activation/direct";
@@ -89,6 +90,7 @@ public class MessagingDao {
 		headers.put("X-ActivationId", endpointId);
 		headers.put("Content-Type", "application/json");
 		headers.put("Accept", "application/json");
+		headers.put("Authorization", getAuthHeader(connection));
 
 		HttpClient.HttpResponse response = post(ACTIVATION_URL, payload, headers, connection);
 		int status = response.getStatus();
@@ -105,7 +107,7 @@ public class MessagingDao {
 			reader = Json.createReader(is);
 			JsonObject json = reader.readObject();
 			DirectActivationResponse directActivationResponse = DirectActivationResponse.fromJson(json);
-			Logger.getAnonymousLogger().info(directActivationResponse.toString());
+			log.info(directActivationResponse.toString());
 			return directActivationResponse;
 		} finally {
 			if (reader != null) {
@@ -113,6 +115,13 @@ public class MessagingDao {
 			}
 		}
 
+	}
+
+	private String getAuthHeader(IOTConnection connection) {
+		String auth = connection.getUsername() + ":" + connection.getPassword();
+		byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+		String authHeader = "Basic " + new String(encodedAuth);
+		return authHeader;
 	}
 
 	private DirectActivationRequest createDirectActivationRequest(IOTConnection connection, KeyPair keyPair,
@@ -140,6 +149,7 @@ public class MessagingDao {
 		headers.put("X-ActivationId", connection.getDeviceId());
 		headers.put("Content-Type", "application/json");
 		headers.put("Accept", "application/json");
+		headers.put("Authorization", getAuthHeader(connection));
 
 		ActivationPolicyRequest policyRequest = createActivationPolicyRequest();
 		String payloadString = policyRequest.toJson();
@@ -173,24 +183,36 @@ public class MessagingDao {
 			throws IOException {
 
 		final URL url = new URL("https", connection.getServer(), connection.getPort(), restApi);
+		String url2 = url.toExternalForm();
 
 		if (connection.getToken() == null) {
-			connection.setToken(renewAccessToken(connection));
+			// connection.setToken(renewAccessToken(connection));
 		}
 		final Map<String, String> _headers = new HashMap<String, String>(headers);
-		_headers.put("Authorization", connection.getTokenType() + " " + connection.getToken());
+		// _headers.put("Authorization", connection.getTokenType() + " " +
+		// connection.getToken());
+		_headers.put("Authorization", getAuthHeader(connection));
+		
+		getRestTemplate().postForObject(url2, payload, Map.class,headers);
+		return null;
 
-		final HttpClient httpClient = new HttpClient(url);
-		HttpClient.HttpResponse response = httpClient.post(payload, _headers);
-		Logger.getAnonymousLogger().fine("POST " + url.toExternalForm() + " reponse = " + response.getStatus());
+//		final HttpClient httpClient = new HttpClient(url);
+//
+//		try {
+//			httpClient.wait((long) 30000);
+//		} catch (InterruptedException e) {
+//			log.error("Error setting timeout", e);
+//		}
+//		HttpClient.HttpResponse response = httpClient.post(payload, _headers);
+//		log.debug("POST " + url.toExternalForm() + " reponse = " + response.getStatus());
+//
+//		if (response.getStatus() == 401) {
+//			connection.setToken(renewAccessToken(connection));
+//			_headers.put("Authorization", connection.getTokenType() + " " + connection.getToken());
+//			response = httpClient.post(payload, _headers);
+//		}
 
-		if (response.getStatus() == 401) {
-			connection.setToken(renewAccessToken(connection));
-			_headers.put("Authorization", connection.getTokenType() + " " + connection.getToken());
-			response = httpClient.post(payload, _headers);
-		}
-
-		return response;
+//		return response;
 	}
 
 	private AccessToken renewAccessToken(IOTConnection connection) throws IOException {
@@ -199,6 +221,7 @@ public class MessagingDao {
 		HashMap<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "application/x-www-form-urlencoded");
 		headers.put("Accept", "application/json");
+		headers.put("Authorization", getAuthHeader(connection));
 
 		log.info("POST " + TOKEN_URL);
 
@@ -266,7 +289,11 @@ public class MessagingDao {
 	// }
 
 	public RestTemplate getRestTemplate() {
-		RestTemplate restTemplate = new RestTemplate();
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setReadTimeout(20000);
+        factory.setConnectTimeout(20000);
+		
+		RestTemplate restTemplate = new RestTemplate(factory);
 		FormHttpMessageConverter formConverter = new FormHttpMessageConverter();
 		formConverter.setCharset(Charset.forName("UTF8"));
 		restTemplate.getMessageConverters().add(formConverter);
@@ -314,6 +341,7 @@ public class MessagingDao {
 		headers.put("Content-Type", "application/json");
 		headers.put("Accept", "application/json");
 		headers.put("X-EndpointId", connection.getDeviceId());
+		headers.put("Authorization", getAuthHeader(connection));
 
 		final HttpClient.HttpResponse response = post(MESSAGES_URL, payload, headers, connection);
 
@@ -336,7 +364,7 @@ public class MessagingDao {
 						}
 					}
 				} catch (MessageParsingException e) {
-					Logger.getAnonymousLogger().info(e.getMessage());
+					log.info(e.getMessage());
 				} finally {
 					if (reader != null) {
 						reader.close();
