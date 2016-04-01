@@ -33,25 +33,51 @@
 				</div>
 				<div class="oj-sm-4 oj-md-6 oj-lg-8 oj-xl-10 oj-flex-item">
 
-					<div id="deviceLayout" data-bind="visible: id, ojComponent: {component: 'ojMasonryLayout'}">
-						<div data-bind="foreach: metrics">
-							<div data-bind="css: sizeClass">
-								<div class="metricLabel" data-bind="text: name"></div>
-								<div class="metricValue" data-bind="text: value"></div>
+					<div class="oj-flex-items-pad">
+						<div class="oj-flex">
+							<div class="oj-flex-item">
+								<div id="metricsLayout" data-bind="visible: id, ojComponent: {component: 'ojMasonryLayout'}">
+									<div data-bind="foreach: metrics">
+										<div data-bind="css: sizeClass">
+											<div class="metricLabel" data-bind="text: name"></div>
+											<div class="metricValue" data-bind="text: value"></div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="oj-masonrylayout-tile-2x1 tile blue" id="eventButtons" data-bind="foreach: events">
-							<div class="button-container" data-bind="click:toggleEvent">
-								<label class="event-label" data-bind="text: name"></label> <input
-									data-bind="ojComponent: {component: 'ojSwitch', value:switchValue}" />
+						<div class="oj-flex">
+							<div class="oj-flex-item">
+								<div id="eventsLayout" data-bind="visible: id, ojComponent: {component: 'ojMasonryLayout'}">
+									<div class="oj-masonrylayout-tile-2x2 tile blue" id="eventButtons">
+										<h3>Events</h3>
+										<hr />
+										<div id="events-container" data-bind="foreach: events">
+											<div class="button-container" data-bind="click:toggleEvent">
+												<label class="event-label" data-bind="text: name"></label> <input
+													data-bind="ojComponent: {component: 'ojSwitch', value:switchValue}" />
+											</div>
+										</div>
+									</div>
+									<div class="oj-masonrylayout-tile-2x2 tile pink" id="alertButtons">
+										<h3>Alerts</h3>
+										<hr />
+										<div class="button-container" data-bind="foreach: alerts">
+											<button class="alert-button" data-bind="click:buttonClick, ojComponent: { component: 'ojButton', label: name }"></button>
+										</div>
+									</div>
+									<div class="oj-masonrylayout-tile-2x1 tile grey" style="text-align: center;"">
+										<img height="75%" style="margin: 20px auto;" aria-hidden="false" data-bind="attr: { src: image}">
+									</div>
+									<div class="oj-masonrylayout-tile-2x1 tile dark">
+										<div class="button-container">
+											<button class="delete-button" data-bind="click:deleteClick, ojComponent: { component: 'ojButton', label: 'Delete' }"></button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="oj-masonrylayout-tile-2x1 tile pink" id="alertButtons">
-							<div class="button-container" data-bind="foreach: alerts">
-								<button class="alert-button" data-bind="click:buttonClick, ojComponent: { component: 'ojButton', label: name }"></button>
-							</div>
-						</div>
-						<div class="oj-masonrylayout-tile-3x2 tile" id='chart-container'>
+						<div class="oj-flex-item">
 							<div id="lineChart"
 								data-bind="ojComponent: {
 						        component: 'ojChart', 
@@ -65,41 +91,34 @@
 						        }"
 								style="width: 100%; height: 250px;"></div>
 						</div>
-						<div class="oj-masonrylayout-tile-2x1 tile grey" style="text-align: center;"">
-							<img height="75%" style="margin: 20px auto;" aria-hidden="false" data-bind="attr: { src: image}">
-						</div>
-						<div class="oj-masonrylayout-tile-2x1 tile dark">
-							<div class="button-container">
-								<button class="delete-button" data-bind="click:deleteClick, ojComponent: { component: 'ojButton', label: 'Delete' }"></button>
-							</div>
+						<div class="oj-flex-item">
+							<div id="deviceButtonsLayout" data-bind="visible: id, ojComponent: {component: 'ojMasonryLayout'}"></div>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="dialogWrapper">
-		<div style="display: none" id="modalDialog1" title="Create Device"
-			data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
-			<div class="oj-dialog-body">
-				<form id="createForm">
-					<label for="typeSelect">Device Type </label> <select id="typeSelect"
-						data-bind="ojComponent: {component: 'ojSelect', options:deviceTypes, value: typeSelect, rootAttributes: {style:'max-width:20em'}}">
-					</select> <br /> <label for="idInput">Device ID</label> <input id="idInput" type="text"
-						data-bind="ojComponent: {component: 'ojInputText', value: idInput}" /> <br /> <label for="secretInput">Secret</label> <input
-						id="secretInput" type="text" data-bind="ojComponent: {component: 'ojInputText', value: secretInput}" />
-				</form>
+		<div id="dialogWrapper">
+			<div style="display: none" id="modalDialog1" title="Create Device"
+				data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+				<div class="oj-dialog-body">
+					<form id="createForm">
+						<label for="typeSelect">Device Type </label> <select id="typeSelect"
+							data-bind="ojComponent: {component: 'ojSelect', options:deviceTypes, value: typeSelect, rootAttributes: {style:'max-width:20em'}}">
+						</select> <br /> <label for="idInput">Device ID</label> <input id="idInput" type="text"
+							data-bind="ojComponent: {component: 'ojInputText', value: idInput}" /> <br /> <label for="secretInput">Secret</label> <input
+							id="secretInput" type="text" data-bind="ojComponent: {component: 'ojInputText', value: secretInput}" />
+					</form>
+				</div>
+				<div class="oj-dialog-footer">
+					<button id="okButton" data-bind="click:createModalClose, ojComponent: {component: 'ojButton', label: 'OK'}"></button>
+					<button id="cancelButton" data-bind="click:cancelModalClose, ojComponent: {component: 'ojButton', label: 'Cancel'}"></button>
+				</div>
 			</div>
-			<div class="oj-dialog-footer">
-				<button id="okButton" data-bind="click:createModalClose, ojComponent: {component: 'ojButton', label: 'OK'}"></button>
-				<button id="cancelButton" data-bind="click:cancelModalClose, ojComponent: {component: 'ojButton', label: 'Cancel'}"></button>
+		</div>
+		<div id="popupWrapper">
+			<div style="display: none" id="toaster" class="toaster" data-bind="ojComponent:{component: 'ojPopup'}">
+				<span data-bind="text:toastText"></span>
 			</div>
 		</div>
 	</div>
-	<div id="popupWrapper">
-		<div style="display: none" id="toaster" class="toaster" data-bind="ojComponent:{component: 'ojPopup'}">
-			<span data-bind="text:toastText"></span>
-		</div>
-	</div>
-</div>

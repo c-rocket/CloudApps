@@ -126,7 +126,8 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 				vm.lineGroupsValue.push(value);
 			});
 			vm.currentId = device.id;
-			$("#deviceLayout").ojMasonryLayout("refresh");
+			$("#metricsLayout").ojMasonryLayout("refresh");
+			$("#eventsLayout").ojMasonryLayout("refresh");
 		});
 	}
 
@@ -150,7 +151,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 				});
 			}
 			vm.currentId = device.id;
-			$("#deviceLayout").ojMasonryLayout("refresh");
+			$("#metricsLayout").ojMasonryLayout("refresh");
 		});
 	}
 
