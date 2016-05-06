@@ -1,9 +1,6 @@
 package com.oracle.iot.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -12,16 +9,10 @@ import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oracle.iot.util.Constants;
 
-import oracle.iot.client.device.Resource;
-import oracle.iot.client.device.Resource.Builder;
-import oracle.iot.client.device.Resource.Method;
-import oracle.iot.message.AlertMessage;
-import oracle.iot.message.DataMessage;
-import oracle.iot.message.HttpRequestMessage;
-import oracle.iot.message.HttpResponseMessage;
-import oracle.iot.message.Message;
-import oracle.iot.message.RequestMessageHandler;
-import oracle.iot.message.StatusCode;
+import oracle.iot.client.AbstractVirtualDevice.ChangeEvent;
+import oracle.iot.client.AbstractVirtualDevice.NamedValue;
+import oracle.iot.client.device.Alert;
+import oracle.iot.client.device.VirtualDevice;
 
 public class PropertyDevice extends IOTDevice {
 	@JsonIgnore
@@ -36,86 +27,21 @@ public class PropertyDevice extends IOTDevice {
 	Map<String, Object> currentMetrics = new LinkedHashMap<String, Object>();
 	@JsonIgnore
 	Map<PropertyEvent, Boolean> eventTriggers = new LinkedHashMap<PropertyEvent, Boolean>();
-	@JsonIgnore
-	List<DeviceResource> resources = new ArrayList<DeviceResource>();
 
 	public PropertyDevice(PropertyDeviceDetails details, String id, String secret) {
 		super(id, secret);
 		this.details = details;
+		//define all the default values for the existing metrics
 		for (PropertyMetric metric : details.getMetrics()) {
 			if (metric.getBoolSet() != null) {
 				currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
 			} else {
 				currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
 			}
-			final PropertyDevice me = this;
-			Builder resourceBuilder = getResourceBuilder(id, metric);
-			DeviceResource resource = new DeviceResource(resourceBuilder.build(), new RequestMessageHandler() {
-
-				@Override
-				public HttpResponseMessage handleRequest(HttpRequestMessage request) throws Exception {
-					String metricName = request.getURL();
-					try {
-						if (request.getMethod().equalsIgnoreCase("get")) {
-							PropertyMetric metric = me.details.getMetricByName(metricName);
-							if (metric != null) {
-								String defaultValue;
-								if (metric.getBoolSet() == null) {
-									defaultValue = metric.getDefaultValue().toString();
-								} else {
-									defaultValue = metric.getBoolSet().toString();
-								}
-								return new HttpResponseMessage.Builder().header(metricName, Arrays.asList(defaultValue))
-										.contentType("text/xml").url(metricName).body(defaultValue)
-										.statusCode(StatusCode.OK).source(me.getId()).clientId(request.getClientId())
-										.sender(request.getDestination()).destination(request.getSender())
-										.requestId(request.getId()).build();
-							}
-						} else if (request.getMethod().equalsIgnoreCase("put")) {
-							String value = request.getBodyString();
-							PropertyMetric metric = me.details.getMetricByName(metricName);
-							if (metric != null) {
-								if (metric.getBoolSet() == null) {
-									metric.setDefaultValue(Double.valueOf(value));
-								} else {
-									metric.setBoolSet(Boolean.valueOf(value));
-								}
-								return new HttpResponseMessage.Builder().header(metricName, Arrays.asList(value))
-										.contentType("text/xml").url(metricName).body(value)
-										.statusCode(StatusCode.ACCEPTED).source(me.getId())
-										.clientId(request.getClientId()).sender(request.getDestination())
-										.destination(request.getSender()).requestId(request.getId()).build();
-							}
-						}
-					} catch (Exception e) {
-						log.error("Problem with Endpoint manipulation", e);
-					}
-					return new HttpResponseMessage.Builder().header(metricName, null).contentType("text/xml")
-							.url(metricName).body("invalid request").statusCode(StatusCode.BAD_REQUEST)
-							.source(me.getId()).clientId(request.getClientId()).sender(request.getDestination())
-							.destination(request.getSender()).requestId(request.getId()).build();
-				}
-			});
-			resources.add(resource);
 		}
-		log.info("Creating Events: " + details.getEvents().size());
-		for (
-
-		PropertyEvent event : details.getEvents())
-
-		{
+		for(PropertyEvent event:details.getEvents()){
 			eventTriggers.put(event, false);
 		}
-
-	}
-
-	private Builder getResourceBuilder(String id, PropertyMetric metric) {
-		List<Method> methods = new ArrayList<Method>();
-		methods.add(Method.PUT); // allow values to be updated
-		methods.add(Method.GET); // allow user to request the value
-		Builder resourceBuilder = new Resource.Builder();
-		resourceBuilder.endpointName(id).name(metric.getName()).path(metric.getName()).methods(methods);
-		return resourceBuilder;
 	}
 
 	@Override
@@ -144,6 +70,7 @@ public class PropertyDevice extends IOTDevice {
 		return currentMetrics;
 	}
 
+	@Override
 	public void animateMetrics() {
 		Map<PropertyMetric, Object> calcs = new LinkedHashMap<PropertyMetric, Object>();
 		// place default values
@@ -287,37 +214,21 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	@Override
-	public AlertMessage createAlertMessage(String alertName) {
-		String description = "Invalid Alert";
-		for (PropertyAlert alert : details.getAlerts()) {
-			if (alert.getName().equalsIgnoreCase(alertName)) {
-				description = alert.getDisplayName();
-				break;
-			}
-		}
-
-		AlertMessage.Builder alertBuilder = new AlertMessage.Builder();
-		alertBuilder.format(details.getAlertFormat());
-		alertBuilder.source(getId());
-		alertBuilder.description(description);
-
+	public void alert(VirtualDevice virtualDevice, String alertName) {
+		Alert alert = virtualDevice.createAlert(alertName);
 		for (String key : currentMetrics.keySet()) {
 			String id = getMetricNameByDisplayName(key);
 			if (id != null) {
 				if (currentMetrics.get(key) instanceof Double) {
 					Double metricValue = (Double) currentMetrics.get(key);
-					alertBuilder.dataItem(id, metricValue);
+					alert.set(id, metricValue);
 				} else if (currentMetrics.get(key) instanceof Boolean) {
 					Boolean metricValue = (Boolean) currentMetrics.get(key);
-					alertBuilder.dataItem(id, metricValue);
+					alert.set(id, metricValue);
 				}
 			}
 		}
-
-		alertBuilder.severity(AlertMessage.Severity.CRITICAL);
-		log.info("Created Alert: " + alertBuilder.build().toString());
-		return alertBuilder.build();
-
+		alert.raise();
 	}
 
 	private String getMetricNameByDisplayName(String displayName) {
@@ -341,31 +252,24 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	@Override
-	public DataMessage createMessage() {
-		animateMetrics();
-
-		DateTime messageDate = new DateTime();
-		DataMessage.Builder msgBuilder = new DataMessage.Builder();
-		msgBuilder.format(details.getDataFormat());
-		msgBuilder.source(getId());
+	public void update(VirtualDevice virtualDevice) {
+		VirtualDevice update = virtualDevice.update();
 
 		for (String key : currentMetrics.keySet()) {
 			String id = getMetricNameByDisplayName(key);
 			if (id != null) {
 				if (currentMetrics.get(key) instanceof Double) {
 					Double metric = (Double) currentMetrics.get(key);
-					msgBuilder.dataItem(id, metric);
-					addToChart(messageDate, key, metric);
+					update.set(id, metric);
+					addToChart(new DateTime(), key, metric);
 				} else if (currentMetrics.get(key) instanceof Boolean) {
 					Boolean metric = (Boolean) currentMetrics.get(key);
-					msgBuilder.dataItem(id, metric);
+					update.set(id, metric);
 					// addToChart(messageDate, key, metric ? 1d : 0d);
 				}
 			}
 		}
-		msgBuilder.reliability(Message.Reliability.BEST_EFFORT);
-		msgBuilder.priority(Message.Priority.MEDIUM);
-		return msgBuilder.build();
+		update.finish();
 	}
 
 	@Override
@@ -384,8 +288,27 @@ public class PropertyDevice extends IOTDevice {
 	}
 
 	@Override
-	public List<DeviceResource> getResources() {
-		return resources;
+	public void addCallbacks(VirtualDevice virtualDevice) {
+		for (PropertyMetric metric : details.getMetrics()) {
+			final String metricName = metric.getName();
+			final String metricDisplay = metric.getDisplayName();
+			if (metric.getBoolSet() != null) {
+				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
+					@Override
+					public void onChange(ChangeEvent<VirtualDevice> event) {
+						NamedValue<?> namedValue = event.getNamedValue();
+						currentMetrics.put(metricDisplay, (boolean) namedValue.getValue());
+					}
+				});
+			} else {
+				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
+					@Override
+					public void onChange(ChangeEvent<VirtualDevice> event) {
+						NamedValue<?> namedValue = event.getNamedValue();
+						currentMetrics.put(metricDisplay, namedValue.getValue());
+					}
+				});
+			}
+		}
 	}
-
 }

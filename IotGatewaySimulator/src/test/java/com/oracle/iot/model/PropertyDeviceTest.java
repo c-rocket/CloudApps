@@ -18,10 +18,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.oracle.iot.client.message.AlertMessage;
 import com.oracle.iot.dao.DevicePropertiesLoaderDao;
 import com.oracle.iot.util.Constants;
 
-import oracle.iot.message.AlertMessage;
+import oracle.iot.client.device.Alert;
+import oracle.iot.client.device.VirtualDevice;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
@@ -40,7 +42,7 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -61,12 +63,14 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		Map<String, Object> metrics = device.getMetrics();
 		Double originalTemp = (Double) metrics.get("Output Temp (C)");
 		device.eventHandler("eventMotorOverheat");
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		Double originalTemp2 = (Double) metrics.get("Output Temp (C)");
+		device.animateMetrics();
+		Double originalTemp3 = (Double) metrics.get("Output Temp (C)");
 
 		// assert
 		metrics = device.getMetrics();
@@ -86,27 +90,27 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		device.eventHandler("eventMotorOverheat");
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -126,28 +130,28 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		device.eventHandler("eventMotorOverheat");
 		device.eventHandler("eventMotorFailure");
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -168,7 +172,7 @@ public class PropertyDeviceTest {
 
 		// execute
 		device.eventHandler("eventMotorFailure");
-		device.createMessage();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -189,8 +193,8 @@ public class PropertyDeviceTest {
 
 		// execute
 		device.eventHandler("eventMotorFailure");
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -211,7 +215,7 @@ public class PropertyDeviceTest {
 
 		// execute
 		device.eventHandler("eventHvacNotWorking");
-		device.createMessage();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -231,11 +235,11 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		device.eventHandler("eventMotorOverheat");
 		device.eventHandler("eventMotorFailure");
 		device.eventHandler("eventHvacNotWorking");
-		device.createMessage();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -251,14 +255,17 @@ public class PropertyDeviceTest {
 		String id = "testId";
 		String secret = "testPassword";
 		PropertyDeviceDetails deviceDetails = dao.getDevice("hvac");
+		VirtualDevice vd = Mockito.mock(VirtualDevice.class);
+		Alert alert = Mockito.mock(Alert.class);
+		Mockito.when(vd.createAlert(Mockito.any(String.class))).thenReturn(alert);
 
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		AlertMessage message = device.createAlertMessage("alertDoorOpen");
+		device.alert(vd, "alertDoorOpen");
 
 		// assert
-		assertNotNull(message);
+		Mockito.verify(alert, Mockito.times(1)).raise();
 	}
 
 	@Test
@@ -280,9 +287,9 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -310,7 +317,7 @@ public class PropertyDeviceTest {
 		// execute
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 		for (int i = 0; i < 1500; i++) {
-			device.createMessage();
+			device.animateMetrics();
 		}
 
 		// assert
@@ -336,10 +343,10 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		device.eventHandler("eventDrillSlowDown");
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();
@@ -364,10 +371,10 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
+		device.animateMetrics();
 		device.eventHandler("eventDrillSlowDown");
 		for (int i = 0; i < 5902; i++) {
-			device.createMessage();
+			device.animateMetrics();
 		}
 
 		// assert
@@ -393,12 +400,12 @@ public class PropertyDeviceTest {
 		PropertyDevice device = new PropertyDevice(deviceDetails, id, secret);
 
 		// execute
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
 		device.eventHandler("eventDrillFailure");
-		device.createMessage();
-		device.createMessage();
-		device.createMessage();
+		device.animateMetrics();
+		device.animateMetrics();
+		device.animateMetrics();
 
 		// assert
 		Map<String, Object> metrics = device.getMetrics();

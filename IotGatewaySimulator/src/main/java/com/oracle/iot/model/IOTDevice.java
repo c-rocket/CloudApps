@@ -9,8 +9,7 @@ import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import oracle.iot.message.AlertMessage;
-import oracle.iot.message.DataMessage;
+import oracle.iot.client.device.VirtualDevice;
 
 public abstract class IOTDevice {
 
@@ -66,11 +65,7 @@ public abstract class IOTDevice {
 
 	public abstract Map<String, Object> getMetrics();
 
-	public abstract AlertMessage createAlertMessage(String alert);
-
 	public abstract Boolean eventHandler(String event);
-
-	public abstract DataMessage createMessage();
 
 	public abstract String getPicture();
 
@@ -88,6 +83,16 @@ public abstract class IOTDevice {
 
 	public abstract IOTDevice copy();
 
-	public abstract List<DeviceResource> getResources();
+	public String getModelURN() {
+		return getResource();
+	}
+
+	public abstract void animateMetrics();
+
+	public abstract void update(VirtualDevice virtualDevice);
+
+	public abstract void alert(VirtualDevice virtualDevice, String alert);
+
+	public abstract void addCallbacks(VirtualDevice virtualDevice);
 
 }

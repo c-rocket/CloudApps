@@ -12,9 +12,6 @@ import com.oracle.iot.model.IOTDevice;
 @Repository
 public class DeviceDaoInMemory {
 	private Map<String, IOTDevice> devices = new LinkedHashMap<String, IOTDevice>();
-	// - used originally but the IOT client jar can barely handle
-	// being one device at a time :)
-	// private IOTDevice device = null;
 
 	public boolean exists(String id) {
 		return (this.devices.get(id) != null);

@@ -157,7 +157,7 @@
 
 		<dependency>
 			<groupId>com.oracle</groupId>
-			<artifactId>multi-client</artifactId>
+			<artifactId>device-library</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
