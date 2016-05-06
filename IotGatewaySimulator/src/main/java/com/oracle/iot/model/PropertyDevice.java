@@ -297,7 +297,7 @@ public class PropertyDevice extends IOTDevice {
 					@Override
 					public void onChange(ChangeEvent<VirtualDevice> event) {
 						NamedValue<?> namedValue = event.getNamedValue();
-						currentMetrics.put(metricDisplay, (boolean) namedValue.getValue());
+						currentMetrics.put(metricDisplay, Boolean.valueOf(namedValue.getValue().toString()));
 					}
 				});
 			} else {
