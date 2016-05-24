@@ -9,8 +9,8 @@ public class SystemConfigService {
 	private Integer port = 7102;
 	private String configFileLocation = "/configs";
 	private Boolean sendingMessages = false;
-	private String password = "changeit";
-	private String weblogicTrust = "C:/PROGRA~1/Java/JDK18~1.0_6/jre/lib/security/cacerts";
+	private String password = "password";
+	private String weblogicTrust = "C:/Oracle/iot_cert/iot_demo.jks";
 
 	public String getHost() {
 		return host;

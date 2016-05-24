@@ -19,11 +19,10 @@ public class MessagingDao {
 	private org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MessagingDao.class);
 	private Map<String, VirtualDevice> connectedDevices = new LinkedHashMap<String, VirtualDevice>();
 
-	public VirtualDevice getDevice(IOTDevice device, String iotcsServer, Integer iotcsPort, String weblogicTrust,
+	public VirtualDevice getVirtualDevice(IOTDevice device, String iotcsServer, Integer iotcsPort, String weblogicTrust,
 			String trustPassword) throws GeneralSecurityException, IOException {
 		VirtualDevice virtualDevice = connectedDevices.get(device.getId());
 		if (virtualDevice == null) {
-			log.info("Activating new device" + device);
 			String[] args = new String[14];
 			args[0] = "-serverHost";
 			args[1] = iotcsServer;
@@ -39,6 +38,7 @@ public class MessagingDao {
 			args[11] = device.getSecret();
 			args[12] = "-deviceId";
 			args[13] = device.getId();
+			log.info("Activating new device" + device + ", " + args.toString());
 
 			String store = null;
 			try {

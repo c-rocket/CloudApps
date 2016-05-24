@@ -77,6 +77,19 @@ public class DeviceService {
 	public IOTDevice getDevice(String id) {
 		return deviceDao.findById(id);
 	}
+	
+	public Map<String,Object> getDeviceUpdate(String id) {
+		IOTDevice device = deviceDao.findById(id);
+		Map<String,Object> map = new LinkedHashMap<>();
+		if(device != null){
+			map.put("metrics", device.getMetrics());
+			map.put("chartSeries", device.getChartSeries());
+			map.put("chartValues", device.getChartValues());
+			map.put("chartLabels", device.getChartLabels());
+			map.put("id", device.getId());
+		}
+		return map;
+	}
 
 	public List<Map<String, Object>> getAllTypes() {
 		return loaderDao.getTypes(true);

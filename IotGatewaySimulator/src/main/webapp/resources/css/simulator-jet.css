@@ -259,6 +259,10 @@ html[dir="rtl"] .demo-oracle-icon {
 	text-align: center;
 }
 
+.pointer {
+	cursor: pointer;
+}
+
 .avatar {
     border-radius: 50%;
     background-size: 35px 35px;
@@ -266,6 +270,13 @@ html[dir="rtl"] .demo-oracle-icon {
     height: 35px;
     display: inline-block;
     margin: 2px;
+}
+
+.trash {
+    display: inline-block;
+    margin: 2px;
+    float: right;
+    cursor: pointer;
 }
 
 .device-list-container .name {

@@ -95,4 +95,18 @@ public abstract class IOTDevice {
 
 	public abstract void addCallbacks(VirtualDevice virtualDevice);
 
+	public List<String> getChartSeries() {
+		return this.chartSeries;
+	}
+
+	public List<List<Double>> getChartValues() {
+		return chartValues;
+	}
+
+	public List<String> getChartLabels() {
+		return chartLabels;
+	}
+	
+	
+
 }

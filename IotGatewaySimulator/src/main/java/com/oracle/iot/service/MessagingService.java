@@ -24,9 +24,9 @@ public class MessagingService {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
 		System.setProperty("com.oracle.iot.client.server.port", String.valueOf(iotcsPort));
 		try {
-			VirtualDevice virtualDevice = dao.getDevice(device, iotcsServer, iotcsPort, weblogicTrust, trustPassword);
 			device.animateMetrics();
 			if (sendMessages) {
+				VirtualDevice virtualDevice = dao.getVirtualDevice(device, iotcsServer, iotcsPort, weblogicTrust, trustPassword);
 				device.update(virtualDevice);
 			}
 		} catch (GeneralSecurityException e) {
@@ -40,7 +40,7 @@ public class MessagingService {
 			Boolean sendMessages, String weblogicTrust, String trustPassword) {
 		if (sendMessages && device != null) {
 			try {
-				VirtualDevice virtualDevice = dao.getDevice(device, iotcsServer, iotcsPort, weblogicTrust,
+				VirtualDevice virtualDevice = dao.getVirtualDevice(device, iotcsServer, iotcsPort, weblogicTrust,
 						trustPassword);
 				device.alert(virtualDevice, alert);
 			} catch (GeneralSecurityException e) {

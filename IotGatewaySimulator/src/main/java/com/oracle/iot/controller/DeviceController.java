@@ -66,6 +66,12 @@ public class DeviceController {
 	public IOTDevice showDevice(@PathVariable String id) {
 		return deviceService.getDevice(id);
 	}
+	
+	@RequestMapping(value = "/device/{id}/update", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String,Object> showDeviceUpdate(@PathVariable String id) {
+		return deviceService.getDeviceUpdate(id);
+	}
 
 	@RequestMapping(value = "/device/{id}/alerts/{alert}", method = RequestMethod.PUT)
 	@ResponseBody

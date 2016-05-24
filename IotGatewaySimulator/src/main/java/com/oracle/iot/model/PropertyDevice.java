@@ -31,7 +31,7 @@ public class PropertyDevice extends IOTDevice {
 	public PropertyDevice(PropertyDeviceDetails details, String id, String secret) {
 		super(id, secret);
 		this.details = details;
-		//define all the default values for the existing metrics
+		// define all the default values for the existing metrics
 		for (PropertyMetric metric : details.getMetrics()) {
 			if (metric.getBoolSet() != null) {
 				currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
@@ -39,7 +39,7 @@ public class PropertyDevice extends IOTDevice {
 				currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
 			}
 		}
-		for(PropertyEvent event:details.getEvents()){
+		for (PropertyEvent event : details.getEvents()) {
 			eventTriggers.put(event, false);
 		}
 	}
@@ -74,6 +74,7 @@ public class PropertyDevice extends IOTDevice {
 	public void animateMetrics() {
 		Map<PropertyMetric, Object> calcs = new LinkedHashMap<PropertyMetric, Object>();
 		// place default values
+
 		for (PropertyMetric metric : details.getMetrics()) {
 			if (metric.getBoolSet() != null) {
 				calcs.put(metric, (boolean) metric.getBoolSet());
@@ -101,12 +102,16 @@ public class PropertyDevice extends IOTDevice {
 		}
 
 		// write out updated values as current values
-		for (PropertyMetric metric : calcs.keySet()) {
-			if (calcs.get(metric) instanceof Double) {
-				Double newValue = Constants.scale((Double) calcs.get(metric), 2);
-				currentMetrics.put(metric.getDisplayName(), newValue);
-			} else if (calcs.get(metric) instanceof Boolean) {
-				currentMetrics.put(metric.getDisplayName(), (Boolean) calcs.get(metric));
+		DateTime newMessageDateTime = new DateTime();
+		for (PropertyMetric key : calcs.keySet()) {
+			if (calcs.get(key) instanceof Double) {
+				Double newValue = Constants.scale((Double) calcs.get(key), 2);
+				currentMetrics.put(key.getDisplayName(), newValue);
+				addToChart(newMessageDateTime, key.getDisplayName(), newValue);
+			} else if (calcs.get(key) instanceof Boolean) {
+				Boolean newValue = (Boolean) calcs.get(key);
+				currentMetrics.put(key.getDisplayName(), newValue);
+				addToChart(newMessageDateTime, key.getDisplayName(), newValue ? 1d : 0d);
 			}
 		}
 	}
@@ -258,15 +263,7 @@ public class PropertyDevice extends IOTDevice {
 		for (String key : currentMetrics.keySet()) {
 			String id = getMetricNameByDisplayName(key);
 			if (id != null) {
-				if (currentMetrics.get(key) instanceof Double) {
-					Double metric = (Double) currentMetrics.get(key);
-					update.set(id, metric);
-					addToChart(new DateTime(), key, metric);
-				} else if (currentMetrics.get(key) instanceof Boolean) {
-					Boolean metric = (Boolean) currentMetrics.get(key);
-					update.set(id, metric);
-					// addToChart(messageDate, key, metric ? 1d : 0d);
-				}
+				update.set(id, currentMetrics.get(key));
 			}
 		}
 		update.finish();

@@ -47,32 +47,33 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 	}
 
 	function deleteClick(data) {
-		var id = data.currentId;
-		vm.currentId = null;
-		vm.title('Select/Create a Device');
-		vm.id(null);
-		vm.type(null);
-		vm.image(null);
-
-		vm.metrics([]);
-		vm.alerts([]);
-		vm.events([]);
-
-		vm.lineSeriesValue([]);
-		vm.lineGroupsValue([]);
-		$("#deviceLayout").ojMasonryLayout("refresh");
-		$.ajax({
-			type : 'DELETE',
-			url : baseUrl + '/device/' + id,
-			dataType : 'json',
-			success : function(jsonData) {
-				loadDevices(vm.devicesDatasource);
-			},
-			error : function() {
-				alert('Error deleteing DeviceID=' + id);
-			}
-		});
-
+		console.log("Delete Data", data);
+		var r = confirm("Are you sure you want to delete " + data.name + "?");
+		if (r == true) {
+			var id = data.name;
+			$.ajax({
+				type : 'DELETE',
+				url : baseUrl + '/device/' + id,
+				dataType : 'json',
+				success : function(jsonData) {
+					vm.currentId = null;
+					vm.title('Select/Create a Device');
+					vm.id(null);
+					vm.type(null);
+					vm.image(null);
+					vm.metrics([]);
+					vm.alerts([]);
+					vm.events([]);
+					vm.lineSeriesValue([]);
+					vm.lineGroupsValue([]);
+					$("#deviceLayout").ojMasonryLayout("refresh");
+					loadDevices(vm.devicesDatasource);
+				},
+				error : function() {
+					alert('Error deleteing DeviceID=' + id);
+				}
+			});
+		}
 	}
 
 	function deviceClick(data, event) {
@@ -132,7 +133,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 	}
 
 	function updateDevice(id) {
-		$.getJSON(baseUrl + '/device/' + id).then(function(device) {
+		$.getJSON(baseUrl + '/device/' + id + '/update').then(function(device) {
 			vm.metrics.removeAll();
 			var colorIndex = 0;
 			$.each(device.metrics, function(key, value) {
@@ -198,6 +199,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 			$.each(devices, function(index, value) {
 				value.deviceClick = deviceClick;
 				value.image = 'data:image/jpeg;base64,' + value.image;
+				value.deviceDeleteClick = deleteClick;
 			});
 			devicesDatasource.add(devices);
 		});
@@ -245,7 +247,6 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 		self.devicesDatasource = new oj.ArrayTableDataSource([], {
 			idAttribute : "name"
 		});
-		
 
 		self.createClick = createClick;
 
