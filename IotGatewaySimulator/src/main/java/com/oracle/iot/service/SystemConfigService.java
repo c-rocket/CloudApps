@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 public class SystemConfigService {
 
 	private String host = "localhost";
-	private Integer port = 7101;
+	private Integer port = 7102;
 	private String configFileLocation = "/configs";
 	private Boolean sendingMessages = false;
-	private String username = "iot";
-	private String password = "welcome1";
+	private String password = "changeit";
+	private String weblogicTrust = "C:/PROGRA~1/Java/JDK18~1.0_6/jre/lib/security/cacerts";
 
 	public String getHost() {
 		return host;
@@ -43,20 +43,20 @@ public class SystemConfigService {
 		return configFileLocation;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getWebLogicTrust() {
+		return this.weblogicTrust ;
+	}
+
+	public void setWebLogicTrust(String weblogicTrust) {
+		this.weblogicTrust = weblogicTrust;
 	}
 	
 	

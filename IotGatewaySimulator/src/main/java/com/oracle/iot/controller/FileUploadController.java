@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,14 +28,29 @@ public class FileUploadController {
 	@Resource
 	private DeviceService deviceService;
 
-	@RequestMapping(value = "/device/setup", method = RequestMethod.GET)
-	public ModelAndView setupPage(@RequestParam(required = false) String message) {
-		ModelAndView modelAndView = new ModelAndView("setup");
+	@RequestMapping(value = "/device/setup/types", method = RequestMethod.GET)
+	public @ResponseBody List<Map<String, Object>> getTypes() {
+		return deviceService.getAllTypes();
+	}
+
+	@RequestMapping(value = "/device/setup/types", method = RequestMethod.PUT)
+	public @ResponseBody Boolean updateTypes(@RequestBody List<Map<String, Object>> deviceTypes) {
+		deviceService.updateTypes(deviceTypes);
+		return true;
+	}
+
+	@RequestMapping(value = "/device/setup/devicecentral", method = RequestMethod.GET)
+	public @ResponseBody Map<String, List<Map<String, Object>>> getDeviceCentralTypes() {
 		List<Map<String, Object>> localDevices = deviceService.getAllTypes();
-		modelAndView.addObject("devices", localDevices);
-		modelAndView.addObject("centralDevices", deviceService.getAllDeviceCentral(localDevices));
-		modelAndView.addObject("message", message);
-		return modelAndView;
+		return deviceService.getAllDeviceCentral(localDevices);
+	}
+
+	@RequestMapping(value = "/device/setup/devicecentral", method = RequestMethod.PUT)
+	public @ResponseBody Boolean updateDeviceCentralTypes(
+			@RequestBody Map<String, List<Map<String, Object>>> deviceTypes) {
+		List<Map<String, Object>> localDevices = deviceService.getAllTypes();
+		updateCentralDevices(deviceTypes, localDevices);
+		return true;
 	}
 
 	@RequestMapping(value = "/device/setup/upload", method = RequestMethod.GET)
@@ -48,69 +62,38 @@ public class FileUploadController {
 	public ModelAndView uploadDevicePost(@ModelAttribute("uploadForm") FileUploadForm uploadForm) {
 		MultipartFile propertyFile = uploadForm.getFiles().get(0);
 		MultipartFile imageFile = uploadForm.getFiles().get(1);
-		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
+		ModelAndView modelAndView = new ModelAndView(new RedirectView("/?root=uploadDevice", true));
 		if (!propertyFile.isEmpty()) {
 			PropertyDeviceDetails device = deviceService.load(propertyFile, imageFile);
-			if (device != null && (uploadForm.getShare() == null || !uploadForm.getShare())) {
-				modelAndView.addObject("message", "Device ONLY Loaded Locally Please Consider Sharing With Everyone");
-			} else if (device != null) {
-				if (deviceService.uploadToDeviceCentral(device.getDisplayName(), uploadForm.getIndustry(), propertyFile,
-						imageFile)) {
-					modelAndView.addObject("message", "Device Loaded Locally and Uploaded to Device Central");
-				} else {
-					modelAndView.addObject("message", "Device only Loaded Locally");
-				}
-			} else {
-				modelAndView.addObject("message", "Error uploading file");
-			}
+			deviceService.uploadToDeviceCentral(device.getDisplayName(), uploadForm.getIndustry(), propertyFile,
+					imageFile);
 		} else {
+			logger.error("Error with proeprty file selected");
 			modelAndView.addObject("message", "Error with proeprty file selected");
 		}
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/device/setup/select", method = RequestMethod.POST)
-	public ModelAndView selectDevices(HttpServletRequest request) {
-		logger.info("updating available devices");
-		List<Map<String, Object>> devices = deviceService.getAllTypes();
-		updateLocalDevices(request, devices);
-		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
-		modelAndView.addObject("message", "Local Devices Enabled/Disabled");
-		return modelAndView;
+	private void updateCentralDevices(Map<String, List<Map<String, Object>>> deviceTypes,
+			List<Map<String, Object>> localDevices) {
+		List<Map<String, Object>> devicesToDownload = new ArrayList<>();
+		for (List<Map<String, Object>> list : deviceTypes.values()) {
+			for (Map<String, Object> item : list) {
+				Boolean enabled = (Boolean) item.get("enabled");
+				if (enabled && !exist((String) item.get("name"), localDevices)) {
+					devicesToDownload.add(item);
+				}
+			}
+		}
+		deviceService.downloadFromDeviceCentral(devicesToDownload);
 	}
 
-	private void updateLocalDevices(HttpServletRequest request, List<Map<String, Object>> devices) {
-		for (Map<String, Object> item : devices) {
-			Object attribute = request.getParameter("devices." + (String) item.get("name"));
-			Boolean enabled = attribute != null;
-			item.put("enabled", enabled);
+	private boolean exist(String name, List<Map<String, Object>> localDevices) {
+		for (Map<String, Object> item : localDevices) {
+			if (name.equalsIgnoreCase((String) item.get("name"))) {
+				return true;
+			}
 		}
-		deviceService.updateTypes(devices);
-	}
-
-	@RequestMapping(value = "/device/setup/centralselect", method = RequestMethod.POST)
-	public ModelAndView selectCentralDevices(HttpServletRequest request) {
-		logger.info("updating available devices");
-		List<Map<String, Object>> localDevices = deviceService.getAllTypes();
-		Map<String, List<Map<String, Object>>> devices = deviceService.getAllDeviceCentral(localDevices);
-		updateCentralDevices(request, devices);
-		ModelAndView modelAndView = new ModelAndView(new RedirectView("/device/setup", true));
-		modelAndView.addObject("message", "Device Central Downloaded Complete");
-		return modelAndView;
-	}
-
-	private void updateCentralDevices(HttpServletRequest request,
-			Map<String, List<Map<String, Object>>> centralDevices) {
-		List<Map<String, Object>> allDevices = new ArrayList<>();
-		for (List<Map<String, Object>> list : centralDevices.values()) {
-			allDevices.addAll(list);
-		}
-
-		for (Map<String, Object> item : allDevices) {
-			Object attribute = request.getParameter("devices." + (String) item.get("name"));
-			Boolean enabled = attribute != null;
-			item.put("enabled", enabled);
-		}
-		deviceService.downloadFromDeviceCentral(allDevices);
+		return false;
 	}
 }

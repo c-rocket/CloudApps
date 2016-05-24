@@ -34,7 +34,7 @@ public class SystemConfigController {
 		result.put("server", systemConfigService.getHost());
 		result.put("port", systemConfigService.getPort());
 		result.put("sendingMessages", systemConfigService.getMessageStatus());
-		result.put("username", systemConfigService.getUsername());
+		result.put("weblogicTrust", systemConfigService.getWebLogicTrust());
 		result.put("password", systemConfigService.getPassword());
 		return result;
 	}
@@ -45,7 +45,7 @@ public class SystemConfigController {
 		systemConfigService.setHost((String) config.get("server"));
 		systemConfigService.setPort((Integer) config.get("port"));
 		systemConfigService.setMessageStatus((Boolean) config.get("sendingMessages"));
-		systemConfigService.setUsername((String) config.get("username"));
+		systemConfigService.setWebLogicTrust((String) config.get("weblogicTrust"));
 		systemConfigService.setPassword((String) config.get("password"));
 
 		return true;

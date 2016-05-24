@@ -51,7 +51,7 @@ public class DeviceController {
 
 	@RequestMapping(value = "/device/list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String,Object>> listDevices() {
+	public List<Map<String, Object>> listDevices() {
 		return deviceService.findAll();
 	}
 
@@ -69,14 +69,15 @@ public class DeviceController {
 
 	@RequestMapping(value = "/device/{id}/alerts/{alert}", method = RequestMethod.PUT)
 	@ResponseBody
-	public Boolean sendAlert(@PathVariable String id,@PathVariable String alert) {
+	public Boolean sendAlert(@PathVariable String id, @PathVariable String alert) {
 		return messagingService.sendAlert(deviceService.getDevice(id), alert, systemConfigService.getHost(),
-				systemConfigService.getPort(), systemConfigService.getMessageStatus());
+				systemConfigService.getPort(), systemConfigService.getMessageStatus(),
+				systemConfigService.getWebLogicTrust(), systemConfigService.getPassword());
 	}
 
 	@RequestMapping(value = "/device/{id}/events/{event}", method = RequestMethod.PUT)
 	@ResponseBody
-	public Boolean triggerEvent(@PathVariable String id,@PathVariable String event) {
+	public Boolean triggerEvent(@PathVariable String id, @PathVariable String event) {
 		IOTDevice device = deviceService.getDevice(id);
 		Boolean started = device.eventHandler(event);
 		deviceService.updateDevice(device);

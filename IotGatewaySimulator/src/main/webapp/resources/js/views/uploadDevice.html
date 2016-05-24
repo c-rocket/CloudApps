@@ -1,0 +1,86 @@
+<!--
+ Copyright (c) 2014, 2016, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<h1>Device Configuration</h1>
+<hr />
+<br />
+<br />
+<div id="form-container" class="oj-form-layout">
+	<h3>Upload A New Device</h3>
+	<div class="content-with-header-2">
+		<form action="device/setup/upload" method="post" enctype='multipart/form-data'>
+			<div class="oj-form">
+				<div class="oj-flex">
+					<div class="oj-flex-item">
+						<div class="oj-label oj-component oj-select-label">
+							<div class="oj-label-group">
+								<label for="propertiesFile" id="oj-select-label-propertiesFile" class="oj-component-initnode">Select Device Properties file:</label>
+							</div>
+						</div>
+						<input id="propertiesFile" type="file" name="files[0]" class="upload" />
+					</div>
+				</div>
+				<div class="oj-flex">
+					<div class="oj-flex-item">
+						<div class="oj-label oj-component oj-select-label">
+							<div class="oj-label-group">
+								<label for="imageFile" id="oj-select-label-imageFile" class="oj-component-initnode">Select an Image(suggested 250x250):</label>
+							</div>
+						</div>
+						<input id="imageFile" type="file" name="files[1]" />
+					</div>
+				</div>
+				<div class="oj-flex">
+					<div class="oj-flex-item">
+						<label for="industrySelect">Industry</label> <select id="industrySelect" name="industry"
+							data-bind="ojComponent: {component: 'ojSelect',
+                                                    value: industrySelect,
+                                                    rootAttributes: {style:'max-width:300px'}}">
+							<option value="Basic Materials" selected="selected">Basic Materials</option>
+							<option value="Consumer Goods">Consumer Goods</option>
+							<option value="Consumer Services">Consumer Services</option>
+							<option value="Financials">Financials</option>
+							<option value="Health Care">Health Care</option>
+							<option value="Industrials">Industrials</option>
+							<option value="Oil and Gas">Oil and Gas</option>
+							<option value="Technology">Technology</option>
+							<option value="Telecommunications">Telecommunications</option>
+							<option value="Utilities">Utilities</option>
+						</select>
+					</div>
+				</div>
+				<div class="oj-flex">
+					<div class="oj-flex-item">
+						<input type="submit" value="upload" />
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<br />
+	<hr />
+	<br /> <br />
+	<h3>Enable/Disable Local Devices</h3>
+	<div class="oj-flex-items-pad">
+		<div class="oj-flex">
+			<div data-bind="foreach: deviceTypes" class="oj-flex-item">
+				<input type="checkbox" data-bind="value: name, checked: enabled" /> <label data-bind="text: display"></label>&nbsp;&nbsp;&nbsp;
+			</div>
+		</div>
+		<div class="oj-flex">
+			<div class="oj-flex-item">
+				<br />
+				<button id="applyChangesButton"
+					data-bind="click: applyChanges, 
+                       ojComponent: { component: 'ojButton', label: 'Apply Changes' }"></button>
+			</div>
+		</div>
+	</div>
+	<div id="popupWrapper">
+		<div style="display: none" id="toaster" class="toaster" data-bind="ojComponent:{component: 'ojPopup'}">
+			<span data-bind="text:toastText"></span>
+		</div>
+	</div>
+</div>

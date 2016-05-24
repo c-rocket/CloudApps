@@ -31,7 +31,7 @@ public class ScheduledTasks {
 			try {
 				if (device != null) {
 					messageService.sendMessages(device, systemConfigService.getHost(), systemConfigService.getPort(),
-							sendingMessages, systemConfigService.getUsername(), systemConfigService.getPassword());
+							sendingMessages, systemConfigService.getWebLogicTrust(), systemConfigService.getPassword());
 					if (sendingMessages) {
 						deviceService.updateDevice(device);
 					}

@@ -15,7 +15,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 		var jsonData = JSON.stringify({
 			server : data.hostname(),
 			port : data.port(),
-			username : data.username(),
+			weblogicTrust : data.weblogicTrust(),
 			password : data.password(),
 			sendingMessages : data.sendingMessages()
 		});
@@ -31,7 +31,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 			success : function(responseData) {
 				console.log(responseData);
 				getConfig();
-				toaster('System Configuraiton Updated');
+				toaster('System Configuration Updated');
 			},
 			error : function() {
 				alert('Error saving Config');
@@ -43,7 +43,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 		var self = this;
 		self.hostname = ko.observable();
 		self.port = ko.observable();
-		self.username = ko.observable();
+		self.weblogicTrust = ko.observable();
 		self.password = ko.observable();
 		self.sendingMessages = ko.observable();
 		self.toastText = ko.observable();
@@ -58,7 +58,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojinputtext'
 		}).then(function(data) {
 			vm.hostname(data.server);
 			vm.port(data.port);
-			vm.username(data.username);
+			vm.weblogicTrust(data.weblogicTrust);
 			vm.password(data.password);
 			vm.sendingMessages(data.sendingMessages);
 		});

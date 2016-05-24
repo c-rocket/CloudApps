@@ -20,31 +20,33 @@ public class MessagingService {
 	private MessagingDao dao;
 
 	public void sendMessages(IOTDevice device, String iotcsServer, Integer iotcsPort, Boolean sendMessages,
-			String username, String password)  {
+			String weblogicTrust, String trustPassword) {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
+		System.setProperty("com.oracle.iot.client.server.port", String.valueOf(iotcsPort));
 		try {
-			VirtualDevice virtualDevice = dao.getDevice(device);
+			VirtualDevice virtualDevice = dao.getDevice(device, iotcsServer, iotcsPort, weblogicTrust, trustPassword);
 			device.animateMetrics();
 			if (sendMessages) {
 				device.update(virtualDevice);
-			} 
+			}
 		} catch (GeneralSecurityException e) {
-			log.error("Error getting device",e);
+			log.error("Error getting device", e);
 		} catch (IOException e) {
-			log.error("Error getting device",e);
+			log.error("Error getting device", e);
 		}
 	}
 
 	public Boolean sendAlert(IOTDevice device, String alert, String iotcsServer, Integer iotcsPort,
-			Boolean sendMessages) {
+			Boolean sendMessages, String weblogicTrust, String trustPassword) {
 		if (sendMessages && device != null) {
 			try {
-				VirtualDevice virtualDevice = dao.getDevice(device);
+				VirtualDevice virtualDevice = dao.getDevice(device, iotcsServer, iotcsPort, weblogicTrust,
+						trustPassword);
 				device.alert(virtualDevice, alert);
 			} catch (GeneralSecurityException e) {
-				log.error("Error getting device",e);
+				log.error("Error getting device", e);
 			} catch (IOException e) {
-				log.error("Error getting device",e);
+				log.error("Error getting device", e);
 			}
 		}
 		return true;

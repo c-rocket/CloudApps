@@ -19,6 +19,7 @@
         component: 'ojInputNumber', 
         step:1, 
         value:port,
+        required: true,
         converter: {
                 type: 'number', 
                   options: {
@@ -29,21 +30,22 @@
 		</div>
 		<div class="oj-flex">
 			<div class="oj-flex-item">
-				<label for="username">Username</label> <input id="username"
+				<label for="weblogicTrust">WebLogic Trust Store</label> <input id="weblogicTrust"
 					data-bind="ojComponent: 
-                   {component: 'ojInputText', value:username, required: true}">
+                   {component: 'ojInputText', value:weblogicTrust, required: true, rootAttributes: {
+                                            style:'max-width:50%'}}">
 			</div>
 		</div>
 		<div class="oj-flex">
 			<div class="oj-flex-item">
-				<label for="password">Password</label> <input id="password"
+				<label for="password">Trust Password</label> <input id="password"
 					data-bind="ojComponent: 
                    {component: 'ojInputText', value:password, required: true}">
 			</div>
 		</div>
 		<div class="oj-flex">
 			<div class="oj-flex-item">
-				<label id="sendingMessagesLabel" for="switch">Sending Messages:</label> <input id="sendingMessages"
+				<label for="sendingMessages">Sending Messages:</label> <input id="sendingMessages"
 					data-bind="ojComponent: {component: 'ojSwitch', value: sendingMessages}" />
 			</div>
 		</div>

@@ -9,7 +9,6 @@
 <meta name="author" content="Oracle">
 <link rel="shortcut icon" href="<c:url value='/resources/pictures/favicon.ico'/>" type="image/x-icon" />
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" />
-<link rel="stylesheet" href="<c:url value='/resources/charts/angular-chart.min.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/simulator.css'/>" />
 
 <!-- Angular Dependencies -->
@@ -22,15 +21,6 @@
 
 <!-- Angular Material Javascript using GitCDN to load directly from `bower-material/master` -->
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
-
-<script src="<c:url value='/resources/charts/Chart.min.js'/>"></script>
-<script src="<c:url value='/resources/charts/angular-chart.min.js'/>"></script>
-<script src="<c:url value='/resources/js/app/SimulatorApp.js'/>"></script>
-
-<script src="<c:url value='/resources/js/app/Service/DeviceListService.js'/>"></script>
-<script src="<c:url value='/resources/js/app/Service/DeviceService.js'/>"></script>
-<script src="<c:url value='/resources/js/app/Service/SystemConfigService.js'/>"></script>
-<script src="<c:url value='/resources/js/app/Controller/DeviceController.js'/>"></script>
 <title>IoT Device Simulator</title>
 </head>
 <body class="setup-page" class="ui-widget-content">
@@ -62,10 +52,10 @@
 		</md-grid-tile-header> 
 		<div class="content-with-header-2">
 			<form:form method="post" action="setup/upload" modelAttribute="uploadForm" enctype="multipart/form-data">
-				<label>Share with Device Central</label>
+				<!-- <label>Share with Device Central</label>
 				<input type="checkbox" name="share" />
 				<br />
-				<br />
+				<br /> -->
 				<label>Select Device Properties file:</label>
 				<input type="file" name="files[0]" class="upload" />
 				<br />
