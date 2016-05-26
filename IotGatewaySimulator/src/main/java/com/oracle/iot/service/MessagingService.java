@@ -23,6 +23,7 @@ public class MessagingService {
 			String weblogicTrust, String trustPassword) {
 		System.setProperty("com.oracle.iot.client.server.cn", iotcsServer);
 		System.setProperty("com.oracle.iot.client.server.port", String.valueOf(iotcsPort));
+		System.setProperty("com.oracle.iot.client.device.allow_draft_device_models", "true");
 		try {
 			device.animateMetrics();
 			if (sendMessages) {

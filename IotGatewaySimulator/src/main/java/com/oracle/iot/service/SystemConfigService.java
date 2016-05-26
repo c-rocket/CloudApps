@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SystemConfigService {
 
-	private String host = "localhost";
+	private String host = "iotserver";//"localhost";
 	private Integer port = 7102;
 	private String configFileLocation = "/configs";
 	private Boolean sendingMessages = false;
-	private String password = "password";
-	private String weblogicTrust = "C:/Oracle/iot_cert/iot_demo.jks";
+	private String password = "changeit";
+	private String weblogicTrust = "C:/Program Files/Java/jdk1.8.0_91/jre/lib/security/cacerts";
 
 	public String getHost() {
 		return host;

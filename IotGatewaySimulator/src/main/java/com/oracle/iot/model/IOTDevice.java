@@ -83,9 +83,7 @@ public abstract class IOTDevice {
 
 	public abstract IOTDevice copy();
 
-	public String getModelURN() {
-		return getResource();
-	}
+	public abstract String getModelURN();
 
 	public abstract void animateMetrics();
 

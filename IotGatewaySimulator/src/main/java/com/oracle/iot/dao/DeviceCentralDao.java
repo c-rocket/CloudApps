@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 public class DeviceCentralDao {
 
 	private static final Logger logger = Logger.getLogger(DeviceCentralDao.class);
-	private String connectionURL = "http://localhost:8480/devicecentral";//"http://129.152.152.157/devicecentral";
+	private String connectionURL = "http://129.152.152.157/devicecentral";//"http://localhost:8480/devicecentral";
 	private String deviceNamesURL = connectionURL + "/devices/list";
 	private String deviceUploadURL = connectionURL + "/device/save";
 	private String deviceDeleteURL = connectionURL + "/device/delete";
@@ -31,7 +31,7 @@ public class DeviceCentralDao {
 		try {
 			return getRestTemplate().getForObject(deviceNamesURL, List.class);
 		} catch (Exception e) {
-			logger.error("Error getting names", e);
+			logger.error("Error getting names, but the show must go on", e);
 			return new ArrayList<Map<String, Object>>();
 		}
 	}

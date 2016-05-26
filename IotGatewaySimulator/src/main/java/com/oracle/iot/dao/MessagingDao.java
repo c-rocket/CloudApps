@@ -54,6 +54,7 @@ public class MessagingDao {
 			DirectlyConnectedDevice dcd = new DirectlyConnectedDevice();
 			// Activate the device
 			if (!dcd.isActivated()) {
+				log.info(device.getModelURN());
 				dcd.activate(device.getModelURN());
 			}
 			DeviceModel dcdModel = dcd.getDeviceModel(device.getModelURN());

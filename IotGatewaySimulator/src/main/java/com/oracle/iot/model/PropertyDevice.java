@@ -220,7 +220,9 @@ public class PropertyDevice extends IOTDevice {
 
 	@Override
 	public void alert(VirtualDevice virtualDevice, String alertName) {
-		Alert alert = virtualDevice.createAlert(alertName);
+		String alertURN = this.details.getAlertFormat() + ":" + alertName;
+		log.info(alertURN);
+		Alert alert = virtualDevice.createAlert(alertURN);
 		for (String key : currentMetrics.keySet()) {
 			String id = getMetricNameByDisplayName(key);
 			if (id != null) {
@@ -307,5 +309,10 @@ public class PropertyDevice extends IOTDevice {
 				});
 			}
 		}
+	}
+
+	@Override
+	public String getModelURN() {
+		return this.details == null? null : details.getDataFormat();
 	}
 }
