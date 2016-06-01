@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HomeController {
 
-	@RequestMapping(value = "/*", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String jetHome(Locale locale, Model model) {
 		return "home-jet";
 	}
-
 }
