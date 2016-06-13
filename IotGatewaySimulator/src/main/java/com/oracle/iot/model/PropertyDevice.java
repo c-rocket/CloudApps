@@ -309,10 +309,25 @@ public class PropertyDevice extends IOTDevice {
 				});
 			}
 		}
+		virtualDevice.setOnChange("Reset", new VirtualDevice.ChangeCallback<VirtualDevice>() {
+			@Override
+			public void onChange(ChangeEvent<VirtualDevice> event) {
+				for (PropertyMetric metric : details.getMetrics()) {
+					if (metric.getBoolSet() != null) {
+						currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
+					} else {
+						currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
+					}
+				}
+				for (PropertyEvent propertyEvent : details.getEvents()) {
+					eventTriggers.put(propertyEvent, false);
+				}
+			}
+		});
 	}
 
 	@Override
 	public String getModelURN() {
-		return this.details == null? null : details.getDataFormat();
+		return this.details == null ? null : details.getDataFormat();
 	}
 }
