@@ -107,6 +107,7 @@ public class DevicePropertiesLoaderDao {
 		// load metrics
 		List<String> metrics = Constants.removeWhiteSpace(Arrays.asList(prop.getProperty("metrics").split(",")));
 		for (String metric : metrics) {
+			logger.info("Loading Metric: " + metric);
 			String prefix = "metrics.";
 			String displayName = prop.getProperty(prefix + metric + ".display");
 			String flag = prop.getProperty(prefix + metric + ".boolean");
@@ -130,6 +131,7 @@ public class DevicePropertiesLoaderDao {
 		// load alerts
 		List<String> alerts = Constants.removeWhiteSpace(Arrays.asList(prop.getProperty("alerts").split(",")));
 		for (String alert : alerts) {
+			logger.info("Loading alert: " + alert);
 			String displayName = prop.getProperty("alerts." + alert + ".display");
 			newDevice.addAlert(alert, displayName);
 		}
@@ -137,6 +139,7 @@ public class DevicePropertiesLoaderDao {
 		// load events
 		List<String> events = Arrays.asList(prop.getProperty("events").split(","));
 		for (String event : events) {
+			logger.info("Loading event: " + event);
 			String prefix = "events.";
 			String displayName = prop.getProperty(prefix + event + ".display");
 			Integer priority = Integer.valueOf(prop.getProperty(prefix + event + ".priority", "1"));

@@ -52,7 +52,7 @@ public class DeviceService {
 			map.put("secret", device.getSecret());
 			map.put("image", device.getPicture());
 			map.put("type", device.getResource());
-			map.put("display", Constants.splitCamelCase(device.getResource()));
+			map.put("display", device.getDisplay());
 			devices.add(map);
 		}
 		return devices;

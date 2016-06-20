@@ -29,7 +29,7 @@ public class PropertyDevice extends IOTDevice {
 	Map<PropertyEvent, Boolean> eventTriggers = new LinkedHashMap<PropertyEvent, Boolean>();
 
 	public PropertyDevice(PropertyDeviceDetails details, String id, String secret) {
-		super(id, secret);
+		super(id, secret, details.getDisplayName());
 		this.details = details;
 		// define all the default values for the existing metrics
 		for (PropertyMetric metric : details.getMetrics()) {
@@ -111,7 +111,6 @@ public class PropertyDevice extends IOTDevice {
 			} else if (calcs.get(key) instanceof Boolean) {
 				Boolean newValue = (Boolean) calcs.get(key);
 				currentMetrics.put(key.getDisplayName(), newValue);
-				addToChart(newMessageDateTime, key.getDisplayName(), newValue ? 1d : 0d);
 			}
 		}
 	}
@@ -288,42 +287,43 @@ public class PropertyDevice extends IOTDevice {
 
 	@Override
 	public void addCallbacks(VirtualDevice virtualDevice) {
-		for (PropertyMetric metric : details.getMetrics()) {
-			final String metricName = metric.getName();
-			final String metricDisplay = metric.getDisplayName();
-			if (metric.getBoolSet() != null) {
-				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
-					@Override
-					public void onChange(ChangeEvent<VirtualDevice> event) {
-						NamedValue<?> namedValue = event.getNamedValue();
-						currentMetrics.put(metricDisplay, Boolean.valueOf(namedValue.getValue().toString()));
-					}
-				});
-			} else {
-				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
-					@Override
-					public void onChange(ChangeEvent<VirtualDevice> event) {
-						NamedValue<?> namedValue = event.getNamedValue();
-						currentMetrics.put(metricDisplay, namedValue.getValue());
-					}
-				});
-			}
-		}
-		virtualDevice.setOnChange("Reset", new VirtualDevice.ChangeCallback<VirtualDevice>() {
-			@Override
-			public void onChange(ChangeEvent<VirtualDevice> event) {
-				for (PropertyMetric metric : details.getMetrics()) {
-					if (metric.getBoolSet() != null) {
-						currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
-					} else {
-						currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
-					}
-				}
-				for (PropertyEvent propertyEvent : details.getEvents()) {
-					eventTriggers.put(propertyEvent, false);
-				}
-			}
-		});
+//		for (PropertyMetric metric : details.getMetrics()) {
+//			final String metricName = metric.getName();
+//			final String metricDisplay = metric.getDisplayName();
+//			if (metric.getBoolSet() != null) {
+//				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
+//					@Override
+//					public void onChange(ChangeEvent<VirtualDevice> event) {
+//						NamedValue<?> namedValue = event.getNamedValue();
+//						currentMetrics.put(metricDisplay, Boolean.valueOf(namedValue.getValue().toString()));
+//					}
+//				});
+//			} else {
+//				virtualDevice.setOnChange(metricName, new VirtualDevice.ChangeCallback<VirtualDevice>() {
+//					@Override
+//					public void onChange(ChangeEvent<VirtualDevice> event) {
+//						NamedValue<?> namedValue = event.getNamedValue();
+//						currentMetrics.put(metricDisplay, namedValue.getValue());
+//					}
+//				});
+//			}
+//		}
+//	
+//		virtualDevice.setOnChange("Reset", new VirtualDevice.ChangeCallback<VirtualDevice>() {
+//			@Override
+//			public void onChange(ChangeEvent<VirtualDevice> event) {
+//				for (PropertyMetric metric : details.getMetrics()) {
+//					if (metric.getBoolSet() != null) {
+//						currentMetrics.put(metric.getDisplayName(), (boolean) metric.getBoolSet());
+//					} else {
+//						currentMetrics.put(metric.getDisplayName(), metric.getDefaultValue());
+//					}
+//				}
+//				for (PropertyEvent propertyEvent : details.getEvents()) {
+//					eventTriggers.put(propertyEvent, false);
+//				}
+//			}
+//		});
 	}
 
 	@Override

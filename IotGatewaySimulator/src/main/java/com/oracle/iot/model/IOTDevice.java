@@ -24,13 +24,16 @@ public abstract class IOTDevice {
 	protected List<List<Double>> chartValues = new ArrayList<List<Double>>();
 	@JsonProperty("chartLabels")
 	protected List<String> chartLabels = new ArrayList<String>();
+	@JsonProperty("display")
+	private String display;
 
-	public IOTDevice(String id, String secret) {
+	public IOTDevice(String id, String secret, String display) {
 		this.authToken = new IOTAuthToken(id, secret);
 		this.createDate = new DateTime().toDate();
 		for (int i = 0; i <= MAX_CHART_SIZE; i++) {
 			chartLabels.add(" ");
 		}
+		this.display = display;
 	}
 
 	public String getId() {
@@ -103,6 +106,10 @@ public abstract class IOTDevice {
 
 	public List<String> getChartLabels() {
 		return chartLabels;
+	}
+
+	public String getDisplay() {
+		return display;
 	}
 	
 	

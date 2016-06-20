@@ -85,14 +85,14 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 			console.log(device);
 			vm.id(device.id);
 			vm.type(device.resource);
-			vm.title(device.resource + ': ' + device.id)
+			vm.title(device.display + ': ' + device.id)
 			vm.image('data:image/jpeg;base64,' + device.picture);
 			vm.metrics.removeAll();
 			var colorIndex = 0;
 			$.each(device.metrics, function(key, value) {
 				vm.metrics.push({
 					name : key,
-					value : value,
+					value : (value === true) ? "Yes" : (value === false) ? "no" : value,
 					sizeClass : 'oj-masonrylayout-tile-2x1 tile tile' + colorIndex
 				});
 				colorIndex = (colorIndex + 1) % 7;
@@ -139,7 +139,7 @@ define([ 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmasonrylay
 			$.each(device.metrics, function(key, value) {
 				vm.metrics.push({
 					name : key,
-					value : value,
+					value : (value === true) ? "Yes" : (value === false) ? "no" : value,
 					sizeClass : 'oj-masonrylayout-tile-2x1 tile tile' + colorIndex
 				});
 				colorIndex = (colorIndex + 1) % 7;
